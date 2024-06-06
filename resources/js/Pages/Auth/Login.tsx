@@ -1,97 +1,83 @@
-import { useEffect, FormEventHandler } from 'react';
-import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react'
 
-export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
+import GuestLayout from '@/Layouts/GuestLayout'
+
+import InputError from '@/Components/InputError'
+import { Button } from '@/Components/ui/button'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+
+interface LoginProps {
+    email: string
+    password: string
+    remember: boolean
+}
+
+export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
-        remember: false,
-    });
+        remember: false
+    })
 
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setData(event.target.name as keyof LoginProps, event.target.value)
+    }
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    const handleLoginSubmit = (event: React.FormEvent) => {
+        event.preventDefault()
 
-        post(route('login'));
-    };
+        post('/login')
+    }
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <GuestLayout title='Login'>
+            <div className='h-screen flex items-center justify-center py-12'>
+                <div className='mx-auto grid w-[350px] gap-6'>
+                    <div className='grid gap-2 text-center'>
+                        <h1 className='text-3xl font-bold'>Login</h1>
+                        <p className='w-full text-balance lg:text-nowrap text-muted-foreground'>Enter your email below to login to your account</p>
+                    </div>
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+                    <form onSubmit={handleLoginSubmit} className='grid gap-3'>
+                        <div className='grid gap-2'>
+                            <Label htmlFor='email' className={errors.email?.length ? 'text-destructive' : ''}>
+                                Email
+                            </Label>
+                            <div className='space-y-px'>
+                                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='your@email.com' />
+                                <InputError message={errors.password} />
+                            </div>
+                        </div>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                        <div className='grid gap-2'>
+                            <div className='flex items-center'>
+                                <Label htmlFor='password' className={errors.password?.length ? 'text-destructive' : ''}>
+                                    Password
+                                </Label>
+                                <Link href='#' className='ml-auto inline-block text-sm underline'>
+                                    Forgot your password?
+                                </Link>
+                            </div>
+                            <div className='space-y-px'>
+                                <Input id='password' type='password' name='password' value={data.password} onChange={handleInputChange} placeholder='••••••••' />
+                                <InputError message={errors.password} />
+                            </div>
+                        </div>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                        <Button type='submit' className='w-full'>
+                            Login
+                        </Button>
+                    </form>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                        />
-                        <span className="ms-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Forgot your password?
+                    <div className='mt-4 text-center text-sm'>
+                        Don&apos;t have an account?{' '}
+                        <Link href='/register' className='underline'>
+                            Sign up
                         </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
+                    </div>
                 </div>
-            </form>
+            </div>
         </GuestLayout>
-    );
+    )
 }

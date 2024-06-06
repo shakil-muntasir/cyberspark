@@ -1,19 +1,17 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
-import { PropsWithChildren } from 'react';
+import LoginBackgroundImage from '@/public/assets/background.jpg'
 
-export default function Guest({ children }: PropsWithChildren) {
+import { Head } from '@inertiajs/react'
+
+export default function GuestLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
     return (
-        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                </Link>
-            </div>
-
-            <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <>
+            <Head title={title} />
+            <div className='w-full min-h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]'>
+                <div className='hidden bg-muted lg:block'>
+                    <img src={LoginBackgroundImage} alt='Login Background' className='h-screen w-full object-cover dark:brightness-[0.2] dark:grayscale' />
+                </div>
                 {children}
             </div>
-        </div>
-    );
+        </>
+    )
 }
