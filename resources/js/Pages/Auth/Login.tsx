@@ -1,3 +1,4 @@
+import { FormEventHandler } from 'react'
 import { Link, useForm } from '@inertiajs/react'
 
 import GuestLayout from '@/Layouts/GuestLayout'
@@ -7,27 +8,29 @@ import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
 
-interface LoginProps {
+interface LoginForm {
     email: string
     password: string
     remember: boolean
 }
 
 export default function Login() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
         email: '',
         password: '',
         remember: false
     })
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setData(event.target.name as keyof LoginProps, event.target.value)
+        const { name, value } = event.target
+        setData(name as keyof LoginForm, value)
+        clearErrors(name as keyof LoginForm)
     }
 
-    const handleLoginSubmit = (event: React.FormEvent) => {
+    const handleLoginSubmit: FormEventHandler = (event: React.FormEvent) => {
         event.preventDefault()
 
-        post('/login')
+        post(route('login'))
     }
 
     return (

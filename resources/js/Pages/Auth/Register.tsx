@@ -1,117 +1,103 @@
-import { useEffect, FormEventHandler } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react'
+import { Link, useForm } from '@inertiajs/react'
 
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+import GuestLayout from '@/Layouts/GuestLayout'
+
+import InputError from '@/Components/InputError'
+import { Button } from '@/Components/ui/button'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+
+interface RegisterForm {
+    name: string
+    email: string
+    password: string
+    password_confirmation: string
+}
+
+export default function Login() {
+    const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
         name: '',
         email: '',
         password: '',
-        password_confirmation: '',
-    });
+        password_confirmation: ''
+    })
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target
+        setData(name as keyof RegisterForm, value)
+        clearErrors(name as keyof RegisterForm)
+    }
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    const handleRegisterSubmit: FormEventHandler = (event: React.FormEvent) => {
+        event.preventDefault()
 
-        post(route('register'));
-    };
+        post(route('register'))
+    }
 
     return (
-        <GuestLayout>
-            <Head title="Register" />
+        <GuestLayout title='Register'>
+            <div className='h-screen flex items-center justify-center py-12'>
+                <div className='mx-auto grid w-[350px] gap-6'>
+                    <div className='grid gap-2 text-center'>
+                        <h1 className='text-3xl font-bold'>Login</h1>
+                        <p className='w-full text-balance lg:text-nowrap text-muted-foreground'>Enter your email below to login to your account</p>
+                    </div>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <form onSubmit={handleRegisterSubmit} className='grid gap-3'>
+                        <div className='grid gap-2'>
+                            <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
+                                Name
+                            </Label>
+                            <div className='space-y-px'>
+                                <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Full Name' />
+                                <InputError message={errors.name} />
+                            </div>
+                        </div>
 
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                    />
+                        <div className='grid gap-2'>
+                            <Label htmlFor='email' className={errors.email?.length ? 'text-destructive' : ''}>
+                                Email
+                            </Label>
+                            <div className='space-y-px'>
+                                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='your@email.com' />
+                                <InputError message={errors.email} />
+                            </div>
+                        </div>
 
-                    <InputError message={errors.name} className="mt-2" />
+                        <div className='grid gap-2'>
+                            <Label htmlFor='password' className={errors.password?.length ? 'text-destructive' : ''}>
+                                Password
+                            </Label>
+                            <div className='space-y-px'>
+                                <Input id='password' type='password' name='password' value={data.password} onChange={handleInputChange} placeholder='••••••••' />
+                                <InputError message={errors.password} />
+                            </div>
+                        </div>
+
+                        <div className='grid gap-2'>
+                            <Label htmlFor='password_confirmation' className={errors.password_confirmation?.length ? 'text-destructive' : ''}>
+                                Confirm Password
+                            </Label>
+                            <div className='space-y-px'>
+                                <Input id='password_confirmation' type='password' name='password_confirmation' value={data.password_confirmation} onChange={handleInputChange} placeholder='••••••••' />
+                                <InputError message={errors.password_confirmation} />
+                            </div>
+                        </div>
+
+                        <Button type='submit' className='w-full'>
+                            Create an account
+                        </Button>
+                    </form>
+
+                    <div className='mt-4 text-center text-sm'>
+                        Already have an account?{' '}
+                        <Link href='/login' className='underline'>
+                            Sign in
+                        </Link>
+                    </div>
                 </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href={route('login')}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-            </form>
+            </div>
         </GuestLayout>
-    );
+    )
 }
