@@ -9,7 +9,7 @@ import { Product, columns } from '@/Pages/Product/Partials/table/columns'
 
 export default function ProductsList({ products }: { products: Product[] }) {
     return (
-        <AuthenticatedLayout title='Dashboard'>
+        <AuthenticatedLayout title='Products'>
             <div className='flex items-center justify-between'>
                 <PageHeader title='Products' description='This is the products page. You can view, edit, and delete products here.' />
                 <AddProduct />

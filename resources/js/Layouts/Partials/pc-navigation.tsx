@@ -1,6 +1,6 @@
 import { createElement } from 'react'
 
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 
 import { routes } from '@/lib/routes'
 
@@ -9,7 +9,7 @@ import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/comp
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
 
 export default function PcNavigation() {
-    const pathname = route().current()
+    const pathname = usePage().url.split('?')[0]
 
     return (
         <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>

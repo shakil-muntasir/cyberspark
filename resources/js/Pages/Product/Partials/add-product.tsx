@@ -40,7 +40,7 @@ export default function AddProduct() {
                 onSuccess: handleSuccess,
                 onError: handleError
             })
-        }, 2000)
+        }, 500)
     }
 
     const handleSuccess = () => {
@@ -72,7 +72,7 @@ export default function AddProduct() {
     }
 
     const handleFormOpen = (value: boolean) => {
-        if (!processing || value) {
+        if (!loading || value) {
             setOpen(value)
         }
     }
