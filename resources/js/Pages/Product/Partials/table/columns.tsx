@@ -16,6 +16,7 @@ export type Product = {
     selling_price: number
     retail_price: number
     status: 'active' | 'inactive'
+    url: string
 }
 
 export const columns: ColumnDef<Product>[] = [
