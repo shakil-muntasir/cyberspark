@@ -3,8 +3,8 @@ import { PanelLeftIcon } from 'lucide-react'
 
 import { routes } from '@/lib/routes'
 
-import { Button } from '@/Components/ui/button'
-import { SheetTrigger, SheetContent, Sheet, SheetClose } from '@/Components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { SheetTrigger, SheetContent, Sheet, SheetClose } from '@/components/ui/sheet'
 
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
 

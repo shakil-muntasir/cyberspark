@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/react'
 
 import { routes } from '@/lib/routes'
 
-import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/Components/ui/tooltip'
+import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/components/ui/tooltip'
 
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
 

@@ -4,9 +4,9 @@ import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
 import MobileNavigation from '@/Layouts/Partials/mobile-navigation'
 import PcNavigation from '@/Layouts/Partials/pc-navigation'
 import UserDropdown from '@/Layouts/Partials/user-dropdown'
-import { DarkModeToggle } from '@/Components/ui/dark-mode-toggle'
-import { Input } from '@/Components/ui/input'
-import { Toaster } from '@/Components/ui/toaster'
+import { DarkModeToggle } from '@/components/ui/dark-mode-toggle'
+import { Input } from '@/components/ui/input'
+import { Toaster } from '@/components/ui/toaster'
 import { Head } from '@inertiajs/react'
 
 export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {

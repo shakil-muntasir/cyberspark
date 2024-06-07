@@ -2,9 +2,9 @@ import { Link, router } from '@inertiajs/react'
 
 import UserAvatar from '@/public/assets/user_avatar.png'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
-import { Button } from '@/Components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 import { useUser } from '@/Contexts/UserContext'
 
