@@ -5,9 +5,12 @@ import UserAvatar from '@/public/assets/user_avatar.png'
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-import { User } from '@/types'
 
-export default function UserDropdown({ user }: { user: User }) {
+import { useUser } from '@/Contexts/UserContext'
+
+export default function UserDropdown() {
+    const user = useUser()
+
     const handleLogout = async () => {
         router.post(route('logout'))
     }

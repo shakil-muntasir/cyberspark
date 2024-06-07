@@ -1,17 +1,15 @@
 import { SearchIcon } from 'lucide-react'
 
-import { User } from '@/types'
-
-import DynamicBreadcrumb from '@/Layouts/_components/breadcrumb'
-import MobileNavigation from '@/Layouts/_components/mobile-navigation'
-import PcNavigation from '@/Layouts/_components/pc-navigation'
-import UserDropdown from '@/Layouts/_components/user-dropdown'
+import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
+import MobileNavigation from '@/Layouts/Partials/mobile-navigation'
+import PcNavigation from '@/Layouts/Partials/pc-navigation'
+import UserDropdown from '@/Layouts/Partials/user-dropdown'
 import { DarkModeToggle } from '@/Components/ui/dark-mode-toggle'
 import { Input } from '@/Components/ui/input'
 import { Toaster } from '@/Components/ui/toaster'
 import { Head } from '@inertiajs/react'
 
-export default function DashboardLayout({ title = '', user, children }: { title?: string; user: User; children: React.ReactNode }) {
+export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
     return (
         <>
             <Head title={title} />
@@ -26,7 +24,7 @@ export default function DashboardLayout({ title = '', user, children }: { title?
                             <Input className='w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' type='search' />
                         </div>
                         <DarkModeToggle />
-                        <UserDropdown user={user} />
+                        <UserDropdown />
                     </header>
                     <main className='flex-1 items-start px-6 py-4 md:py-0'>{children}</main>
                 </div>

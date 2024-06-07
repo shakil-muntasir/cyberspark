@@ -1,10 +1,14 @@
-import { AxiosInstance } from 'axios';
-import { route as ziggyRoute } from 'ziggy-js';
+import { PageProps } from '@/types'
+import { AxiosInstance } from 'axios'
+import { route as ziggyRoute } from 'ziggy-js'
 
 declare global {
     interface Window {
-        axios: AxiosInstance;
+        axios: AxiosInstance
+        initialPage: {
+            props: PageProps
+        }
     }
 
-    var route: typeof ziggyRoute;
+    var route: typeof ziggyRoute
 }
