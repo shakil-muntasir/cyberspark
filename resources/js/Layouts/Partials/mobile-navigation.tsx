@@ -1,10 +1,10 @@
 import { Link } from '@inertiajs/react'
 import { PanelLeftIcon } from 'lucide-react'
 
-import { routes } from '@/lib/routes'
+import { routes } from '@/Lib/routes'
 
-import { Button } from '@/components/ui/button'
-import { SheetTrigger, SheetContent, Sheet, SheetClose } from '@/components/ui/sheet'
+import { Button } from '@/Components/ui/button'
+import { SheetTrigger, SheetContent, Sheet, SheetClose } from '@/Components/ui/sheet'
 
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
 

@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import PageHeader from '@/Layouts/Partials/page-header'
 import AddProduct from '@/Pages/Product/Partials/add-product'
 import { DataTable } from '@/Pages/Product/Partials/table/data-table'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/Components/ui/separator'
 
 import { Product, columns } from '@/Pages/Product/Partials/table/columns'
 

@@ -2,9 +2,9 @@ import { createElement } from 'react'
 
 import { Link, usePage } from '@inertiajs/react'
 
-import { routes } from '@/lib/routes'
+import { routes } from '@/Lib/routes'
 
-import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/components/ui/tooltip'
+import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/Components/ui/tooltip'
 
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
 

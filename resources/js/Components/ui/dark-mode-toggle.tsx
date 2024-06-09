@@ -2,8 +2,8 @@ import { Moon, Sun } from 'lucide-react'
 
 import { useTheme } from '@/providers/theme-provider'
 
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Button } from '@/Components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 
 export function DarkModeToggle() {
     const { setTheme } = useTheme()

@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react'
 
-import { BreadcrumbLink, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbPage, BreadcrumbList, Breadcrumb } from '@/components/ui/breadcrumb'
+import { BreadcrumbLink, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbPage, BreadcrumbList, Breadcrumb } from '@/Components/ui/breadcrumb'
 
 type BreadcrumbItemType = {
     href: string
