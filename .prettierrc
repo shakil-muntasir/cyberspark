@@ -1,0 +1,48 @@
+{
+  "singleQuote": true,
+  "printWidth": 300,
+  "tabWidth": 4,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "jsxSingleQuote": true,
+  "semi": false,
+  "useEditorConfig": false,
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.jsx",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.tsx",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.config.js",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.config.ts",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.prettier*",
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}
