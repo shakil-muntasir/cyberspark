@@ -28,6 +28,11 @@ class Product extends Model
         'status' => ProductStatus::class
     ];
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function getUrlAttribute(): string
     {
         return rtrim(env('APP_URL', '/')) . '/products/' . $this->id;
