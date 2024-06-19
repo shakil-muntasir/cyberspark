@@ -13,13 +13,14 @@ export default function DataTablePagination<T>({ data: { per_page, current_page,
   const page = usePage()
   const [pageSize, setPageSize] = useState(per_page)
 
-  const visitPage = (url: string | null) => {
-    router.get(url!, {
+  const fetchPaginatedData = (pageNumber: number) => {
+    router.get(page.url, {
+      page: pageNumber,
       per_page: pageSize
     })
   }
 
-  const fetchData = (value: string) => {
+  const fetchPerPageData = (value: string) => {
     router.get(page.url, { per_page: Number(value) })
     setPageSize(Number(value))
   }
@@ -28,7 +29,7 @@ export default function DataTablePagination<T>({ data: { per_page, current_page,
     <div className='flex flex-col md:flex-row items-center justify-between md:px-2'>
       <div className='flex items-center space-x-2 md:mr-4'>
         <p className='text-sm font-medium'>Rows per page</p>
-        <Select value={`${pageSize}`} onValueChange={fetchData}>
+        <Select value={`${pageSize}`} onValueChange={fetchPerPageData}>
           <SelectTrigger className='h-8 w-[70px]'>
             <SelectValue placeholder={`${pageSize}`} />
           </SelectTrigger>
@@ -47,19 +48,19 @@ export default function DataTablePagination<T>({ data: { per_page, current_page,
           Page {`${current_page}`} of {last_page}
         </div>
         <div className='flex items-center space-x-2'>
-          <Button variant='outline' className='hidden h-8 w-8 p-0 lg:flex' disabled={prev_page_url === null} onClick={() => visitPage(first_page_url)}>
+          <Button variant='outline' className='hidden h-8 w-8 p-0 lg:flex' disabled={current_page === 1} onClick={() => fetchPaginatedData(1)}>
             <span className='sr-only'>Go to first page</span>
             <DoubleArrowLeftIcon className='h-4 w-4' />
           </Button>
-          <Button variant='outline' className='h-8 w-8 p-0' disabled={prev_page_url === null} onClick={() => visitPage(prev_page_url)}>
+          <Button variant='outline' className='h-8 w-8 p-0' disabled={current_page === 1} onClick={() => fetchPaginatedData(current_page - 1)}>
             <span className='sr-only'>Go to previous page</span>
             <ChevronLeftIcon className='h-4 w-4' />
           </Button>
-          <Button variant='outline' className='h-8 w-8 p-0' disabled={next_page_url === null} onClick={() => visitPage(next_page_url)}>
+          <Button variant='outline' className='h-8 w-8 p-0' disabled={current_page === last_page} onClick={() => fetchPaginatedData(current_page + 1)}>
             <span className='sr-only'>Go to next page</span>
             <ChevronRightIcon className='h-4 w-4' />
           </Button>
-          <Button variant='outline' className='hidden h-8 w-8 p-0 lg:flex' disabled={next_page_url === null} onClick={() => visitPage(last_page_url)}>
+          <Button variant='outline' className='hidden h-8 w-8 p-0 lg:flex' disabled={next_page_url === null} onClick={() => fetchPaginatedData(last_page)}>
             <span className='sr-only'>Go to last page</span>
             <DoubleArrowRightIcon className='h-4 w-4' />
           </Button>

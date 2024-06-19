@@ -14,8 +14,12 @@ class ProductController extends Controller
     {
         Gate::authorize('viewAny', Product::class);
 
+        $sortBy = request()->query('sortBy', 'id');
+        $sortTo = request()->query('sortTo', 'asc');
+        $paginate = (int) request()->input('per_page', 10);
+
         return inertia('Product/Index', [
-            'products' => Product::paginate((int) request()->input('per_page', 10)),
+            'products' => Product::orderBy($sortBy, $sortTo)->paginate($paginate),
         ]);
     }
 

@@ -1,9 +1,11 @@
+import { MoreHorizontal } from 'lucide-react'
+
 import { TableColumn } from '@/Types'
 import { Product } from '@/Types/product'
 import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { Button } from '@/Components/ui/button'
-import { MoreHorizontal } from 'lucide-react'
+import { Badge } from '@/Components/ui/badge'
 
 const toggleSorting = (desc: boolean) => {
   console.log(`Sorting toggled to ${desc ? 'descending' : 'ascending'}`)
@@ -13,13 +15,13 @@ const toggleVisibility = (hidden: boolean) => {
   console.log(`Visibility toggled to ${hidden ? 'hidden' : 'visible'}`)
 }
 
-const createColumns = <T,>(columns: Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'>[]): TableColumn<T>[] => {
+const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
+    ...column,
     toggleSorting,
     toggleVisibility,
-    enableSorting: true,
-    hidden: false,
-    ...column
+    enableSorting: column.enableSorting ?? true,
+    hidden: column.hidden ?? false
   }))
 }
 
@@ -78,8 +80,12 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'status',
-    header: column => <DataTableColumnHeader column={column} title='Status' />,
-    cell: row => <span>{row.status}</span>
+    header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
+    cell: ({ status }) => (
+      <span className='flex justify-center'>
+        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{status}</Badge>
+      </span>
+    )
   },
   {
     id: 'actions',

@@ -1,9 +1,10 @@
 import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon } from '@radix-ui/react-icons'
 
+import { TableColumn } from '@/Types'
 import { cn } from '@/Lib/utils'
+
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-import { TableColumn } from '@/Types'
 
 interface DataTableColumnHeaderProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   column: TableColumn<T>
@@ -31,7 +32,7 @@ export function DataTableColumnHeader<T>({ column, title, className, align = '' 
             Desc
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+          <DropdownMenuItem onClick={() => column.toggleVisibility(true)}>
             <EyeNoneIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
             Hide
           </DropdownMenuItem>
