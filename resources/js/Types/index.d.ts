@@ -1,4 +1,4 @@
-import { Key } from 'react'
+import { ReactNode } from 'react'
 
 export interface User {
     id: number
@@ -30,8 +30,14 @@ export interface PaginatedData<T> {
 }
 
 export interface TableColumn<T> {
-    header: string
-    id: keyof T | ((row: T) => any) | Key
+    id: keyof T | ((row: T) => any) | 'actions'
+    header: string | ((column: TableColumn<T>) => JSX.Element)
+    cell?: string | ((row: T) => JSX.Element)
+    sorted?: 'asc' | 'desc'
+    toggleSorting: (desc: boolean) => void
+    toggleVisibility: (hidden: boolean) => void
+    enableSorting: boolean
+    hidden: boolean
 }
 
 export interface TableProps<T> {

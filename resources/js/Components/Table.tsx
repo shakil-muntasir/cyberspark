@@ -10,7 +10,7 @@ export default function DataTable<T>({ data, columns }: TableProps<T>) {
           <TableHeader>
             <TableRow>
               {columns.map(column => (
-                <TableHead key={String(column.id)}>{column.header}</TableHead>
+                <TableHead key={String(column.id)}>{typeof column.header === 'string' ? column.header : column.header(column)}</TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -19,7 +19,7 @@ export default function DataTable<T>({ data, columns }: TableProps<T>) {
               data.data.map((row, index) => (
                 <TableRow key={index}>
                   {columns.map(column => (
-                    <TableCell key={String(column.id)}>{typeof column.id === 'function' ? column.id(row) : row[column.id as keyof T]}</TableCell>
+                    <TableCell key={String(column.id)}>{column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof T] : column.cell(row)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof T]}</TableCell>
                   ))}
                 </TableRow>
               ))
@@ -33,7 +33,6 @@ export default function DataTable<T>({ data, columns }: TableProps<T>) {
           </TableBody>
         </Table>
       </div>
-
       <div className='pt-4'>
         <DataTablePagination data={data} />
       </div>
