@@ -1,4 +1,4 @@
-import { PageProps } from '@/types'
+import { PageProps } from '@/Types'
 import { AxiosInstance } from 'axios'
 import { route as ziggyRoute } from 'ziggy-js'
 

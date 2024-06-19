@@ -15,7 +15,7 @@ class ProductController extends Controller
         Gate::authorize('viewAny', Product::class);
 
         return inertia('Product/Index', [
-            'products' => Product::all(),
+            'products' => Product::paginate((int) request()->input('per_page', 10)),
         ]);
     }
 

@@ -7,17 +7,7 @@ import { Checkbox } from '@/Components/ui/checkbox'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { DataTableColumnHeader } from '@/Pages/Product/Partials/table/column-header'
-
-export type Product = {
-    id: string
-    name: string
-    quantity: number
-    buying_price: number
-    selling_price: number
-    retail_price: number
-    status: 'active' | 'inactive'
-    url: string
-}
+import { Product } from '@/Types/product'
 
 export const columns: ColumnDef<Product>[] = [
     {
