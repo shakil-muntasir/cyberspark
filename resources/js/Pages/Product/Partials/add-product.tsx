@@ -101,7 +101,7 @@ export default function AddProduct() {
           <form onSubmit={handleAddProduct} className='mt-3 mb-8 grid gap-3 mx-6'>
             <div className='grid gap-2'>
               <Label htmlFor='sku' className={errors.sku?.length ? 'text-destructive' : ''}>
-                Name
+                SKU
               </Label>
               <div className='space-y-px'>
                 <Input id='sku' type='text' name='sku' value={data.sku} onChange={handleInputChange} placeholder='Product SKU' />

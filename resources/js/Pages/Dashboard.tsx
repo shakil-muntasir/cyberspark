@@ -1,10 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
-import { PageProps } from '@/Types'
-
-export default function Dashboard({ auth }: PageProps) {
+export default function Dashboard() {
   return (
-    <AuthenticatedLayout title='Dashboard' user={auth.user}>
+    <AuthenticatedLayout title='Dashboard'>
       <div className='py-12'>
         <div className='max-w-7xl mx-auto sm:px-6 lg:px-8'>
           <div className='bg-background overflow-hidden shadow-sm sm:rounded-lg'>

@@ -27,7 +27,10 @@ class ProductController extends Controller
     {
         Gate::authorize('create', Product::class);
 
-        Product::create($request->validated());
+        /** @var \App\Models\User */
+        $user = $request->user();
+
+        $user->products()->create($request->validated());
 
         return redirect()->back();
     }
