@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 
-import { ThemeProvider } from '@/providers/theme-provider'
+import { ThemeProvider } from '@/Providers/theme-provider'
 import { UserProvider } from '@/Contexts/UserContext'
 import { PageProps } from '@/Types'
 

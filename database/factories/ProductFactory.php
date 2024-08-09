@@ -18,7 +18,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'sku' => $this->faker->unique()->uuid,
+            'sku' => strtoupper($this->faker->bothify('??###')),
             'name' => $this->faker->words(2, true),
             'description' => $this->faker->sentence,
             'quantity' => $this->faker->numberBetween(1, 100),

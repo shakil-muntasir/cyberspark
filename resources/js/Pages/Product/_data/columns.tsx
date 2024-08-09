@@ -6,20 +6,13 @@ import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
-
-const toggleSorting = (desc: boolean) => {
-  console.log(`Sorting toggled to ${desc ? 'descending' : 'ascending'}`)
-}
-
-const toggleVisibility = (hidden: boolean) => {
-  console.log(`Visibility toggled to ${hidden ? 'hidden' : 'visible'}`)
-}
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
     ...column,
-    toggleSorting,
-    toggleVisibility,
+    toggleSorting: () => {},
+    toggleVisibility: () => {},
     enableSorting: column.enableSorting ?? true,
     hidden: column.hidden ?? false
   }))
@@ -27,16 +20,19 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 
 const columns: TableColumn<Product>[] = createColumns([
   {
-    id: 'id',
-    header: 'ID',
+    id: 'sku',
+    label: 'SKU',
+    header: 'SKU',
     cell: row => <span>{row.id}</span>
   },
   {
     id: 'name',
+    label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
     id: 'quantity',
+    label: 'Quantity',
     header: column => <DataTableColumnHeader column={column} title='Quantity' align='end' />,
     cell: ({ quantity }) => {
       return <div className='text-right font-medium mr-4'>{quantity}</div>
@@ -44,6 +40,7 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'buying_price',
+    label: 'Buying Price',
     header: column => <DataTableColumnHeader column={column} title='Buying Price' align='end' />,
     cell: ({ buying_price }) => {
       const formatted = new Intl.NumberFormat('en-US', {
@@ -56,6 +53,7 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'selling_price',
+    label: 'Selling Price',
     header: column => <DataTableColumnHeader column={column} title='Selling Price' align='end' />,
     cell: ({ selling_price }) => {
       const formatted = new Intl.NumberFormat('en-US', {
@@ -68,6 +66,7 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'retail_price',
+    label: 'Retail Price',
     header: column => <DataTableColumnHeader column={column} title='Retail Price' align='end' />,
     cell: ({ retail_price }) => {
       const formatted = new Intl.NumberFormat('en-US', {
@@ -80,15 +79,29 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'status',
+    label: 'Status',
     header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
     cell: ({ status }) => (
       <span className='flex justify-center'>
         <Badge variant={status === 'active' ? 'default' : 'secondary'}>{status}</Badge>
       </span>
-    )
+    ),
+    options: [
+      {
+        label: 'Active',
+        value: 'active',
+        icon: CheckCircledIcon
+      },
+      {
+        label: 'Inactive',
+        value: 'inactive',
+        icon: CrossCircledIcon
+      }
+    ]
   },
   {
     id: 'actions',
+    label: 'Actions',
     header: () => (
       <div className='flex justify-center'>
         <span>Actions</span>

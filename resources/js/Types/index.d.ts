@@ -27,8 +27,15 @@ export interface PaginatedData<T> {
     last_page_url: string | null
 }
 
+export type ColumnOption = {
+    label: string
+    value: string
+    icon?: React.ComponentType<{ className?: string }>
+}
+
 export interface TableColumn<T> {
     id: keyof T | ((row: T) => any) | 'actions'
+    label: string
     header: string | ((column: TableColumn<T>) => JSX.Element)
     cell?: string | ((row: T) => JSX.Element)
     sorted?: 'asc' | 'desc'
@@ -36,9 +43,12 @@ export interface TableColumn<T> {
     toggleVisibility: (hidden: boolean) => void
     enableSorting: boolean
     hidden: boolean
+    options?: ColumnOption[]
 }
 
 export interface TableProps<T> {
     data: PaginatedData<T>
     columns: TableColumn<T>[]
+    filterColumnBy: string
+    filterPlaceholder: string
 }

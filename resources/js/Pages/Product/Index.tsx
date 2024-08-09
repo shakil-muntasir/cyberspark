@@ -44,18 +44,18 @@ export default function ProductsList({ products }: { products: PaginatedData<Pro
         <AddProduct />
       </div>
 
-      <Separator className='my-4' />
+      <Separator className='mt-4' />
 
-      <div className='mx-auto md:container'>
-        <DataTable
+      <DataTable
           data={products}
           columns={columns.map(column => ({
             ...column,
             toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
             toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
           }))}
+          filterColumnBy='status'
+          filterPlaceholder='products'
         />
-      </div>
     </AuthenticatedLayout>
   )
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProductStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +37,38 @@ class Product extends Model
     public function getUrlAttribute(): string
     {
         return rtrim(env('APP_URL', '/')) . '/products/' . $this->id;
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if (!empty($search)) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', ProductStatus::ACTIVE->value);
+
+    }
+
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('status', ProductStatus::INACTIVE->value);
+    }
+
+    public function getActiveCountAttribute(): int
+    {
+        return $this->active()->count();
+    }
+
+    public function getInactiveCountAttribute(): int
+    {
+        return $this->inactive()->count();
     }
 }

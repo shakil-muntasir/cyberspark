@@ -1,10 +1,12 @@
 import DataTablePagination from '@/Components/table/pagination'
+import { DataTableToolbar } from '@/Components/table/toolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import { TableProps } from '@/Types'
 
-export default function DataTable<T>({ data, columns }: TableProps<T>) {
+export default function DataTable<T>({ data, columns, filterColumnBy, filterPlaceholder }: TableProps<T>) {
   return (
     <div>
+      <DataTableToolbar columns={columns} filterColumnBy={filterColumnBy} filterPlaceholder={filterPlaceholder} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
