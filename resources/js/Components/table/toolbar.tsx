@@ -10,7 +10,7 @@ import { Separator } from '@/Components/ui/separator'
 import { Input } from '@/Components/ui/input'
 import { useEffect, useState, useRef } from 'react'
 import { router, usePage } from '@inertiajs/react'
-import { TableProps, TableColumn } from '@/Types'
+import { TableProps } from '@/Types'
 import { DataTableViewOptions } from '@/Components/table/view-options'
 
 interface DataTableToolbarProps<T> extends Omit<TableProps<T>, 'data'> {
@@ -43,14 +43,14 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
   const updateURL = (search: string | undefined, filters: string[]) => {
     const params = new URLSearchParams(page.url.split('?')[1] || '')
 
+    // Handle the search parameter
     if (search) {
       params.set('search', search)
-      params.set('page', '1')
     } else {
       params.delete('search')
-      params.delete('page')
     }
 
+    // Handle filter parameters
     column.options!.forEach(option => {
       if (filters.includes(option.value)) {
         params.set(option.value, 'true')
@@ -59,10 +59,22 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
       }
     })
 
+    // Check if any parameters (search or filters) are present
+    const hasParams = search || filters.length > 0
+
+    // Handle the page parameter based on presence of other parameters
+    if (hasParams) {
+      params.set('page', '1')
+    } else {
+      params.delete('page')
+    }
+
+    // Construct the new URL with sorted parameters
     const sortedParams = new URLSearchParams(Array.from(params.entries()).sort())
     const newUrl = page.url.split('?')[0] + '?' + sortedParams.toString()
 
-    router.get(newUrl, {}, { preserveState: true, replace: true }) // Only one router.get() call
+    // Perform the router.get with the new URL
+    router.get(newUrl, {}, { preserveState: true, replace: true })
   }
 
   useEffect(() => {
