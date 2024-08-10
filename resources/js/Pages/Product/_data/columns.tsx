@@ -23,7 +23,7 @@ const columns: TableColumn<Product>[] = createColumns([
     id: 'sku',
     label: 'SKU',
     header: 'SKU',
-    cell: row => <span>{row.id}</span>
+    cell: row => <span>{row.sku}</span>
   },
   {
     id: 'name',
