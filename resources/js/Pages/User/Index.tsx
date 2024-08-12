@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
+import PageHeader from '@/Layouts/Partials/page-header'
+import AddUser from '@/Pages/User/Partials/add-user'
 import { Separator } from '@/Components/ui/separator'
 
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import PageHeader from '@/Layouts/Partials/page-header'
-import AddProduct from '@/Pages/Product/Partials/add-product'
-
-import DataTable from '@/Components/Table'
-import { columns as initialColumns } from '@/Pages/Product/_data/columns'
 import { PaginatedData } from '@/Types'
-import { Product } from '@/Pages/Product/type'
+import DataTable from '@/Components/Table'
+import { columns as initialColumns } from '@/Pages/User/_data/columns'
+import { useEffect, useState } from 'react'
+import { router, usePage } from '@inertiajs/react'
+import { User } from '@/Pages/User/type'
 
-export default function ProductsList({ products }: { products: PaginatedData<Product> }) {
+export default function UsersList({ users }: { users: PaginatedData<User> }) {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 
@@ -39,23 +38,23 @@ export default function ProductsList({ products }: { products: PaginatedData<Pro
   }
 
   return (
-    <AuthenticatedLayout title='Products'>
+    <AuthenticatedLayout title='Users'>
       <div className='flex items-center justify-between'>
-        <PageHeader title='Products' description='This is the products page. You can view, edit, and delete products here.' />
-        <AddProduct />
+        <PageHeader title='Users' description='This is the users page. You can view, edit, and delete users here.' />
+        <AddUser />
       </div>
 
       <Separator className='mt-4' />
 
       <DataTable
-          data={products}
+          data={users}
           columns={columns.map(column => ({
             ...column,
             toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
             toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
           }))}
           filterColumnBy='status'
-          filterPlaceholder='products'
+          filterPlaceholder='users'
         />
     </AuthenticatedLayout>
   )

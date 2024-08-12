@@ -11,12 +11,12 @@ import { Textarea } from '@/Components/ui/textarea'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
-import { ProductForm } from '@/Types/product'
+import { ProductForm } from '@/Pages/Product/type'
 
 export default function AddProduct() {
   const { toast } = useToast()
 
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
+  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
     sku: '',
     name: '',
     description: '',

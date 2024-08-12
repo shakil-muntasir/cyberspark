@@ -75,7 +75,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         )}
 
         <div className='flex items-center gap-4'>
-          <Button disabled={processing}>Save</Button>
+          <Button type='submit' disabled={processing}>Save</Button>
 
           <Transition show={recentlySuccessful} enter='transition ease-in-out' enterFrom='opacity-0' leave='transition ease-in-out' leaveTo='opacity-0'>
             <p className='text-sm text-gray-600'>Saved.</p>

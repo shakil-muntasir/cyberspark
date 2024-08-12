@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
-import { Product } from '@/Pages/Product/type'
+import { User } from '@/Pages/User/type'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -18,63 +18,21 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
   }))
 }
 
-const columns: TableColumn<Product>[] = createColumns([
-  {
-    id: 'sku',
-    label: 'SKU',
-    header: column => <DataTableColumnHeader column={column} title='SKU' />
-  },
+const columns: TableColumn<User>[] = createColumns([
   {
     id: 'name',
     label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
-    id: 'quantity',
-    label: 'Quantity',
-    header: column => <DataTableColumnHeader column={column} title='Quantity' align='end' />,
-    cell: ({ quantity }) => {
-      return <div className='text-right font-medium mr-4'>{quantity}</div>
-    }
+    id: 'email',
+    label: 'Email',
+    header: column => <DataTableColumnHeader column={column} title='Email' />
   },
   {
-    id: 'buying_price',
-    label: 'Buying Price',
-    header: column => <DataTableColumnHeader column={column} title='Buying Price' align='end' />,
-    cell: ({ buying_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(buying_price)
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
-  },
-  {
-    id: 'selling_price',
-    label: 'Selling Price',
-    header: column => <DataTableColumnHeader column={column} title='Selling Price' align='end' />,
-    cell: ({ selling_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(selling_price)
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
-  },
-  {
-    id: 'retail_price',
-    label: 'Retail Price',
-    header: column => <DataTableColumnHeader column={column} title='Retail Price' align='end' />,
-    cell: ({ retail_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(retail_price)
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
+    id: 'phone',
+    label: 'Phone',
+    header: column => <DataTableColumnHeader column={column} title='Phone' />
   },
   {
     id: 'status',
@@ -118,10 +76,10 @@ const columns: TableColumn<Product>[] = createColumns([
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy product ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy user ID</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit product</DropdownMenuItem>
-              <DropdownMenuItem>View product details</DropdownMenuItem>
+              <DropdownMenuItem>Edit user</DropdownMenuItem>
+              <DropdownMenuItem>View user details</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

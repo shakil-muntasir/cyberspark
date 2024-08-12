@@ -91,7 +91,7 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
               Cancel
             </Button>
 
-            <Button variant='destructive' className='ms-3' disabled={processing}>
+            <Button type='submit' variant='destructive' className='ms-3' disabled={processing}>
               Delete Account
             </Button>
           </div>

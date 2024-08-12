@@ -23,15 +23,15 @@ export const routes: Route[] = [
         tooltip: 'Orders'
     },
     {
-        href: '/customers',
+        href: '/users',
         icon: UsersIcon,
-        tooltip: 'Customers'
+        tooltip: 'Users'
     },
-    {
-        href: '/analytics',
-        icon: LineChartIcon,
-        tooltip: 'Analytics'
-    },
+    // {
+    //     href: '/analytics',
+    //     icon: LineChartIcon,
+    //     tooltip: 'Analytics'
+    // },
     {
         href: '/profile',
         icon: UserCircle2Icon,
