@@ -22,7 +22,7 @@ class AdminSeeder extends Seeder
 
 
         $user->address()->create([
-            'address' => '123 Admin Street',
+            'street' => '123 Admin Street',
             'city' => 'Admin City',
             'state' => 'Admin State',
             'zip' => '12345',

@@ -19,13 +19,13 @@ class ProductFactory extends Factory
     {
         return [
             'sku' => strtoupper($this->faker->bothify('??###')),
-            'name' => $this->faker->words(2, true),
-            'description' => $this->faker->sentence,
-            'quantity' => $this->faker->numberBetween(1, 100),
-            'buying_price' => $this->faker->randomFloat(2, 1, 1999),
-            'retail_price' => $this->faker->randomFloat(2, 1, 1999),
-            'selling_price' => $this->faker->randomFloat(2, 1, 1999),
-            'status' => $this->faker->randomElement(['active', 'inactive']),
+            'name' => fake()->words(2, true),
+            'description' => fake()->sentence,
+            'quantity' => fake()->numberBetween(1, 100),
+            'buying_price' => fake()->randomFloat(2, 1, 1999),
+            'retail_price' => fake()->randomFloat(2, 1, 1999),
+            'selling_price' => fake()->randomFloat(2, 1, 1999),
+            'status' => fake()->randomElement(['active', 'inactive']),
             'created_by' => User::factory(),
         ];
     }

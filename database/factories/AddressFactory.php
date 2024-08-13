@@ -19,10 +19,10 @@ class AddressFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'address' => $this->faker->address,
-            'city' => $this->faker->city,
-            'state' => $this->faker->state,
-            'zip' => $this->faker->postcode,
+            'street' => fake()->streetName,
+            'city' => fake()->city,
+            'state' => fake()->state,
+            'zip' => fake()->numerify('####'),
         ];
     }
 }
