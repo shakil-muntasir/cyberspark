@@ -11,20 +11,31 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     }
 }
 
-export interface PaginatedData<T> {
-    data: T[]
-    per_page: number
-    current_page: number
-    last_page: number
-    first_page_url: string | null
+export interface PaginationData  {
     links: {
-        url: string | null
-        label: string
-        active: boolean
-    }[]
-    next_page_url: string | null
-    prev_page_url: string | null
-    last_page_url: string | null
+        first: string | null;
+        last: string | null;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        from: number | null;
+        last_page: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+        path: string;
+        per_page: number;
+        to: number | null;
+        total: number;
+    }
+}
+
+export interface TableData<T> extends PaginationData {
+    data: T[];
 }
 
 export type ColumnOption = {
@@ -47,7 +58,7 @@ export interface TableColumn<T> {
 }
 
 export interface TableProps<T> {
-    data: PaginatedData<T>
+    data: TableData<T>
     columns: TableColumn<T>[]
     filterColumnBy: string
     filterPlaceholder: string

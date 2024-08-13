@@ -13,7 +13,7 @@ import { router, usePage } from '@inertiajs/react'
 import { TableProps } from '@/Types'
 import { DataTableViewOptions } from '@/Components/table/view-options'
 
-interface DataTableToolbarProps<T> extends Omit<TableProps<T>, 'data'> {
+interface DataTableToolbarProps<T> extends Omit<TableProps<T>, 'data' | 'pagination'> {
   disableFilter?: boolean
   filterColumnBy: string
   filterPlaceholder: string

@@ -30,7 +30,7 @@ export default function DataTable<T>({ data, columns, filterColumnBy, filterPlac
         </Table>
       </div>
       <div className='pt-4'>
-        <DataTablePagination data={data} />
+        <DataTablePagination meta={data.meta} links={data.links} />
       </div>
     </div>
   )

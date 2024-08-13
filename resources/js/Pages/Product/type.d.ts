@@ -7,6 +7,7 @@ export type Product = {
     selling_price: number
     retail_price: number
     status: 'active' | 'inactive'
+    created_by?: string
     url: string
 }
 

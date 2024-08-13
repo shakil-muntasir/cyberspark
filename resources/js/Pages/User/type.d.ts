@@ -5,6 +5,8 @@ export type User = {
     phone: string
     image?: string
     status: 'active' | 'inactive'
+    address?: string
+    created_by?: string
     url: string
 }
 

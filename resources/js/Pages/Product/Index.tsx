@@ -6,13 +6,12 @@ import { Separator } from '@/Components/ui/separator'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import PageHeader from '@/Layouts/Partials/page-header'
 import AddProduct from '@/Pages/Product/Partials/add-product'
-
 import DataTable from '@/Components/Table'
 import { columns as initialColumns } from '@/Pages/Product/_data/columns'
-import { PaginatedData } from '@/Types'
+import { TableData } from '@/Types'
 import { Product } from '@/Pages/Product/type'
 
-export default function ProductsList({ products }: { products: PaginatedData<Product> }) {
+export default function ProductsList({ products }: { products: TableData<Product> }) {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 

@@ -1,17 +1,17 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-
-import PageHeader from '@/Layouts/Partials/page-header'
-import AddUser from '@/Pages/User/Partials/add-user'
-import { Separator } from '@/Components/ui/separator'
-
-import { PaginatedData } from '@/Types'
-import DataTable from '@/Components/Table'
-import { columns as initialColumns } from '@/Pages/User/_data/columns'
 import { useEffect, useState } from 'react'
 import { router, usePage } from '@inertiajs/react'
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import PageHeader from '@/Layouts/Partials/page-header'
+import AddUser from '@/Pages/User/Partials/add-user'
+import DataTable from '@/Components/Table'
+import { Separator } from '@/Components/ui/separator'
+
+import { columns as initialColumns } from '@/Pages/User/_data/columns'
+import { TableData } from '@/Types'
 import { User } from '@/Pages/User/type'
 
-export default function UsersList({ users }: { users: PaginatedData<User> }) {
+export default function UsersList({ users }: { users: TableData<User> }) {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 
@@ -47,15 +47,15 @@ export default function UsersList({ users }: { users: PaginatedData<User> }) {
       <Separator className='mt-4' />
 
       <DataTable
-          data={users}
-          columns={columns.map(column => ({
-            ...column,
-            toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
-            toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
-          }))}
-          filterColumnBy='status'
-          filterPlaceholder='users'
-        />
+        data={users}
+        columns={columns.map(column => ({
+          ...column,
+          toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
+          toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
+        }))}
+        filterColumnBy='status'
+        filterPlaceholder='users'
+      />
     </AuthenticatedLayout>
   )
 }
