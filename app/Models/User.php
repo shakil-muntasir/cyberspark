@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -74,5 +75,37 @@ class User extends Authenticatable
     public function creator()
     {
         return $this->belongsTo(self::class, 'created_by');
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if (!empty($search)) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhereHas('address', function ($q) use ($search) {
+                        $q->where('street', 'like', "%{$search}%")
+                            ->orWhere('city', 'like', "%{$search}%")
+                            ->orWhere('state', 'like', "%{$search}%")
+                            ->orWhere('zip', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('creator', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', UserStatus::ACTIVE->value);
+    }
+
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('status', UserStatus::INACTIVE->value);
     }
 }

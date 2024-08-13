@@ -21,10 +21,6 @@ class Product extends Model
         'selling_price',
     ];
 
-    protected $appends = [
-        'url'
-    ];
-
     protected $casts = [
         'status' => ProductStatus::class
     ];
@@ -34,17 +30,15 @@ class Product extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function getUrlAttribute(): string
-    {
-        return rtrim(env('APP_URL', '/')) . '/products/' . $this->id;
-    }
-
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
         if (!empty($search)) {
             return $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%");
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhereHas('creator', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -28,7 +29,7 @@ class ProductController extends Controller
             ->paginate($paginate);
 
         return inertia('Product/Index', [
-            'products' => $products,
+            'products' => ProductResource::collection($products),
         ]);
     }
 
