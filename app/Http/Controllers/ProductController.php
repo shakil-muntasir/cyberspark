@@ -11,22 +11,11 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function index(): Response
+    public function index(ProductRequest $request): Response
     {
         Gate::authorize('viewAny', Product::class);
 
-        $searchWith = request()->query('search', '');
-        $active = filter_var(request()->query('active'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        $inactive = filter_var(request()->query('inactive'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        $sortBy = request()->query('sortBy', 'id');
-        $sortTo = request()->query('sortTo', 'asc');
-        $paginate = (int) request()->input('per_page', 10);
-
-        $products = Product::search($searchWith)
-            ->when($active, fn ($q) => $q->active())
-            ->when($inactive, fn ($q) => $q->inactive())
-            ->orderBy($sortBy, $sortTo)
-            ->paginate($paginate);
+        $products = Product::filterAndSort($request->validatedParams());
 
         return inertia('Product/Index', [
             'products' => ProductResource::collection($products),

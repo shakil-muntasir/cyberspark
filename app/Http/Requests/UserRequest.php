@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -20,15 +20,11 @@ class ProductRequest extends FormRequest
         }
 
         return [
-            'sku' => 'required|string|unique:products,sku',
-            'sku' => ['required', 'string', Rule::unique('products', 'sku')->ignore($this->route('product'))],
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'buying_price' => 'required|numeric',
-            'retail_price' => 'nullable|numeric',
-            'selling_price' => 'required|numeric',
-            'status' => ['string', Rule::in(['active', 'inactive'])],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
+            'password' => ['required', 'string', 'min:8'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
 
