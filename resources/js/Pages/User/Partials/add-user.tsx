@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Loader2, PlusCircle, AlertCircle, XIcon, RefreshCcwDotIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
+import { ChangeEvent, useRef, useState } from 'react'
+import { Loader2, PlusCircle, AlertCircle, XIcon, RefreshCcwDotIcon, EyeIcon, EyeOffIcon, Trash2Icon } from 'lucide-react'
 
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
@@ -12,7 +12,26 @@ import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { UserForm } from '@/Pages/User/type'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-import { CheckCircledIcon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import { CheckCircledIcon } from '@radix-ui/react-icons'
+import { Avatar, AvatarImage } from '@/Components/ui/avatar'
+import { cn } from '@/Lib/utils'
+
+function getImageData(event: ChangeEvent<HTMLInputElement>) {
+  try {
+    // FileList is immutable, so we need to create a new one
+    const dataTransfer = new DataTransfer()
+
+    // Add newly uploaded images
+    Array.from(event.target.files!).forEach(image => dataTransfer.items.add(image))
+
+    const file = dataTransfer.files![0]
+    const displayUrl = URL.createObjectURL(event.target.files![0])
+
+    return { file, displayUrl }
+  } catch (_) {
+    return { file: undefined, displayUrl: '' }
+  }
+}
 
 export default function AddUser() {
   const { toast } = useToast()
@@ -33,6 +52,8 @@ export default function AddUser() {
   const [loading, setLoading] = useState(false)
   const [passwordCopied, setPasswordCopied] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const imageRef = useRef<HTMLInputElement>(null)
   const [submitButtonText, setSubmitButtonText] = useState<string>('Save changes')
 
   const handleAddUser = async (event: React.FormEvent) => {
@@ -87,7 +108,7 @@ export default function AddUser() {
     }
   }
 
-  function generateStrongPassword(): string {
+  function generateStrongPassword() {
     const lowerCaseChars = 'abcdefghijklmnopqrstuvwxyz'
     const upperCaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const numericChars = '0123456789'
@@ -122,9 +143,16 @@ export default function AddUser() {
     setPasswordCopied(true)
     navigator.clipboard.writeText(password)
 
-    setData("password", password)
+    setData('password', password)
     setShowPassword(true)
-    return password
+  }
+
+  const handleImageClear = () => {
+    setPreviewImage('')
+    setData('image', undefined)
+    if (imageRef.current) {
+      imageRef.current.value = ''
+    }
   }
 
   return (
@@ -181,12 +209,12 @@ export default function AddUser() {
               </Label>
               <div className='space-y-px'>
                 <div className='relative w-full max-w-sm'>
-                  <Input id='password' type={showPassword ? 'text' : 'password'} name='password' value={data.password !== null ? data.password : ''} onChange={handleInputChange} placeholder='••••••••' className='w-full pr-9' />
-                  <div className='flex items-center space-x-1 absolute right-1 top-1/2'>
+                  <Input id='password' type={showPassword ? 'text' : 'password'} name='password' value={data.password !== null ? data.password : ''} onChange={handleInputChange} placeholder={showPassword ? 'Password' : '••••••••'} className='w-full pr-9' />
+                  <div className='flex items-center absolute right-1 top-1/2'>
                     <TooltipProvider>
-                      <Tooltip>
+                      <Tooltip delayDuration={0}>
                         <TooltipTrigger asChild>
-                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setShowPassword(!showPassword)}>
+                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 mr-1' onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? (
                               <>
                                 <EyeOffIcon className='h-4 w-4' />
@@ -201,23 +229,37 @@ export default function AddUser() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{showPassword ? "Hide password": "Show Password"}</p>
+                          <p>{showPassword ? 'Hide password' : 'Show Password'}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                     <TooltipProvider>
-                      <Tooltip open={passwordCopied} onOpenChange={() => setPasswordCopied(false)}>
-                        <TooltipTrigger asChild>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger
+                          asChild
+                          onClick={event => {
+                            event.preventDefault()
+                          }}
+                          onMouseLeave={() => setTimeout(() => setPasswordCopied(false), 200)}
+                        >
                           <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={generateStrongPassword}>
                             <RefreshCcwDotIcon className='h-4 w-4' />
                             <span className='sr-only'>Generate Password</span>
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <div className='flex items-center justify-center space-x-1'>
-                            <CheckCircledIcon className='w-4 h-4' />
-                            <p>Copied to clipboard</p>
-                          </div>
+                        <TooltipContent
+                          onPointerDownOutside={event => {
+                            event.preventDefault()
+                          }}
+                        >
+                          {passwordCopied ? (
+                            <div className='flex items-center justify-center space-x-1'>
+                              <CheckCircledIcon className='w-4 h-4' />
+                              <p>Copied to clipboard</p>
+                            </div>
+                          ) : (
+                            <p>Generate password</p>
+                          )}
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -232,17 +274,47 @@ export default function AddUser() {
                 Profile image
               </Label>
               <div className='space-y-px'>
-                <Input
-                  id='image'
-                  type='file'
-                  name='image'
-                  className='dark:file:text-foreground'
-                  onChange={e => {
-                    if (e.target.files) {
-                      setData('image', e.target.files[0])
-                    }
-                  }}
-                />
+                {previewImage && (
+                  <div className='flex justify-center items-center pb-2'>
+                    <Avatar className='w-24 h-24'>
+                      <AvatarImage className='object-cover' src={previewImage} />
+                    </Avatar>
+                  </div>
+                )}
+                <div className={cn('relative w-full max-w-sm', previewImage !== '' ? `relative` : '')}>
+                  <Input
+                    id='image'
+                    ref={imageRef}
+                    type='file'
+                    name='image'
+                    className='dark:file:text-foreground pr-8'
+                    onChange={e => {
+                      if (e.target.files) {
+                        const { file, displayUrl } = getImageData(e)
+                        setPreviewImage(displayUrl)
+                        setData('image', file)
+                      }
+                    }}
+                  />
+                  {previewImage && (
+                    <div className='flex items-center absolute right-1 top-1/2'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
+                              <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                              <span className='sr-only'>Remove picture</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove picture</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  )}
+                </div>
+
                 <InputError message={errors.image} />
               </div>
             </div>
