@@ -3,10 +3,10 @@ import { DataTableToolbar } from '@/Components/table/toolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import { TableProps } from '@/Types'
 
-export default function DataTable<T>({ data, columns, filterColumnBy, filterPlaceholder }: TableProps<T>) {
+export default function DataTable<T>({ data, columns, filterColumnBy, searchPlaceholder }: TableProps<T>) {
   return (
     <div>
-      <DataTableToolbar columns={columns} filterColumnBy={filterColumnBy} filterPlaceholder={filterPlaceholder} />
+      <DataTableToolbar columns={columns} filterColumnBy={filterColumnBy} searchPlaceholder={searchPlaceholder} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

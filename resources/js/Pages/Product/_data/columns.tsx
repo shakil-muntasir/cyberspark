@@ -78,7 +78,7 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'created_by',
-    label: 'created_by',
+    label: 'Created by',
     header: column => <DataTableColumnHeader column={column} title='Created by' />
   },
   {

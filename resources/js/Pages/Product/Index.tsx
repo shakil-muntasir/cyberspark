@@ -54,7 +54,7 @@ export default function ProductsList({ products }: { products: TableData<Product
             toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
           }))}
           filterColumnBy='status'
-          filterPlaceholder='products'
+          searchPlaceholder='products'
         />
     </AuthenticatedLayout>
   )

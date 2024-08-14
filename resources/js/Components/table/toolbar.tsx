@@ -16,10 +16,10 @@ import { DataTableViewOptions } from '@/Components/table/view-options'
 interface DataTableToolbarProps<T> extends Omit<TableProps<T>, 'data' | 'pagination'> {
   disableFilter?: boolean
   filterColumnBy: string
-  filterPlaceholder: string
+  searchPlaceholder: string
 }
 
-export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterColumnBy, filterPlaceholder }: DataTableToolbarProps<T>) => {
+export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterColumnBy, searchPlaceholder }: DataTableToolbarProps<T>) => {
   const page = usePage()
   const initialRender = useRef(true)
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -94,7 +94,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
 
     searchTimeout.current = setTimeout(() => {
       updateURL(search, filterValue)
-    }, 300)
+    }, 400)
 
     return () => {
       if (searchTimeout.current) {
@@ -112,7 +112,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
   return (
     <div className='flex items-center py-4'>
       <div className='flex flex-1 items-center space-x-2'>
-        <Input placeholder={`Filter ${filterPlaceholder}...`} value={search || ''} onChange={e => setSearch(e.target.value)} className='h-8 w-[150px] lg:w-[250px]' />
+        <Input placeholder={`Search ${searchPlaceholder}...`} value={search || ''} onChange={e => setSearch(e.target.value)} className='h-8 w-[150px] lg:w-[250px]' />
 
         {!disableFilter && (
           <Popover>

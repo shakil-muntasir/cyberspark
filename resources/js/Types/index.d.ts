@@ -61,5 +61,5 @@ export interface TableProps<T> {
     data: TableData<T>
     columns: TableColumn<T>[]
     filterColumnBy: string
-    filterPlaceholder: string
+    searchPlaceholder: string
 }

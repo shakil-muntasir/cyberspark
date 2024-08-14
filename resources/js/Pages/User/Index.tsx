@@ -54,7 +54,7 @@ export default function UsersList({ users }: { users: TableData<User> }) {
           toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
         }))}
         filterColumnBy='status'
-        filterPlaceholder='users'
+        searchPlaceholder='users'
       />
     </AuthenticatedLayout>
   )
