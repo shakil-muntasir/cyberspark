@@ -20,6 +20,7 @@ export type User = {
 export type UserForm = {
     name: string
     email: string
+    gender: string
     phone: string
     image?: File
     role: string

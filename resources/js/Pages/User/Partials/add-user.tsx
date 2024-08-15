@@ -16,12 +16,15 @@ import { CheckCircledIcon } from '@radix-ui/react-icons'
 import { Avatar, AvatarImage } from '@/Components/ui/avatar'
 import { cn, generatePassword, getImageData } from '@/Lib/utils'
 
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
+
 export default function AddUser() {
   const { toast } = useToast()
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>({
     name: '',
     email: '',
+    gender: '',
     phone: '',
     image: undefined,
     role: '',
@@ -41,6 +44,7 @@ export default function AddUser() {
 
   const handleAddUser = async (event: React.FormEvent) => {
     event.preventDefault()
+    console.log(data)
     setLoading(true)
     setSubmitButtonText('Saving')
 
@@ -144,6 +148,27 @@ export default function AddUser() {
               <div className='space-y-px'>
                 <Input id='email' type='number' name='email' value={data.email !== null ? data.email : ''} onChange={handleInputChange} placeholder='your@email.com' />
                 <InputError message={errors.email} />
+              </div>
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='gender' className={errors.gender?.length ? 'text-destructive' : ''}>
+                Gender
+              </Label>
+              <div className='space-y-px'>
+                <Select value={data.gender} onValueChange={value => setData('gender', value)}>
+                  <SelectTrigger>
+                    <SelectValue onChange={handleInputChange} placeholder='Select Gender' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value='male'>Male</SelectItem>
+                      <SelectItem value='female'>Female</SelectItem>
+                      <SelectItem value='other'>Other</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <InputError message={errors.role} />
               </div>
             </div>
 
@@ -279,7 +304,19 @@ export default function AddUser() {
                 Role
               </Label>
               <div className='space-y-px'>
-                <Input id='role' type='text' name='role' value={data.role !== null ? data.role : ''} onChange={handleInputChange} placeholder='Role' />
+                <Select value={data.role} onValueChange={value => setData('role', value)}>
+                  <SelectTrigger>
+                    <SelectValue onChange={handleInputChange} placeholder='Select Role' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value='admin'>Admin</SelectItem>
+                      <SelectItem value='sales_rep'>Sales Representative</SelectItem>
+                      <SelectItem value='customer'>Customer</SelectItem>
+                      <SelectItem value='delivery_man'>Delivery-Man</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
                 <InputError message={errors.role} />
               </div>
             </div>
@@ -304,23 +341,41 @@ export default function AddUser() {
               </div>
             </div>
 
-            <div className='grid gap-2'>
-              <Label htmlFor='state' className={errors.state?.length ? 'text-destructive' : ''}>
-                State
-              </Label>
-              <div className='space-y-px'>
-                <Input id='state' type='text' name='state' value={data.state !== null ? data.state : ''} onChange={handleInputChange} placeholder='State' />
-                <InputError message={errors.state} />
+            <div className='space-x-2 grid grid-cols-2'>
+              <div className='grid gap-2'>
+                <Label htmlFor='state' className={errors.state?.length ? 'text-destructive' : ''}>
+                  State
+                </Label>
+                <div className='space-y-px'>
+                  <Select value={data.state} onValueChange={value => setData('state', value)}>
+                    <SelectTrigger>
+                      <SelectValue onChange={handleInputChange} placeholder='Select State' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value='dhaka'>Dhaka</SelectItem>
+                        <SelectItem value='chattogram'>Chattogram</SelectItem>
+                        <SelectItem value='khulna'>Khulna</SelectItem>
+                        <SelectItem value='rajshahi'>Rajshahi</SelectItem>
+                        <SelectItem value='barishal'>Barishal</SelectItem>
+                        <SelectItem value='sylhet'>Sylhet</SelectItem>
+                        <SelectItem value='rangpur'>Rangpur</SelectItem>
+                        <SelectItem value='mymensingh'>Mymensingh</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <InputError message={errors.state} />
+                </div>
               </div>
-            </div>
 
-            <div className='grid gap-2'>
-              <Label htmlFor='zip' className={errors.zip?.length ? 'text-destructive' : ''}>
-                ZIP
-              </Label>
-              <div className='space-y-px'>
-                <Input id='zip' type='text' name='zip' value={data.zip !== null ? data.zip : ''} onChange={handleInputChange} placeholder='ZIP' />
-                <InputError message={errors.zip} />
+              <div className='grid gap-2'>
+                <Label htmlFor='zip' className={errors.zip?.length ? 'text-destructive' : ''}>
+                  ZIP
+                </Label>
+                <div className='space-y-px'>
+                  <Input id='zip' type='text' name='zip' value={data.zip !== null ? data.zip : ''} onChange={handleInputChange} placeholder='ZIP' />
+                  <InputError message={errors.zip} />
+                </div>
               </div>
             </div>
 
