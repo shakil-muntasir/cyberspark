@@ -26,7 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        // below route is declared as "post" due to the limitation of Inertia.js multiple file upload
+        Route::post('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 });
