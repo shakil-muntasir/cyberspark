@@ -21,13 +21,13 @@ createInertiaApp({
     const pageProps = props.initialPage.props as unknown as PageProps
 
     root.render(
-      // <React.StrictMode>
+      <React.StrictMode>
         <UserProvider authUser={pageProps.auth.user}>
           <ThemeProvider defaultTheme='light' storageKey='ui-theme'>
             <App {...props} />
           </ThemeProvider>
         </UserProvider>
-      // </React.StrictMode>
+      </React.StrictMode>
     )
   },
   progress: {

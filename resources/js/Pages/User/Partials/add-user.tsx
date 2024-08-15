@@ -240,6 +240,7 @@ export default function AddUser() {
                     id='image'
                     ref={imageRef}
                     type='file'
+                    accept='image/*'
                     name='image'
                     className='dark:file:text-foreground pr-8'
                     onChange={e => {

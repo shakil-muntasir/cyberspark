@@ -1,16 +1,18 @@
-import InputError from '@/Components/InputError'
-import { Link, useForm, usePage } from '@inertiajs/react'
-import { Transition } from '@headlessui/react'
 import { FormEventHandler, useRef, useState } from 'react'
-import { PageProps } from '@/Types'
+import { Link, useForm, usePage } from '@inertiajs/react'
+import { Trash2Icon } from 'lucide-react'
+
+import InputError from '@/Components/InputError'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { cn, getImageData } from '@/Lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-import { Trash2Icon, User2Icon, UserIcon } from 'lucide-react'
 import { Spinner } from '@/Components/ui/spinner'
+import { toast } from '@/Components/ui/use-toast'
+import { PageProps } from '@/Types'
+import UserPlaceholder from '@/public/assets/user_male_placeholder.png'
 
 type UpdateUserProfileData = {
   name: string
@@ -20,10 +22,11 @@ type UpdateUserProfileData = {
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
   const { data: user } = usePage<PageProps>().props.auth.user
+  console.log(user)
 
   const [previewImage, setPreviewImage] = useState<string>('')
   const imageRef = useRef<HTMLInputElement>(null)
-  const { data, setData, post, errors, clearErrors, processing, recentlySuccessful } = useForm<UpdateUserProfileData>({
+  const { data, setData, post, errors, clearErrors, processing, recentlySuccessful, reset } = useForm<UpdateUserProfileData>({
     name: user.attributes.name,
     email: user.attributes.email,
     image: undefined
@@ -39,8 +42,22 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     e.preventDefault()
 
     setTimeout(() => {
-      post(route('profile.update'))
+      post(route('profile.update'), {
+        onSuccess: handleSuccess
+      })
     }, 500)
+  }
+
+  const handleSuccess = () => {
+    setTimeout(() => {
+      reset()
+      toast({
+        title: 'Success!',
+        description: 'The profile has been updated successfully.',
+        duration: 2000
+      })
+      handleImageClear()
+    }, 200)
   }
 
   const handleImageClear = () => {
@@ -91,6 +108,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                   id='image'
                   ref={imageRef}
                   type='file'
+                  accept='image/*'
                   name='image'
                   className='dark:file:text-foreground pr-8'
                   onChange={e => {
@@ -141,25 +159,25 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
             <Button type='submit' disabled={processing}>
               Save
             </Button>
-
-            <Transition show={recentlySuccessful} enter='transition ease-in-out' enterFrom='opacity-0' leave='transition ease-in-out' leaveTo='opacity-0'>
-              <p className='text-sm text-gray-600'>Saved.</p>
-            </Transition>
           </div>
         </form>
 
         <div className='flex justify-center items-center pb-2'>
-          <Avatar className='w-56 h-56'>
-            {user.attributes?.image && previewImage === '' ? (
-              <>
-                <AvatarImage className='object-cover' src={user.attributes?.image} />
-              </>
-            ) : (
-              <>
-                <AvatarImage className='object-cover' src={previewImage} />
-              </>
+          <Avatar className='relative w-56 h-56'>
+            {/* Show spinner if processing state is true */}
+            {previewImage && processing && (
+              <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+                <Spinner size='large' />
+              </div>
             )}
-            <AvatarFallback>{processing ? <Spinner size='large' /> : <UserIcon className='h-16 w-16 text-gray-300' />}</AvatarFallback>
+
+            {/* Avatar Image Logic */}
+            <AvatarImage className='object-cover' src={previewImage || user.attributes?.image || UserPlaceholder} />
+
+            {/* Fallback if no image is present */}
+            <AvatarFallback>
+              <Spinner size='large' />
+            </AvatarFallback>
           </Avatar>
         </div>
       </div>

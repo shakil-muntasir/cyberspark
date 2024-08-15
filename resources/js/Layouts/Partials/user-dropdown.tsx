@@ -1,16 +1,14 @@
-import { Link, router } from '@inertiajs/react'
-
-import UserAvatar from '@/public/assets/user_avatar.png'
+import { Link, router, usePage } from '@inertiajs/react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-
-import { useUser } from '@/Contexts/UserContext'
-import { UserIcon } from 'lucide-react'
+import { Spinner } from '@/Components/ui/spinner'
+import { PageProps } from '@/Types'
+import UserPlaceholder from '@/public/assets/user_male_placeholder.png'
 
 export default function UserDropdown() {
-  const { data: user } = useUser() ?? {}
+  const { data: user } = usePage<PageProps>().props.auth.user
 
   const handleLogout = async () => {
     router.post(route('logout'))
@@ -21,9 +19,12 @@ export default function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-9 w-9'>
-            <AvatarImage className='object-cover' src={user?.attributes?.image} alt='User Avatar' />
+            {/* Avatar Image Logic */}
+            <AvatarImage className='object-cover' src={user.attributes.image || UserPlaceholder} />
+
+            {/* Fallback if no image is present */}
             <AvatarFallback>
-              <UserIcon className='w-6 h-6' />
+              <Spinner size='small' />
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -31,8 +32,8 @@ export default function UserDropdown() {
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>{user?.attributes.name}</p>
-            <p className='text-xs leading-none text-muted-foreground'>{user?.attributes.email}</p>
+            <p className='text-sm font-medium leading-none'>{user.attributes.name}</p>
+            <p className='text-xs leading-none text-muted-foreground'>{user.attributes.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
