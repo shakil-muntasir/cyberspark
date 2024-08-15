@@ -1,7 +1,7 @@
 import DataTablePagination from '@/Components/table/pagination'
 import { DataTableToolbar } from '@/Components/table/toolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
-import { TableProps } from '@/Types'
+import { Attributes, ColumnOption, TableProps } from '@/Types'
 
 export default function DataTable<T>({ data, columns, filterColumnBy, searchPlaceholder }: TableProps<T>) {
   return (
@@ -14,9 +14,17 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
           </TableHeader>
           <TableBody>
             {data.data.length > 0 ? (
-              (data.data as Array<{ attributes: T }>).map(({ attributes: row }, index) => (
+              (data.data as Array<{ attributes: Attributes<T> }>).map(({ attributes: row }, index) => (
                 <TableRow key={index}>
-                  {columns.map(column => !column.hidden && <TableCell key={String(column.id)}>{column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof T] : column.cell(row)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof T]}</TableCell>)}
+                  {columns.map(
+                    column =>
+                      !column.hidden && (
+                        <TableCell key={String(column.id)}>
+                          {/** @ts-ignore TODO: fix this later */} 
+                          {column.cell ? typeof column.cell === 'string' ? row[column.cell as keyof Attributes<T>] : column.cell(row as any) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof Attributes<T>]}
+                        </TableCell>
+                      )
+                  )}
                 </TableRow>
               ))
             ) : (

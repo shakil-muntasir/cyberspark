@@ -22,7 +22,6 @@ type UpdateUserProfileData = {
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
   const { data: user } = usePage<PageProps>().props.auth.user
-  console.log(user)
 
   const [previewImage, setPreviewImage] = useState<string>('')
   const imageRef = useRef<HTMLInputElement>(null)

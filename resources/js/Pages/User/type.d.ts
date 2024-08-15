@@ -3,6 +3,7 @@ export type User = {
         type: string
         id: string
         attributes: {
+            id: string
             name: string
             email: string
             phone: string

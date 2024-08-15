@@ -36,12 +36,12 @@ const columns: TableColumn<User>[] = createColumns([
   },
   {
     id: 'address',
-    label: 'address',
+    label: 'Address',
     header: column => <DataTableColumnHeader column={column} title='Address' />
   },
   {
     id: 'created_by',
-    label: 'created_by',
+    label: 'Created By',
     header: column => <DataTableColumnHeader column={column} title='Created by' />
   },
   {
