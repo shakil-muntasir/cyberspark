@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react'
-import { User } from '@/Types'
+import { User } from '@/Pages/User/type'
 
 interface UserContextProps {
   user: User | null

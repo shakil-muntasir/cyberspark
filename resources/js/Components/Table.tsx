@@ -14,7 +14,7 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
           </TableHeader>
           <TableBody>
             {data.data.length > 0 ? (
-              data.data.map((row, index) => (
+              (data.data as Array<{ attributes: T }>).map(({ attributes: row }, index) => (
                 <TableRow key={index}>
                   {columns.map(column => !column.hidden && <TableCell key={String(column.id)}>{column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof T] : column.cell(row)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof T]}</TableCell>)}
                 </TableRow>

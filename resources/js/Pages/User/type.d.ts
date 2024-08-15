@@ -1,13 +1,19 @@
 export type User = {
-    id: string
-    name: string
-    email: string
-    phone: string
-    image?: string
-    status: 'active' | 'inactive'
-    address?: string
-    created_by?: string
-    url: string
+    data: {
+        type: string
+        id: string
+        attributes: {
+            name: string
+            email: string
+            phone: string
+            image?: string
+            status: 'active' | 'inactive'
+            address?: string
+            created_by?: string
+            email_verified_at?: string
+            url: string
+        }
+    }
 }
 
 export type UserForm = {
