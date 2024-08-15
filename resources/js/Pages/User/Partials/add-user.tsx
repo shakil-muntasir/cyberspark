@@ -14,24 +14,7 @@ import { UserForm } from '@/Pages/User/type'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { CheckCircledIcon } from '@radix-ui/react-icons'
 import { Avatar, AvatarImage } from '@/Components/ui/avatar'
-import { cn } from '@/Lib/utils'
-
-function getImageData(event: ChangeEvent<HTMLInputElement>) {
-  try {
-    // FileList is immutable, so we need to create a new one
-    const dataTransfer = new DataTransfer()
-
-    // Add newly uploaded images
-    Array.from(event.target.files!).forEach(image => dataTransfer.items.add(image))
-
-    const file = dataTransfer.files![0]
-    const displayUrl = URL.createObjectURL(event.target.files![0])
-
-    return { file, displayUrl }
-  } catch (_) {
-    return { file: undefined, displayUrl: '' }
-  }
-}
+import { cn, generatePassword, getImageData } from '@/Lib/utils'
 
 export default function AddUser() {
   const { toast } = useToast()
@@ -108,37 +91,8 @@ export default function AddUser() {
     }
   }
 
-  function generateStrongPassword() {
-    const lowerCaseChars = 'abcdefghijklmnopqrstuvwxyz'
-    const upperCaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    const numericChars = '0123456789'
-    const specialChars = '!@#$%'
-
-    const allChars = lowerCaseChars + upperCaseChars + numericChars
-    const passwordLength = 10
-    let password = ''
-
-    // Ensure the password contains at least one character from each category
-    password += lowerCaseChars[Math.floor(Math.random() * lowerCaseChars.length)]
-    password += upperCaseChars[Math.floor(Math.random() * upperCaseChars.length)]
-    password += numericChars[Math.floor(Math.random() * numericChars.length)]
-
-    // Add up to 2 special characters
-    const specialCharCount = 2
-    for (let i = 0; i < specialCharCount; i++) {
-      password += specialChars[Math.floor(Math.random() * specialChars.length)]
-    }
-
-    // Fill the remaining length with random characters from lower, upper, and numeric categories
-    for (let i = password.length; i < passwordLength; i++) {
-      password += allChars[Math.floor(Math.random() * allChars.length)]
-    }
-
-    // Shuffle the password to ensure randomness
-    password = password
-      .split('')
-      .sort(() => 0.5 - Math.random())
-      .join('')
+  function generateRandomPassword() {
+    const password = generatePassword()
 
     setPasswordCopied(true)
     navigator.clipboard.writeText(password)
@@ -242,7 +196,7 @@ export default function AddUser() {
                           }}
                           onMouseLeave={() => setTimeout(() => setPasswordCopied(false), 200)}
                         >
-                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={generateStrongPassword}>
+                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={generateRandomPassword}>
                             <RefreshCcwDotIcon className='h-4 w-4' />
                             <span className='sr-only'>Generate Password</span>
                           </Button>
