@@ -146,7 +146,7 @@ export default function AddUser() {
                 Email
               </Label>
               <div className='space-y-px'>
-                <Input id='email' type='number' name='email' value={data.email !== null ? data.email : ''} onChange={handleInputChange} placeholder='your@email.com' />
+                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='your@email.com' />
                 <InputError message={errors.email} />
               </div>
             </div>

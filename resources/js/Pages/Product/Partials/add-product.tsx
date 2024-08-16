@@ -12,6 +12,7 @@ import { ScrollArea } from '@/Components/ui/scroll-area'
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { ProductForm } from '@/Pages/Product/type'
+import { InputNumber } from '@/Components/ui/input-number'
 
 export default function AddProduct() {
   const { toast } = useToast()
@@ -134,7 +135,7 @@ export default function AddProduct() {
                 Quantity
               </Label>
               <div className='space-y-px'>
-                <Input id='quantity' type='number' name='quantity' value={data.quantity !== null ? data.quantity : ''} onChange={handleInputChange} placeholder='Quantity' />
+                <InputNumber id='quantity' type='number' name='quantity' value={data.quantity ?? ''} onChange={handleInputChange} placeholder='Quantity' />
                 <InputError message={errors.quantity} />
               </div>
             </div>
@@ -144,7 +145,7 @@ export default function AddProduct() {
                 Buying Price
               </Label>
               <div className='space-y-px'>
-                <Input id='buying_price' type='number' name='buying_price' value={data.buying_price !== null ? data.buying_price : ''} onChange={handleInputChange} placeholder='Buying Price' />
+                <InputNumber id='buying_price' type='number' name='buying_price' value={data.buying_price ?? ''} onChange={handleInputChange} placeholder='Buying Price' />
                 <InputError message={errors.buying_price} />
               </div>
             </div>
@@ -154,7 +155,7 @@ export default function AddProduct() {
                 Retail Price
               </Label>
               <div className='space-y-px'>
-                <Input id='retail_price' type='number' name='retail_price' value={data.retail_price !== null ? data.retail_price : ''} onChange={handleInputChange} placeholder='Retail Price' />
+                <InputNumber id='retail_price' type='number' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail Price' />
                 <InputError message={errors.retail_price} />
               </div>
             </div>
@@ -164,7 +165,7 @@ export default function AddProduct() {
                 Selling Price
               </Label>
               <div className='space-y-px'>
-                <Input id='selling_price' type='number' name='selling_price' value={data.selling_price !== null ? data.selling_price : ''} onChange={handleInputChange} placeholder='Selling Price' />
+                <InputNumber id='selling_price' type='number' name='selling_price' value={data.selling_price ?? ''} onChange={handleInputChange} placeholder='Selling Price' />
                 <InputError message={errors.selling_price} />
               </div>
             </div>

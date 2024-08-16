@@ -74,7 +74,20 @@ const config = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [
+    require('tailwindcss-animate'),
+    // Add the no-spin utility to hide the number input spinner
+    function ({ addUtilities }) {
+      addUtilities({
+        '.no-spin': {
+          '-webkit-appearance': 'none',
+          '-moz-appearance': 'textfield',
+          '&::-webkit-outer-spin-button': { display: 'none' },
+          '&::-webkit-inner-spin-button': { display: 'none' }
+        }
+      })
+    }
+  ]
 } satisfies Config
 
 export default config
