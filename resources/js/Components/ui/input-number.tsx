@@ -8,10 +8,11 @@ interface CustomNumberInputProps {
   name: string
   value: string | number
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  allowNegative?: boolean
   placeholder?: string
 }
 
-const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, placeholder }) => {
+const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, allowNegative = false, placeholder }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const changeValue = (delta: number, e: React.MouseEvent) => {
@@ -24,6 +25,12 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
     // Save the current value and adjust it
     let numberValue = parseInt(input.value) || 0
     numberValue += delta
+
+    if (!allowNegative) {
+      if (numberValue < 0) {
+        numberValue = 0
+      }
+    }
 
     // Update the input value
     onChange({
@@ -38,7 +45,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
 
   return (
     <div className='flex relative group'>
-      <Input id={id} type='text' value={value} onChange={onChange} ref={inputRef} className='no-spin' placeholder={placeholder} />
+      <Input id={id} type='text' name={name} value={value} onChange={onChange} ref={inputRef} className='no-spin' placeholder={placeholder} />
       <div className='absolute flex flex-col right-2 top-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity h-10'>
         <button
           type='button'
