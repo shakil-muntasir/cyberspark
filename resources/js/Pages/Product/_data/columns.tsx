@@ -1,15 +1,14 @@
 import { MoreHorizontal } from 'lucide-react'
 
-import { TableColumn } from '@/Types'
 import { DataTableColumnHeader } from '@/Components/table/column-header'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+import { Button } from '@/Components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { Product } from '@/Pages/Product/type'
-import { Link, router } from '@inertiajs/react'
-import DeleteModal from '@/Components/DeleteModal'
-import { useState } from 'react'
+import { TableColumn } from '@/Types'
+import { Link } from '@inertiajs/react'
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -114,13 +113,16 @@ const columns: TableColumn<Product>[] = createColumns([
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id }) => {
-      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    cell: ({ id, name }) => {
+      const { initializeDeleteModal } = useDeleteModal()
 
-      const handleProductDeletion = () => {
-        // TODO: delete the product
-        router.visit('/products')
+      const deleteModalData = {
+        id,
+        name,
+        title: 'product',
+        url: '/products'
       }
+
       return (
         <div className='flex justify-center items-center'>
           <DropdownMenu modal={false}>
@@ -138,13 +140,11 @@ const columns: TableColumn<Product>[] = createColumns([
               <Link href={`/products/${id}`}>
                 <DropdownMenuItem>View product details</DropdownMenuItem>
               </Link>
-              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => setIsDeleteModalOpen(true)}>
+              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>
                 Delete product
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* TODO: fix the bug with multiple modal render */}
-          <DeleteModal title='product' isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={handleProductDeletion} />
         </div>
       )
     }

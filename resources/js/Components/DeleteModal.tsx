@@ -1,36 +1,33 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/Components/ui/alert-dialog'
+import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { toTitleCase } from '@/Lib/utils'
+import { router } from '@inertiajs/react'
 
-interface DeleteModalProps {
-  data?: {
-    id: string
-    name: string
+const DeleteModal = () => {
+  const { data, isOpen, setIsOpen } = useDeleteModal()
+
+  const onConfirm = () => {
+    setIsOpen(false)
+    router.visit(data.url)
   }
-  title: string
-  onConfirm: () => void
-  isOpen?: boolean
-  onCancel?: () => void
-}
 
-const DeleteModal = ({ data, title, onConfirm, isOpen = false, onCancel = () => null }: DeleteModalProps) => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle className='text-xl'>Are you absolutely sure?</AlertDialogTitle>
           {data && (
-            <div className='tracking-wider'>
-              <p className='-mt-2 underline '>{toTitleCase(title)}</p>
-              <span className='text-sm '>
-                <p>ID: {data?.id}</p>
-                <p>Name: {data?.name}</p>
-              </span>
-            </div>
+            <span className='pt-2 flex space-x-2 items-baseline'>
+              <p>
+                {toTitleCase(data.title)}: {data?.name}
+              </p>
+              <p className='text-xs text-muted-foreground'>ID: {data?.id}</p>
+            </span>
           )}
-          <AlertDialogDescription>This action cannot be undone. This will permanently delete this {title} and remove it from the server.</AlertDialogDescription>
+          <AlertDialogDescription>This action cannot be undone. This will permanently delete this {data.title} and remove it from the server.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} className='bg-destructive text-destructive-foreground hover:bg-destructive/90'>
             Delete
           </AlertDialogAction>

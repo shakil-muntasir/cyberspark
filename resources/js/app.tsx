@@ -1,12 +1,13 @@
-import './bootstrap'
 import '../css/app.css'
+import './bootstrap'
 
-import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { createRoot } from 'react-dom/client'
 
-import { ThemeProvider } from '@/Providers/theme-provider'
+import { DeleteModalProvider } from '@/Contexts/DeleteModalContext'
 import { UserProvider } from '@/Contexts/UserContext'
+import { ThemeProvider } from '@/Providers/theme-provider'
 import { PageProps } from '@/Types'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
@@ -22,7 +23,9 @@ createInertiaApp({
     root.render(
       <UserProvider authUser={pageProps.auth.user}>
         <ThemeProvider defaultTheme='light' storageKey='ui-theme'>
-          <App {...props} />
+          <DeleteModalProvider>
+            <App {...props} />
+          </DeleteModalProvider>
         </ThemeProvider>
       </UserProvider>
     )

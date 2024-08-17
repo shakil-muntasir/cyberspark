@@ -1,7 +1,8 @@
+import DeleteModal from '@/Components/DeleteModal'
 import DataTablePagination from '@/Components/table/pagination'
 import { DataTableToolbar } from '@/Components/table/toolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
-import { Attributes, ColumnOption, TableProps } from '@/Types'
+import { Attributes, TableProps } from '@/Types'
 
 export default function DataTable<T>({ data, columns, filterColumnBy, searchPlaceholder }: TableProps<T>) {
   return (
@@ -20,8 +21,8 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
                     column =>
                       !column.hidden && (
                         <TableCell key={String(column.id)}>
-                          {/** @ts-ignore TODO: fix this later */} 
-                          {column.cell ? typeof column.cell === 'string' ? row[column.cell as keyof Attributes<T>] : column.cell(row as any) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof Attributes<T>]}
+                          {/** @ts-ignore TODO: fix this later */}
+                          {column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof Attributes<T>] : column.cell(row as any)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof Attributes<T>]}
                         </TableCell>
                       )
                   )}
@@ -40,6 +41,7 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
       <div className='pt-4'>
         <DataTablePagination meta={data.meta} links={data.links} />
       </div>
+      <DeleteModal />
     </div>
   )
 }

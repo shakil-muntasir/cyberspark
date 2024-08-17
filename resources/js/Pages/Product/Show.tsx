@@ -1,7 +1,9 @@
-import { Link, useForm, router } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 
 import { ChevronLeft, PlusCircle } from 'lucide-react'
 
+import DeleteModal from '@/Components/DeleteModal'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
@@ -11,13 +13,10 @@ import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import { Textarea } from '@/Components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Product, ProductForm } from '@/Pages/Product/type'
-import { Tooltip, TooltipContent, TooltipProvider } from '@/Components/ui/tooltip'
-import { TooltipTrigger } from '@/Components/ui/tooltip'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
-import DeleteModal from '@/Components/DeleteModal'
-import { useState } from 'react'
 
 export default function ShowProduct({ product: { data: product } }: { product: Product }) {
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
@@ -32,7 +31,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     selling_price: product.attributes.selling_price
   })
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const { initializeDeleteModal } = useDeleteModal()
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
@@ -40,9 +39,11 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     clearErrors(name as keyof ProductForm)
   }
 
-  const handleProductDeletion = () => {
-    // TODO: delete the product
-    router.visit('/products')
+  const deleteModalData = {
+    id: product.attributes.id,
+    name: product.attributes.name,
+    title: 'product',
+    url: '/products'
   }
 
   const categories = [
@@ -269,10 +270,9 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   <CardDescription>Once you delete a product, your actions can't be undone</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button size='sm' variant='destructive' onClick={() => setIsDeleteModalOpen(true)}>
+                  <Button size='sm' variant='destructive' onClick={() => initializeDeleteModal(deleteModalData)}>
                     Delete
                   </Button>
-                  <DeleteModal isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={() => handleProductDeletion()} title='product' />
                 </CardContent>
               </Card>
             </div>
@@ -287,6 +287,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
           </div>
         </div>
       </main>
+      <DeleteModal />
     </AuthenticatedLayout>
   )
 }
