@@ -82,10 +82,12 @@ const columns: TableColumn<Product>[] = createColumns([
     label: 'Retail Price',
     header: column => <DataTableColumnHeader column={column} title='Retail Price' align='end' />,
     cell: ({ retail_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(retail_price)
+      const formatted = retail_price
+        ? new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }).format(retail_price)
+        : 'N/A'
 
       return <div className='text-right font-medium mr-4'>{formatted}</div>
     }

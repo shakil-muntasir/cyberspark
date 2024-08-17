@@ -26,9 +26,14 @@ class Product extends Model
         'status' => ProductStatus::class
     ];
 
-    public function creator()
+    public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**
@@ -44,7 +49,7 @@ class Product extends Model
             return $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('sku', 'like', "%{$search}%")
-                    ->orWhereHas('creator', function ($q) use ($search) {
+                    ->orWhereHas('createdBy', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
             });

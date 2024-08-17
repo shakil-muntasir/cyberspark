@@ -14,9 +14,10 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach(range(1, 49) as $i) {
+        foreach (range(1, 49) as $i) {
             Product::factory()->create([
-                'created_by' => User::inRandomOrder()->first()->id,
+                'created_by_id' => User::inRandomOrder()->first()->id,
+                'updated_by_id' => User::inRandomOrder()->first()->id
             ]);
         }
     }

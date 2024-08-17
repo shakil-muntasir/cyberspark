@@ -26,7 +26,10 @@ class ProductFactory extends Factory
             'retail_price' => fake()->randomFloat(2, 1, 1999),
             'selling_price' => fake()->randomFloat(2, 1, 1999),
             'status' => fake()->randomElement(['active', 'inactive']),
-            'created_by' => User::factory(),
+            'created_by_id' => User::factory(),
+            'updated_by_id' => User::factory(),
+            'created_at' => fake()->dateTimeBetween('-15 days', '-7 days'),
+            'updated_at' => fake()->dateTimeBetween('-6 days', '-1 days')
         ];
     }
 }

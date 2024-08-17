@@ -27,7 +27,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     status: product.attributes.status,
     quantity: product.attributes.quantity,
     buying_price: product.attributes.buying_price,
-    retail_price: product.attributes.retail_price,
+    retail_price: product.attributes.retail_price ?? null,
     selling_price: product.attributes.selling_price
   })
 
@@ -109,7 +109,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   <div className='grid gap-3'>
                     <Label>Created by</Label>
                     <div className='flex items-center justify-between'>
-                      <Link href={`/users/${product.attributes.creator_id}`}>
+                      <Link href={`/users/${product.attributes.created_by_id}`}>
                         <p className='text-sm underline underline-offset-2'>{product.attributes.created_by}</p>
                       </Link>
                       <p className='text-[0.7rem] text-muted-foreground'>
@@ -121,7 +121,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   <div className='grid gap-3'>
                     <Label>Updated by</Label>
                     <div className='flex items-center justify-between'>
-                      <Link href={`/users/${product.attributes.updater_id}`}>
+                      <Link href={`/users/${product.attributes.updated_by_id}`}>
                         <p className='text-sm underline underline-offset-2'>{product.attributes.updated_by}</p>
                       </Link>
                       <p className='text-[0.7rem] text-muted-foreground'>
@@ -135,7 +135,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
               <Card>
                 <CardHeader>
                   <CardTitle>Variants</CardTitle>
-                  <CardDescription>Add/update the buying, selling and retail prices of product varients.</CardDescription>
+                  <CardDescription>Add/update the buying, selling and retail prices of product variants.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table className='hidden lg:block'>

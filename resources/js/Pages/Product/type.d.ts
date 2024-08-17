@@ -10,10 +10,10 @@ export type Product = {
             quantity: number
             buying_price: number
             selling_price: number
-            retail_price: number
+            retail_price?: number
             status: 'active' | 'inactive'
-            creator_id: string
-            updater_id: string
+            created_by_id: string
+            updated_by_id: string
             created_by: string
             updated_by: string
             created_at: string
