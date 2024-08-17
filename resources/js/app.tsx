@@ -1,7 +1,6 @@
 import './bootstrap'
 import '../css/app.css'
 
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
@@ -21,13 +20,11 @@ createInertiaApp({
     const pageProps = props.initialPage.props as unknown as PageProps
 
     root.render(
-      <React.StrictMode>
-        <UserProvider authUser={pageProps.auth.user}>
-          <ThemeProvider defaultTheme='light' storageKey='ui-theme'>
-            <App {...props} />
-          </ThemeProvider>
-        </UserProvider>
-      </React.StrictMode>
+      <UserProvider authUser={pageProps.auth.user}>
+        <ThemeProvider defaultTheme='light' storageKey='ui-theme'>
+          <App {...props} />
+        </ThemeProvider>
+      </UserProvider>
     )
   },
   progress: {

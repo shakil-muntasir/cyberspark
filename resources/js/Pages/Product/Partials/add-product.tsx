@@ -81,7 +81,7 @@ export default function AddProduct() {
       clearErrors()
     }
   }
-
+  // TODO: make the form take full width in mobile view
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>

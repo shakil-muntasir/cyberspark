@@ -27,7 +27,13 @@ class ProductResource extends JsonResource
                 'retail_price' => $this->retail_price,
                 'selling_price' => $this->selling_price,
                 'status' => $this->status,
+                // TODO: implement the updater feature
+                'creator_id' => (string) $this->creator->id,
+                'updater_id' => (string) $this->creator->id,
                 'created_by' => $this->creator->name,
+                'updated_by' => $this->creator->name,
+                'created_at' => $this->created_at->format('jS F, Y h:i A'),
+                'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ]
         ];
     }

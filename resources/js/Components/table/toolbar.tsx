@@ -108,7 +108,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
     setFilterValue([])
     updateURL(search, []) // Call updateURL directly without triggering useEffect
   }
-
+  // TODO: add clear filter feature
   return (
     <div className='flex items-center py-4'>
       <div className='flex flex-1 items-center space-x-2'>

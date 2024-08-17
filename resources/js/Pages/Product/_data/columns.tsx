@@ -7,6 +7,7 @@ import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 import { Product } from '@/Pages/Product/type'
+import { Link } from '@inertiajs/react'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -123,10 +124,14 @@ const columns: TableColumn<Product>[] = createColumns([
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy product ID</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit product</DropdownMenuItem>
-              <DropdownMenuItem>View product details</DropdownMenuItem>
+              {/* TODO: add a toaster with proper message */}
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy product ID</DropdownMenuItem>
+              <Link href={`/products/${id}`}>
+                <DropdownMenuItem>View product details</DropdownMenuItem>
+              </Link>
+              {/* TODO: add the delete product modal */}
+              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground'>Delete product</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -112,7 +112,7 @@ export default function AddUser() {
       imageRef.current.value = ''
     }
   }
-
+  // TODO: make the form take full width in mobile view
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>
@@ -156,9 +156,9 @@ export default function AddUser() {
                 Gender
               </Label>
               <div className='space-y-px'>
-                <Select value={data.gender} onValueChange={value => setData('gender', value)}>
-                  <SelectTrigger>
-                    <SelectValue onChange={handleInputChange} placeholder='Select Gender' />
+                <Select name='gender' value={data.gender} onValueChange={value => setData('gender', value)}>
+                  <SelectTrigger id='gender'>
+                    <SelectValue placeholder='Select Gender' />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -304,9 +304,9 @@ export default function AddUser() {
                 Role
               </Label>
               <div className='space-y-px'>
-                <Select value={data.role} onValueChange={value => setData('role', value)}>
-                  <SelectTrigger>
-                    <SelectValue onChange={handleInputChange} placeholder='Select Role' />
+                <Select name='role' value={data.role} onValueChange={value => setData('role', value)}>
+                  <SelectTrigger id='role'>
+                    <SelectValue placeholder='Select Role' />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -347,9 +347,9 @@ export default function AddUser() {
                   State
                 </Label>
                 <div className='space-y-px'>
-                  <Select value={data.state} onValueChange={value => setData('state', value)}>
-                    <SelectTrigger>
-                      <SelectValue onChange={handleInputChange} placeholder='Select State' />
+                  <Select name='state' value={data.state} onValueChange={value => setData('state', value)}>
+                    <SelectTrigger id='state'>
+                      <SelectValue placeholder='Select State' />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>

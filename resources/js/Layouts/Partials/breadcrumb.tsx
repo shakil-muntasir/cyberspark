@@ -1,6 +1,5 @@
 import { Link, usePage } from '@inertiajs/react'
-
-import { BreadcrumbLink, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbPage, BreadcrumbList, Breadcrumb } from '@/Components/ui/breadcrumb'
+import { BreadcrumbLink, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbList, Breadcrumb } from '@/Components/ui/breadcrumb'
 
 type BreadcrumbItemType = {
   href: string
@@ -10,8 +9,14 @@ type BreadcrumbItemType = {
 const generateBreadcrumbs = (pathname: string): BreadcrumbItemType[] => {
   const paths = pathname.split('?')[0].split('/').filter(Boolean)
   const breadcrumbs = paths.map((path, index) => {
+    let text = path.charAt(0).toUpperCase() + path.slice(1)
+
+    // Replace the last value with "Details" if it's a number
+    if (index === paths.length - 1 && /^\d+$/.test(path)) {
+      text = 'Details'
+    }
+
     const href = '/' + paths.slice(0, index + 1).join('/')
-    const text = path.charAt(0).toUpperCase() + path.slice(1)
     return { href, text }
   })
 
@@ -19,7 +24,7 @@ const generateBreadcrumbs = (pathname: string): BreadcrumbItemType[] => {
 }
 
 export default function DynamicBreadcrumb() {
-  const breadcrumbs: BreadcrumbItemType[] = generateBreadcrumbs(usePage().url ?? [])
+  const breadcrumbs: BreadcrumbItemType[] = generateBreadcrumbs(usePage().url ?? '')
 
   return (
     <Breadcrumb className='hidden md:flex'>
