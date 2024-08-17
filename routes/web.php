@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('products')->name('products.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
     });
 
     Route::prefix('orders')->name('orders.')->group(function () {

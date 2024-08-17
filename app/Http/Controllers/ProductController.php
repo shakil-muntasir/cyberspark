@@ -7,11 +7,11 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class ProductController extends Controller
 {
-    public function index(ProductRequest $request): Response
+    public function index(ProductRequest $request): InertiaResponse
     {
         Gate::authorize('viewAny', Product::class);
 
@@ -32,5 +32,14 @@ class ProductController extends Controller
         $user->products()->create($request->validated());
 
         return redirect()->back();
+    }
+
+    public function show(Product $product): InertiaResponse
+    {
+        Gate::authorize('view', $product);
+
+        return inertia('Product/Show', [
+            'product' => new ProductResource($product),
+        ]);
     }
 }
