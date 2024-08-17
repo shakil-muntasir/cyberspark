@@ -1,15 +1,26 @@
 import { MoreHorizontal } from 'lucide-react'
 
-import { TableColumn } from '@/Types'
 import { DataTableColumnHeader } from '@/Components/table/column-header'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+import { Button } from '@/Components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { toast } from '@/Components/ui/use-toast'
+import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { User } from '@/Pages/User/type'
-import { Link, router } from '@inertiajs/react'
-import { useState } from 'react'
-import DeleteModal from '@/Components/DeleteModal'
+import { TableColumn } from '@/Types'
+import { Link } from '@inertiajs/react'
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+
+const handleCopyId = (id: string): void => {
+  navigator.clipboard.writeText(id)
+  setTimeout(() => {
+    toast({
+      title: 'Copied!',
+      description: 'The user ID is copied to the clipboard.',
+      duration: 2000
+    })
+  }, 200)
+}
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -78,12 +89,15 @@ const columns: TableColumn<User>[] = createColumns([
       </div>
     ),
     cell: ({ id, name }) => {
-      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+      const { initializeDeleteModal } = useDeleteModal()
 
-      const handleUserDeletion = () => {
-        // TODO: delete the user
-        router.visit('/users')
+      const deleteModalData = {
+        id,
+        name,
+        title: 'user',
+        url: '/users'
       }
+
       return (
         <div className='flex justify-center items-center'>
           <DropdownMenu modal={false}>
@@ -96,18 +110,15 @@ const columns: TableColumn<User>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* TODO: add a toaster with proper message */}
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy user ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy user ID</DropdownMenuItem>
               <Link href={`/users/${id}`}>
                 <DropdownMenuItem>View user details</DropdownMenuItem>
               </Link>
-              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => setIsDeleteModalOpen(true)}>
+              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>
                 Delete user
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* TODO: fix multiple modal render */}
-          <DeleteModal data={{ id, name }} title='user' isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={handleUserDeletion} />
         </div>
       )
     }

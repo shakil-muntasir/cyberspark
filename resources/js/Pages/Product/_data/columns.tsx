@@ -4,11 +4,23 @@ import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { toast } from '@/Components/ui/use-toast'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { Product } from '@/Pages/Product/type'
 import { TableColumn } from '@/Types'
 import { Link } from '@inertiajs/react'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+
+const handleCopyId = (id: string): void => {
+  navigator.clipboard.writeText(id)
+  setTimeout(() => {
+    toast({
+      title: 'Copied!',
+      description: 'The product ID is copied to the clipboard.',
+      duration: 2000
+    })
+  }, 200)
+}
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -135,8 +147,7 @@ const columns: TableColumn<Product>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* TODO: add a toaster with proper message */}
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy product ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy product ID</DropdownMenuItem>
               <Link href={`/products/${id}`}>
                 <DropdownMenuItem>View product details</DropdownMenuItem>
               </Link>
