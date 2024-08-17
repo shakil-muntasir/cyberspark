@@ -7,6 +7,9 @@ import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 import { User } from '@/Pages/User/type'
+import { Link, router } from '@inertiajs/react'
+import { useState } from 'react'
+import DeleteModal from '@/Components/DeleteModal'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -74,10 +77,16 @@ const columns: TableColumn<User>[] = createColumns([
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id }) => {
+    cell: ({ id, name }) => {
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+      const handleUserDeletion = () => {
+        // TODO: delete the user
+        router.visit('/users')
+      }
       return (
         <div className='flex justify-center items-center'>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
                 <span className='sr-only'>Open menu</span>
@@ -86,12 +95,19 @@ const columns: TableColumn<User>[] = createColumns([
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy user ID</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit user</DropdownMenuItem>
-              <DropdownMenuItem>View user details</DropdownMenuItem>
+              {/* TODO: add a toaster with proper message */}
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>Copy user ID</DropdownMenuItem>
+              <Link href={`/users/${id}`}>
+                <DropdownMenuItem>View user details</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => setIsDeleteModalOpen(true)}>
+                Delete user
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* TODO: fix multiple modal render */}
+          <DeleteModal data={{ id, name }} title='user' isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={handleUserDeletion} />
         </div>
       )
     }

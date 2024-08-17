@@ -40,19 +40,30 @@ export function generatePassword(passwordLength = 10): string {
     // Add up to 2 special characters
     const specialCharCount = 2
     for (let i = 0; i < specialCharCount; i++) {
-      password += specialChars[Math.floor(Math.random() * specialChars.length)]
+        password += specialChars[Math.floor(Math.random() * specialChars.length)]
     }
 
     // Fill the remaining length with random characters from lower, upper, and numeric categories
     for (let i = password.length; i < passwordLength; i++) {
-      password += allChars[Math.floor(Math.random() * allChars.length)]
+        password += allChars[Math.floor(Math.random() * allChars.length)]
     }
 
     // Shuffle the password to ensure randomness
     password = password
-      .split('')
-      .sort(() => 0.5 - Math.random())
-      .join('')
+        .split('')
+        .sort(() => 0.5 - Math.random())
+        .join('')
 
     return password
-  }
+}
+
+export function toTitleCase(str: string) {
+    if (typeof str !== 'string' || str.length === 0) {
+        return ''
+    }
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+}

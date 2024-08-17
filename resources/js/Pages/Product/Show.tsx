@@ -1,4 +1,5 @@
-import { Link, useForm } from '@inertiajs/react'
+import { Link, useForm, router } from '@inertiajs/react'
+
 import { ChevronLeft, PlusCircle } from 'lucide-react'
 
 import { Badge } from '@/Components/ui/badge'
@@ -15,6 +16,8 @@ import { Product, ProductForm } from '@/Pages/Product/type'
 import { Tooltip, TooltipContent, TooltipProvider } from '@/Components/ui/tooltip'
 import { TooltipTrigger } from '@/Components/ui/tooltip'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
+import DeleteModal from '@/Components/DeleteModal'
+import { useState } from 'react'
 
 export default function ShowProduct({ product: { data: product } }: { product: Product }) {
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
@@ -29,10 +32,17 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     selling_price: product.attributes.selling_price
   })
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
     setData(name as keyof ProductForm, value)
     clearErrors(name as keyof ProductForm)
+  }
+
+  const handleProductDeletion = () => {
+    // TODO: delete the product
+    router.visit('/products')
   }
 
   const categories = [
@@ -45,7 +55,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     { label: 'Active', value: 'active' },
     { label: 'Inactive', value: 'inactive' }
   ]
-  // TODO: implement delete product modal
+
   return (
     <AuthenticatedLayout title='Product Details'>
       <main className='grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
@@ -259,10 +269,10 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   <CardDescription>Once you delete a product, your actions can't be undone</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div></div>
-                  <Button size='sm' variant='destructive'>
+                  <Button size='sm' variant='destructive' onClick={() => setIsDeleteModalOpen(true)}>
                     Delete
                   </Button>
+                  <DeleteModal isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={() => handleProductDeletion()} title='product' />
                 </CardContent>
               </Card>
             </div>

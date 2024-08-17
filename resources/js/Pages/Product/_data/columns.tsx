@@ -7,7 +7,9 @@ import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 import { Product } from '@/Pages/Product/type'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
+import DeleteModal from '@/Components/DeleteModal'
+import { useState } from 'react'
 
 const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'toggleVisibility' | 'enableSorting' | 'hidden'> & Partial<Pick<TableColumn<T>, 'enableSorting' | 'hidden'>>)[]): TableColumn<T>[] => {
   return columns.map(column => ({
@@ -113,9 +115,15 @@ const columns: TableColumn<Product>[] = createColumns([
       </div>
     ),
     cell: ({ id }) => {
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+      const handleProductDeletion = () => {
+        // TODO: delete the product
+        router.visit('/products')
+      }
       return (
         <div className='flex justify-center items-center'>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
                 <span className='sr-only'>Open menu</span>
@@ -130,10 +138,13 @@ const columns: TableColumn<Product>[] = createColumns([
               <Link href={`/products/${id}`}>
                 <DropdownMenuItem>View product details</DropdownMenuItem>
               </Link>
-              {/* TODO: add the delete product modal */}
-              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground'>Delete product</DropdownMenuItem>
+              <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => setIsDeleteModalOpen(true)}>
+                Delete product
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* TODO: fix the bug with multiple modal render */}
+          <DeleteModal title='product' isOpen={isDeleteModalOpen} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={handleProductDeletion} />
         </div>
       )
     }
