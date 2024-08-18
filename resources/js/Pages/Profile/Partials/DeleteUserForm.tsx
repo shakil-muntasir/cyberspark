@@ -1,20 +1,17 @@
-import { useRef, useState, FormEventHandler } from 'react'
-import DangerButton from '@/Components/DangerButton'
 import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
 import Modal from '@/Components/Modal'
-import SecondaryButton from '@/Components/SecondaryButton'
-import TextInput from '@/Components/TextInput'
-import { useForm } from '@inertiajs/react'
-import { Label } from '@/Components/ui/label'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
+import { Card, CardFooter, CardHeader } from '@/Components/ui/card'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+import { useForm } from '@inertiajs/react'
+import { FormEventHandler, useRef, useState } from 'react'
 
 type DeleteUserPasswordData = {
   password: string
 }
 
-export default function DeleteUserForm({ className = '' }: { className?: string }) {
+export default function DeleteUserForm() {
   const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false)
   const passwordInput = useRef<HTMLInputElement>(null)
 
@@ -59,16 +56,18 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
   }
 
   return (
-    <section className={`space-y-6 ${className}`}>
-      <header>
+    <Card>
+      <CardHeader className='max-w-xl lg:pr-0'>
         <h2 className='text-lg font-medium text-foreground'>Delete Account</h2>
 
         <p className='mt-1 text-sm text-muted-foreground'>Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.</p>
-      </header>
+      </CardHeader>
 
-      <Button variant='destructive' onClick={confirmUserDeletion}>
-        Delete Account
-      </Button>
+      <CardFooter>
+        <Button variant='destructive' onClick={confirmUserDeletion}>
+          Delete Account
+        </Button>
+      </CardFooter>
 
       <Modal show={confirmingUserDeletion} onClose={closeModal}>
         <form onSubmit={deleteUser} className='p-6'>
@@ -97,6 +96,6 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
           </div>
         </form>
       </Modal>
-    </section>
+    </Card>
   )
 }

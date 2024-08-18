@@ -6,20 +6,12 @@ import UpdateProfileInformationForm from './Partials/UpdateProfileInformationFor
 export default function Edit({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
   return (
     <AuthenticatedLayout title='Profile'>
-      <div className='py-10'>
-        <div className='max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6'>
-          <div className='p-4 sm:p-8 bg-background shadow sm:rounded-lg'>
-            <UpdateProfileInformationForm mustVerifyEmail={mustVerifyEmail} status={status} />
-          </div>
+      <div className='max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6'>
+        <UpdateProfileInformationForm mustVerifyEmail={mustVerifyEmail} status={status} />
 
-          <div className='p-4 sm:p-8 bg-background shadow sm:rounded-lg'>
-            <UpdatePasswordForm className='max-w-xl' />
-          </div>
+        <UpdatePasswordForm />
 
-          <div className='p-4 sm:p-8 bg-background shadow sm:rounded-lg'>
-            <DeleteUserForm className='max-w-xl' />
-          </div>
-        </div>
+        <DeleteUserForm />
       </div>
     </AuthenticatedLayout>
   )

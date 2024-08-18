@@ -1,18 +1,17 @@
-import { FormEventHandler, useRef, useState } from 'react'
 import { Link, useForm, usePage } from '@inertiajs/react'
 import { Trash2Icon } from 'lucide-react'
+import { FormEventHandler, useRef, useState } from 'react'
 
 import InputError from '@/Components/InputError'
-import { Label } from '@/Components/ui/label'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
-import { cn, getImageData } from '@/Lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
+import { Card, CardContent, CardFooter, CardHeader } from '@/Components/ui/card'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-import { Spinner } from '@/Components/ui/spinner'
 import { toast } from '@/Components/ui/use-toast'
+import UserAvatar from '@/Components/UserAvatar'
+import { cn, getImageData } from '@/Lib/utils'
 import { PageProps } from '@/Types'
-import UserPlaceholder from '@/public/assets/user_male_placeholder.png'
 
 type UpdateUserProfileData = {
   name: string
@@ -42,7 +41,8 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
     setTimeout(() => {
       post(route('profile.update'), {
-        onSuccess: handleSuccess
+        onSuccess: handleSuccess,
+        preserveScroll: true
       })
     }, 500)
   }
@@ -68,119 +68,107 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
   }
 
   return (
-    <section>
-      <div className='grid grid-cols-2 items-center  '>
-        <div>
-          <header>
+    <section className='lg:pt-6'>
+      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex lg:hidden' />
+      <Card className='flex  flex-col-reverse lg:flex-row items-center'>
+        <div className='max-w-xl flex-1'>
+          <CardHeader className='max-w-xl'>
             <h2 className='text-lg font-medium text-foreground'>Profile Information</h2>
 
             <p className='mt-1 text-sm text-muted-foreground'>Update your account's profile information and email address.</p>
-          </header>
-          <form onSubmit={submit} className='mt-6 space-y-5'>
-            <div>
-              <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
-                Name
-              </Label>
-              <div className='space-y-px'>
-                <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' autoComplete='name' />
-                <InputError message={errors.name} />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor='email' className={errors.email?.length ? 'text-destructive' : ''}>
-                Email
-              </Label>
-              <div className='space-y-px'>
-                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='email' autoComplete='email' />
-                <InputError message={errors.email} />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor='image' className={errors.image?.length ? 'text-destructive' : ''}>
-                Profile image
-              </Label>
-              <div className='space-y-px'>
-                <div className={cn('relative w-full', previewImage !== '' ? `relative` : '')}>
-                  <Input
-                    id='image'
-                    ref={imageRef}
-                    type='file'
-                    accept='image/*'
-                    name='image'
-                    className='dark:file:text-foreground pr-8'
-                    onChange={e => {
-                      if (e.target.files) {
-                        const { file, displayUrl } = getImageData(e)
-                        setPreviewImage(displayUrl)
-                        setData('image', file)
-                      }
-                    }}
-                  />
-                  {previewImage && (
-                    <div className='flex items-center absolute right-1 top-1/2'>
-                      <TooltipProvider>
-                        <Tooltip delayDuration={0}>
-                          <TooltipTrigger asChild>
-                            <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
-                              <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                              <span className='sr-only'>Remove picture</span>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Remove picture</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  )}
+          </CardHeader>
+          <form onSubmit={submit}>
+            <CardContent className='pb-2 lg:pr-0 max-w-xl'>
+              <div className='gap-2'>
+                <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
+                  Name
+                </Label>
+                <div className='space-y-px'>
+                  <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' autoComplete='name' />
+                  <InputError message={errors.name} />
                 </div>
-
-                <InputError message={errors.image} />
               </div>
-            </div>
 
-            {mustVerifyEmail && user.attributes.email_verified_at === null && (
               <div>
-                <p className='text-sm mt-2 text-gray-800'>
-                  Your email address is unverified.
-                  <Link href={route('verification.send')} method='post' as='button' className='underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                    Click here to re-send the verification email.
-                  </Link>
-                </p>
-
-                {status === 'verification-link-sent' && <div className='mt-2 font-medium text-sm text-green-600'>A new verification link has been sent to your email address.</div>}
+                <Label htmlFor='email' className={errors.email?.length ? 'text-destructive' : ''}>
+                  Email
+                </Label>
+                <div className='space-y-px'>
+                  <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='email' autoComplete='email' />
+                  <InputError message={errors.email} />
+                </div>
               </div>
-            )}
 
-            <div className='flex items-center gap-4'>
-              <Button type='submit' disabled={processing}>
-                Save
-              </Button>
-            </div>
+              <div>
+                <Label htmlFor='image' className={errors.image?.length ? 'text-destructive' : ''}>
+                  Profile image
+                </Label>
+                <div className='space-y-px'>
+                  <div className={cn('relative w-full', previewImage !== '' ? `relative` : '')}>
+                    <Input
+                      id='image'
+                      ref={imageRef}
+                      type='file'
+                      accept='image/*'
+                      name='image'
+                      className='dark:file:text-foreground pr-8'
+                      onChange={e => {
+                        if (e.target.files) {
+                          const { file, displayUrl } = getImageData(e)
+                          setPreviewImage(displayUrl)
+                          setData('image', file)
+                        }
+                      }}
+                    />
+                    {previewImage && (
+                      <div className='flex items-center absolute right-1 top-1/2'>
+                        <TooltipProvider>
+                          <Tooltip delayDuration={0}>
+                            <TooltipTrigger asChild>
+                              <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
+                                <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                <span className='sr-only'>Remove picture</span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Remove picture</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    )}
+                  </div>
+
+                  <InputError message={errors.image} />
+                </div>
+              </div>
+
+              {mustVerifyEmail && user.attributes.email_verified_at === null && (
+                <div>
+                  <p className='text-sm mt-2 text-gray-800'>
+                    Your email address is unverified.
+                    <Link href={route('verification.send')} method='post' as='button' className='underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                      Click here to re-send the verification email.
+                    </Link>
+                  </p>
+
+                  {status === 'verification-link-sent' && <div className='mt-2 font-medium text-sm text-green-600'>A new verification link has been sent to your email address.</div>}
+                </div>
+              )}
+            </CardContent>
+
+            <CardFooter>
+              <div className='flex items-center'>
+                <Button type='submit' disabled={processing}>
+                  Save
+                </Button>
+              </div>
+            </CardFooter>
           </form>
         </div>
 
-        <div className='flex justify-center items-center pb-2 w-full'>
-          <Avatar className='relative w-72 h-72'>
-            {/* Show spinner if processing state is true */}
-            {previewImage && processing && (
-              <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                <Spinner size='large' />
-              </div>
-            )}
-
-            {/* Avatar Image Logic */}
-            <AvatarImage className='object-cover' src={previewImage || user.attributes?.image || UserPlaceholder} />
-
-            {/* Fallback if no image is present */}
-            <AvatarFallback>
-              <Spinner size='large' />
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
+        <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='hidden lg:flex' />
+      </Card>
     </section>
   )
 }

@@ -1,8 +1,8 @@
-import { createElement } from 'react'
-import { Link, usePage } from '@inertiajs/react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { routes } from '@/Lib/routes'
-import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from '@/Components/ui/tooltip'
 import SprintDevsLogo from '@/public/assets/sprint_devs.png'
+import { Link, usePage } from '@inertiajs/react'
+import { createElement } from 'react'
 
 export default function PcNavigation() {
   const pathname = usePage().url.split('?')[0]
@@ -38,9 +38,7 @@ export default function PcNavigation() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors md:h-8 md:w-8 ${
-                  pathname === routes[routes.length - 1].href || pathname.startsWith(`${routes[routes.length - 1].href}/`) ? 'bg-highlight text-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors md:h-8 md:w-8 ${pathname === routes[routes.length - 1].href || pathname.startsWith(`${routes[routes.length - 1].href}/`) ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                 href={routes[routes.length - 1].href}
               >
                 {createElement(routes[routes.length - 1].icon, { className: 'h-5 w-5' })}
