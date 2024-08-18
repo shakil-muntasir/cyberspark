@@ -60,7 +60,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
   return (
     <AuthenticatedLayout title='Product Details'>
       <main className='grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
-        <div className='mx-auto grid max-w-[68rem] flex-1 auto-rows-max gap-4'>
+        <div className='mx-auto grid max-w-[80rem] flex-1 auto-rows-max gap-4'>
           <div className='flex items-center gap-4'>
             <TooltipProvider>
               <Tooltip delayDuration={0}>
@@ -277,6 +277,8 @@ export default function ShowProduct({ product: { data: product } }: { product: P
               </Card>
             </div>
           </div>
+
+          {/* for mobile view only */}
           <div className='flex items-center justify-end gap-2 md:hidden'>
             <Button variant='secondary' size='sm' onClick={() => reset()}>
               Discard
