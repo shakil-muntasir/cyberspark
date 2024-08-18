@@ -69,7 +69,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
   return (
     <section className='lg:pt-6'>
-      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex lg:hidden' />
+      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex lg:hidden pb-4' />
       <Card className='flex  flex-col-reverse lg:flex-row items-center'>
         <div className='max-w-xl flex-1'>
           <CardHeader className='max-w-xl'>

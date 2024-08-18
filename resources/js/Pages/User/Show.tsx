@@ -123,7 +123,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
           <div className='flex flex-col lg:flex-row gap-4 lg:gap-8'>
             <div className='flex flex-col gap-4 lg:gap-8'>
               <div className='flex flex-col lg:flex-row flex-1 auto-rows-max items-start gap-4 lg:gap-8'>
-                <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} />
+                <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='mx-auto' />
                 <Card className='w-full'>
                   <CardHeader>
                     <CardTitle>User Information</CardTitle>
