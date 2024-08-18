@@ -27,7 +27,7 @@ export default function AddUser() {
     gender: '',
     phone: '',
     image: undefined,
-    role: '',
+    roles: [],
     address: '',
     city: '',
     state: '',
@@ -168,7 +168,7 @@ export default function AddUser() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                <InputError message={errors.role} />
+                <InputError message={errors.roles} />
               </div>
             </div>
 
@@ -300,11 +300,11 @@ export default function AddUser() {
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='role' className={errors.role?.length ? 'text-destructive' : ''}>
+              <Label htmlFor='role' className={errors.roles?.length ? 'text-destructive' : ''}>
                 Role
               </Label>
               <div className='space-y-px'>
-                <Select name='role' value={data.role} onValueChange={value => setData('role', value)}>
+                <Select name='role'>
                   <SelectTrigger id='role'>
                     <SelectValue placeholder='Select Role' />
                   </SelectTrigger>
@@ -317,7 +317,7 @@ export default function AddUser() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                <InputError message={errors.role} />
+                <InputError message={errors.roles} />
               </div>
             </div>
 

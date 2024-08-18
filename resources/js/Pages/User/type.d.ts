@@ -9,6 +9,7 @@ export type User = {
             phone: string
             image?: string
             status: 'active' | 'inactive'
+            roles: string[]
             address?: string
             created_by?: string
             email_verified_at?: string
@@ -23,7 +24,8 @@ export type UserForm = {
     gender: string
     phone: string
     image?: File
-    role: string
+    roles: string[]
+    status?: string
     address: string
     city: string
     state: string

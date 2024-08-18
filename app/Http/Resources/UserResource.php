@@ -25,6 +25,7 @@ class UserResource extends JsonResource
                 'image' => $this->image ? asset("storage/{$this->image}") : null,
                 'address' => $this->address ? $this->address->street : 'N/A',
                 'status' => $this->status,
+                'roles' => $this->roles->pluck('name') ?? [],
                 'created_by' => $this->creator ? $this->creator->name : 'N/A',
                 'email_verified_at' => $this->email_verified_at,
             ]
