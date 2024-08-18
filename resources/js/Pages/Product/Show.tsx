@@ -150,7 +150,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                     </TableHeader>
                     <TableBody>
                       <TableRow>
-                        <TableCell className='font-semibold'>
+                        <TableCell>
                           <Label htmlFor='sku' className='sr-only'>
                             SKU
                           </Label>
