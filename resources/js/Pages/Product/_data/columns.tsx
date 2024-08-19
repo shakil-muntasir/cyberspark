@@ -34,63 +34,41 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 
 const columns: TableColumn<Product>[] = createColumns([
   {
-    id: 'sku',
-    label: 'SKU',
-    header: column => <DataTableColumnHeader column={column} title='SKU' />
-  },
-  {
     id: 'name',
     label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
-    id: 'quantity',
-    label: 'Quantity',
-    header: column => <DataTableColumnHeader column={column} title='Quantity' align='end' />,
-    cell: ({ quantity }) => {
-      return <div className='text-right font-medium mr-4'>{quantity}</div>
-    }
+    id: 'variants',
+    label: 'Variants',
+    header: column => <DataTableColumnHeader column={column} title='Variants' />
   },
   {
-    id: 'buying_price',
-    label: 'Buying Price',
-    header: column => <DataTableColumnHeader column={column} title='Buying Price' align='end' />,
-    cell: ({ buying_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(buying_price)
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
+    id: 'total_stock',
+    label: 'Total Stock',
+    header: column => <DataTableColumnHeader column={column} title='Total Stock' />
   },
   {
-    id: 'selling_price',
-    label: 'Selling Price',
-    header: column => <DataTableColumnHeader column={column} title='Selling Price' align='end' />,
-    cell: ({ selling_price }) => {
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(selling_price)
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
-  },
-  {
-    id: 'retail_price',
-    label: 'Retail Price',
-    header: column => <DataTableColumnHeader column={column} title='Retail Price' align='end' />,
-    cell: ({ retail_price }) => {
-      const formatted = retail_price
-        ? new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-          }).format(retail_price)
-        : 'N/A'
-
-      return <div className='text-right font-medium mr-4'>{formatted}</div>
-    }
+    id: 'stock_status',
+    label: 'Stock Status',
+    header: column => <DataTableColumnHeader column={column} title='Stock Status' align='center' />,
+    cell: ({ stock_status }) => (
+      <span className='flex justify-center'>
+        <Badge variant={stock_status === 'available' ? 'default' : 'secondary'}>{stock_status}</Badge>
+      </span>
+    ),
+    options: [
+      {
+        label: 'Active',
+        value: 'active',
+        icon: CheckCircledIcon
+      },
+      {
+        label: 'Inactive',
+        value: 'inactive',
+        icon: CrossCircledIcon
+      }
+    ]
   },
   {
     id: 'created_by',

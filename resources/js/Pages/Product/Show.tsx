@@ -16,10 +16,12 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Product, ProductForm } from '@/Pages/Product/type'
+import { Product, ProductForm, ProductStatus } from '@/Pages/Product/type'
 import { useEffect, useState } from 'react'
 
-export default function ShowProduct({ product: { data: product } }: { product: Product }) {
+// TODO: refactor for lastest product changes
+
+export default function ShowProduct({ product: { data: product }, statuses }: { product: Product; statuses: ProductStatus[] }) {
   const initialData = {
     sku: product.attributes.sku,
     name: product.attributes.name,
@@ -34,6 +36,15 @@ export default function ShowProduct({ product: { data: product } }: { product: P
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialData)
 
+  const [variants, setVariants] = useState([{ sku: '32KJ4', quantity: '34', buying_price: '134', selling_price: '143', retail_price: '144' }])
+
+  const [addVariantIsOpen, setAddVariantIsOpen] = useState(false)
+
+  const addNewVariant = () => {
+    setAddVariantIsOpen(true)
+    // setVariants([...variants, { sku: '', quantity: '', buying_price: '', selling_price: '', retail_price: '' }])
+  }
+
   const { initializeDeleteModal } = useDeleteModal()
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -42,12 +53,12 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     clearErrors(name as keyof ProductForm)
   }
 
-  const [saveButtonVariant, setSaveButtonVariant] = useState<'default' | 'disabled'>('disabled')
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
 
   useEffect(() => {
     const hasChanges = Object.keys(initialData).some(key => data[key as keyof ProductForm] !== initialData[key as keyof ProductForm])
 
-    setSaveButtonVariant(hasChanges ? 'default' : 'disabled')
+    setIsSaveButtonDisabled(!hasChanges)
   }, [data])
 
   const deleteModalData = {
@@ -63,10 +74,10 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     { label: 'Accessories', value: 'accessories' }
   ]
 
-  const statuses = [
-    { label: 'Active', value: 'active' },
-    { label: 'Inactive', value: 'inactive' }
-  ]
+  // const statuses = [
+  //   { label: 'Active', value: 'active' },
+  //   { label: 'Inactive', value: 'inactive' }
+  // ]
 
   return (
     <AuthenticatedLayout title='Product Details'>
@@ -94,7 +105,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
               <Button variant='secondary' size='sm' onClick={() => reset()}>
                 Discard
               </Button>
-              <Button size='sm' variant={saveButtonVariant}>
+              <Button size='sm' disabled={isSaveButtonDisabled}>
                 Save Product
               </Button>
             </div>
@@ -110,7 +121,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   <div className='grid gap-6'>
                     <div className='grid gap-2'>
                       <Label htmlFor='name'>Name</Label>
-                      <Input id='name' type='text' name='name' className='w-full' value={data.name} onChange={handleInputChange} />
+                      <Input id='name' type='text' name='name' className='w-full' value={data.name} onChange={handleInputChange} autoComplete='off' />
                     </div>
                     <div className='grid gap-2'>
                       <Label htmlFor='description'>Description</Label>
@@ -120,7 +131,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                 </CardContent>
                 <CardFooter className='grid gap-7 lg:gap-6 border-t py-6'>
                   <div className='grid gap-3'>
-                    <Label>Created by</Label>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Created by</span>
                     <div className='flex items-center justify-between'>
                       <Link href={`/users/${product.attributes.created_by_id}`}>
                         <p className='text-sm underline underline-offset-2'>{product.attributes.created_by}</p>
@@ -132,7 +143,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                     </div>
                   </div>
                   <div className='grid gap-3'>
-                    <Label>Updated by</Label>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Updated by</span>
                     <div className='flex items-center justify-between'>
                       <Link href={`/users/${product.attributes.updated_by_id}`}>
                         <p className='text-sm underline underline-offset-2'>{product.attributes.updated_by}</p>
@@ -163,85 +174,85 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          <Label htmlFor='sku' className='sr-only'>
-                            SKU
-                          </Label>
-                          <Input id='sku' type='text' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor='quantity' className='sr-only'>
-                            Quantity
-                          </Label>
-                          <InputNumber id='quantity' name='quantity' type='number' value={data.quantity ?? ''} onChange={handleInputChange} />
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor='buying_price' className='sr-only'>
-                            Buying Price
-                          </Label>
-                          <InputNumber id='buying_price' name='buying_price' type='number' value={data.buying_price ?? ''} onChange={handleInputChange} />
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor='selling_price' className='sr-only'>
-                            Selling Price
-                          </Label>
-                          <InputNumber id='selling_price' name='selling_price' type='number' value={data.selling_price ?? ''} onChange={handleInputChange} />
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor='retail_price' className='sr-only'>
-                            Retail Price
-                          </Label>
-                          <InputNumber id='retail_price' name='retail_price' type='number' value={data.retail_price ?? ''} onChange={handleInputChange} />
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor='actions' className='sr-only'>
-                            Delete Variant
-                          </Label>
-                          <div className='flex items-center justify-center h-full'>
-                            <TooltipProvider>
-                              <Tooltip delayDuration={0}>
-                                <TooltipTrigger asChild>
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                    <LockKeyholeIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                    <span className='sr-only'>Lock price</span>
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Lock price</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip delayDuration={0}>
-                                <TooltipTrigger asChild>
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                    <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                    <span className='sr-only'>Status</span>
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Status</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                      {variants.map(variant => (
+                        <TableRow key={variant.sku}>
+                          <TableCell>
+                            <Label htmlFor='sku' className='sr-only'>
+                              SKU
+                            </Label>
+                            <Input id='sku' type='text' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                          </TableCell>
+                          <TableCell>
+                            <Label htmlFor='quantity' className='sr-only'>
+                              Quantity
+                            </Label>
+                            <InputNumber id='quantity' name='quantity' type='number' value={data.quantity ?? ''} onChange={handleInputChange} />
+                          </TableCell>
+                          <TableCell>
+                            <Label htmlFor='buying_price' className='sr-only'>
+                              Buying Price
+                            </Label>
+                            <InputNumber id='buying_price' name='buying_price' type='number' value={data.buying_price ?? ''} onChange={handleInputChange} />
+                          </TableCell>
+                          <TableCell>
+                            <Label htmlFor='selling_price' className='sr-only'>
+                              Selling Price
+                            </Label>
+                            <InputNumber id='selling_price' name='selling_price' type='number' value={data.selling_price ?? ''} onChange={handleInputChange} />
+                          </TableCell>
+                          <TableCell>
+                            <Label htmlFor='retail_price' className='sr-only'>
+                              Retail Price
+                            </Label>
+                            <InputNumber id='retail_price' name='retail_price' type='number' value={data.retail_price ?? ''} onChange={handleInputChange} />
+                          </TableCell>
+                          <TableCell>
+                            <span className='sr-only'>Actions</span>
+                            <div className='flex items-center justify-center h-full'>
+                              <TooltipProvider>
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                      <LockKeyholeIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                      <span className='sr-only'>Lock price</span>
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Lock price</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <TooltipProvider>
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                      <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                      <span className='sr-only'>Status</span>
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Status</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
 
-                            <TooltipProvider>
-                              <Tooltip delayDuration={0}>
-                                <TooltipTrigger asChild>
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                    <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                                    <span className='sr-only'>Remove picture</span>
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Remove</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+                              <TooltipProvider>
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                      <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                      <span className='sr-only'>Remove picture</span>
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Remove</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                   <Accordion type='single' collapsible className='w-full lg:hidden '>
@@ -269,7 +280,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                   </Accordion>
                 </CardContent>
                 <CardFooter className='justify-center border-t p-1 lg:p-2'>
-                  <Button size='sm' variant='ghost' className='gap-1'>
+                  <Button size='sm' variant='ghost' className='gap-1' onClick={addNewVariant}>
                     <PlusCircle className='h-3.5 w-3.5' />
                     Add Variant
                   </Button>
@@ -344,7 +355,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
             <Button variant='secondary' size='sm' onClick={() => reset()}>
               Discard
             </Button>
-            <Button size='sm' variant={saveButtonVariant}>
+            <Button size='sm' disabled={isSaveButtonDisabled}>
               Save Product
             </Button>
           </div>
