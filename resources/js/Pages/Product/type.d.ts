@@ -17,6 +17,30 @@ export type Product = {
             created_at: string
             updated_at: string
         }
+        relationships: {
+            variants: ProductVariant[]
+        }
+    }
+}
+
+export type ProductVariant = {
+    type: string
+    id: string
+    attributes: {
+        id: string
+        product_id: string
+        sku: string
+        quantity: string
+        buying_price: string
+        retail_price: string
+        selling_price: string
+        status: string
+        created_by_id: string
+        updated_by_id: string
+        created_by: string
+        updated_by: string
+        created_at: string
+        updated_at: string
     }
 }
 
@@ -25,6 +49,15 @@ export type ProductForm = {
     description: string
     category?: string
     status?: string
+}
+
+export type ProductVariantForm = {
+    product_id: string
+    sku: string
+    quantity: string
+    buying_price: string
+    retail_price: string
+    selling_price: string
 }
 
 export type ProductStatus = {

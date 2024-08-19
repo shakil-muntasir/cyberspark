@@ -39,15 +39,18 @@ const columns: TableColumn<Product>[] = createColumns([
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
-    id: 'variants_count',
-    label: 'Variants',
-    header: column => <DataTableColumnHeader column={column} title='Variants' />
-  },
-  {
     id: 'total_stock',
     label: 'Total Stock',
-    header: column => <DataTableColumnHeader column={column} title='Total Stock' />
+    header: column => <DataTableColumnHeader column={column} title='Total Stock' align='end' />,
+    cell: ({ total_stock }) => <div className='text-right font-medium mr-4'>{total_stock}</div>
   },
+  {
+    id: 'variants_count',
+    label: 'Variants',
+    header: column => <DataTableColumnHeader column={column} title='Variants' align='end' />,
+    cell: ({ variants_count }) => <div className='text-right font-medium mr-4'>{variants_count}</div>
+  },
+
   {
     id: 'stock_status',
     label: 'Stock Status',

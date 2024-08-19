@@ -67,3 +67,10 @@ export function toTitleCase(str: string) {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ')
 }
+
+export function formatCurrency(amount: string, currency = 'USD') {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency
+    }).format(parseInt(amount))
+}

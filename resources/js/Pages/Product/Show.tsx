@@ -16,22 +16,22 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Product, ProductForm, ProductStatus } from '@/Pages/Product/type'
+import { Product, ProductForm, ProductStatus, ProductVariantForm } from '@/Pages/Product/type'
 import { useEffect, useState } from 'react'
+import { formatCurrency } from '@/Lib/utils'
+import { Pencil2Icon } from '@radix-ui/react-icons'
 
-// TODO: refactor for latest product changes
+// TODO: add product variant form
 
 export default function ShowProduct({ product: { data: product }, statuses }: { product: Product; statuses: ProductStatus[] }) {
-  const initialData = {
+  const initialProductData = {
     name: product.attributes.name,
     description: product.attributes.description ?? '',
     category: '',
     status: product.attributes.status
   }
 
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialData)
-
-  const [variants, setVariants] = useState([{ sku: '32KJ4', quantity: '34', buying_price: '134', selling_price: '143', retail_price: '144' }])
+  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
 
   const [addVariantIsOpen, setAddVariantIsOpen] = useState(false)
 
@@ -51,7 +51,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
 
   useEffect(() => {
-    const hasChanges = Object.keys(initialData).some(key => data[key as keyof ProductForm] !== initialData[key as keyof ProductForm])
+    const hasChanges = Object.keys(initialProductData).some(key => data[key as keyof ProductForm] !== initialProductData[key as keyof ProductForm])
 
     setIsSaveButtonDisabled(!hasChanges)
   }, [data])
@@ -165,45 +165,31 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                         <TableHead>Buying Price</TableHead>
                         <TableHead>Selling Price</TableHead>
                         <TableHead>Retail Price</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead className='text-center'>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {variants.map(variant => (
-                        <TableRow key={variant.sku}>
+                      {product.relationships.variants.map(variant => (
+                        <TableRow key={variant.id}>
                           <TableCell>
-                            <Label htmlFor='sku' className='sr-only'>
-                              SKU
-                            </Label>
-                            <Input id='sku' type='text' name='sku' placeholder='SKU' />
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                            <div>{variant.attributes.sku}</div>
                           </TableCell>
                           <TableCell>
-                            <Label htmlFor='quantity' className='sr-only'>
-                              Quantity
-                            </Label>
-                            {/* TODO: Use InputNumber component */}
-                            <Input id='quantity' name='quantity' type='number' placeholder='Quantity' />
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.quantity)}</div>
                           </TableCell>
                           <TableCell>
-                            <Label htmlFor='buying_price' className='sr-only'>
-                              Buying Price
-                            </Label>
-                            {/* TODO: Use InputNumber component */}
-                            <Input id='buying_price' name='buying_price' type='number' placeholder='Buying Price' />
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                           </TableCell>
                           <TableCell>
-                            <Label htmlFor='selling_price' className='sr-only'>
-                              Selling Price
-                            </Label>
-                            {/* TODO: Use InputNumber component */}
-                            <Input id='selling_price' name='selling_price' type='number' placeholder='Selling Price' />
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                           </TableCell>
                           <TableCell>
-                            <Label htmlFor='retail_price' className='sr-only'>
-                              Retail Price
-                            </Label>
-                            {/* TODO: Use InputNumber component */}
-                            <Input id='retail_price' name='retail_price' type='number' placeholder='Retail Price' />
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
                           </TableCell>
                           <TableCell>
                             <span className='sr-only'>Actions</span>
@@ -212,12 +198,12 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                                 <Tooltip delayDuration={0}>
                                   <TooltipTrigger asChild>
                                     <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                      <LockKeyholeIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                      <span className='sr-only'>Lock price</span>
+                                      <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                      <span className='sr-only'>Edit</span>
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Lock price</p>
+                                    <p>Edit</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -254,43 +240,55 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                       ))}
                     </TableBody>
                   </Table>
-                  <Accordion type='single' collapsible className='w-full lg:hidden '>
-                    <AccordionItem value='item-1'>
-                      <AccordionTrigger className='py-0'>SKU: ABC123</AccordionTrigger>
-                      <AccordionContent className='space-y-2 pt-4 pb-0 mr-0.5'>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='quantity'>Quantity</Label>
+                  <Accordion type='single' collapsible className='w-full lg:hidden space-y-4'>
+                    {product.relationships.variants.map(variant => (
+                      <AccordionItem key={variant.id} value={variant.id}>
+                        <AccordionTrigger className='py-0 '>
                           <div>
-                            <Input id='quantity' name='quantity' type='number' placeholder='Quantity' />
+                            <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
                           </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='buying_price'>Buying Price</Label>
-                          <div>
-                            <Input id='buying_price' name='buying_price' type='text' placeholder='Buying Price' />
+                        </AccordionTrigger>
+                        <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.quantity)}</div>
                           </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='selling_price'>Selling Price</Label>
-                          {/* TODO: Use InputNumber component */}
-                          <div>
-                            <Input id='selling_price' name='selling_price' type='text' placeholder='Selling Price' />
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                           </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='retail_price'>Retail Price</Label>
-                          {/* TODO: Use InputNumber component */}
-                          <div>
-                            <Input id='retail_price' name='retail_price' type='number' placeholder='Retail Price' />
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                           </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                          </div>
+                          <div className='flex items-center justify-center space-x-2'>
+                            <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 flex items-center' onClick={() => null}>
+                              <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                              <span className='tracking-wider'>Edit</span>
+                            </Button>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => null}>
+                              <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                              <span className='tracking-wider'>Status</span>
+                            </Button>
+
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => null}>
+                              <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                              <span className='tracking-wider'>Remove</span>
+                            </Button>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
                   </Accordion>
                 </CardContent>
                 <CardFooter className='justify-center border-t p-1 lg:p-2'>
                   <Button size='sm' variant='ghost' className='gap-1' onClick={addNewVariant}>
-                    <PlusCircle className='h-3.5 w-3.5' />
+                    <PlusCircle className='h-4 w-4' />
                     Add Variant
                   </Button>
                 </CardFooter>
