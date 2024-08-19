@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ProductStatus: string
+enum ProductVariantStatus: string
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';

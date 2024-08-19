@@ -14,13 +14,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('sku')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->integer('quantity');
-            $table->decimal('buying_price', 10, 2);
-            $table->decimal('retail_price', 10, 2)->nullable();
-            $table->decimal('selling_price', 10, 2);
             $table->string('status')->default(ProductStatus::ACTIVE);
             $table->foreignId('created_by_id')->constrained('users');
             $table->foreignId('updated_by_id')->constrained('users');

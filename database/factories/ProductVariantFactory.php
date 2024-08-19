@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductVariant>
  */
-class ProductFactory extends Factory
+class ProductVariantFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +19,12 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(2, true),
-            'description' => fake()->sentence,
+            'product_id' => Product::factory(),
+            'sku' => strtoupper($this->faker->bothify('??###')),
+            'quantity' => fake()->numberBetween(1, 100),
+            'buying_price' => fake()->randomFloat(2, 1, 1999),
+            'retail_price' => fake()->randomFloat(2, 1, 1999),
+            'selling_price' => fake()->randomFloat(2, 1, 1999),
             'status' => fake()->randomElement(['active', 'inactive']),
             'created_by_id' => User::factory(),
             'updated_by_id' => User::factory(),

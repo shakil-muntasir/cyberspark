@@ -13,18 +13,18 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sku',
         'name',
-        'description',
-        'quantity',
-        'buying_price',
-        'retail_price',
-        'selling_price',
+        'description'
     ];
 
     protected $casts = [
         'status' => ProductStatus::class
     ];
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 
     public function createdBy()
     {
@@ -48,7 +48,6 @@ class Product extends Model
         if (!empty($search)) {
             return $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%")
                     ->orWhereHas('createdBy', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
@@ -89,6 +88,7 @@ class Product extends Model
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
+            ->with(['variants', 'createdBy', 'updatedBy'])
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
@@ -104,5 +104,29 @@ class Product extends Model
     public function getInactiveCountAttribute(): int
     {
         return $this->inactive()->count();
+    }
+
+    /**
+     * Accessor to get total stock of variants.
+     */
+    public function getTotalStockAttribute(): int
+    {
+        return $this->variants()->sum('quantity');
+    }
+
+    /**
+     * Accessor to get stock status based on total stock.
+     */
+    public function getStockStatusAttribute(): string
+    {
+        $totalStock = $this->total_stock;
+
+        if ($totalStock > 10) {
+            return 'available';
+        } elseif ($totalStock > 0) {
+            return 'low';
+        } else {
+            return 'out of stock';
+        }
     }
 }

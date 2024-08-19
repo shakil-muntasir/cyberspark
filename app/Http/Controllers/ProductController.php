@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductStatus;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -42,7 +43,8 @@ class ProductController extends Controller
         Gate::authorize('view', $product);
 
         return inertia('Product/Show', [
-            'product' => new ProductResource($product),
+            'product' => new ProductResource($product->load('variants')),
+            'statuses' => ProductStatus::getAllStatuses()
         ]);
     }
 }
