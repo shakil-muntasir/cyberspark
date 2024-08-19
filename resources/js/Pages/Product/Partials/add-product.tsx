@@ -13,18 +13,16 @@ import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { ProductForm } from '@/Pages/Product/type'
 import { InputNumber } from '@/Components/ui/input-number'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 
 export default function AddProduct() {
   const { toast } = useToast()
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
-    sku: '',
     name: '',
     description: '',
-    quantity: null,
-    buying_price: null,
-    retail_price: null,
-    selling_price: null
+    category: '',
+    status: ''
   })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -81,7 +79,13 @@ export default function AddProduct() {
       clearErrors()
     }
   }
-  // TODO: make the form take full width in mobile view
+
+  const categories = [
+    { label: 'Clothing', value: 'clothing' },
+    { label: 'Electronics', value: 'electronics' },
+    { label: 'Accessories', value: 'accessories' }
+  ]
+
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>
@@ -100,16 +104,6 @@ export default function AddProduct() {
 
         <ScrollArea className='h-[calc(100vh-80px)]'>
           <form onSubmit={handleAddProduct} className='mt-3 mb-8 grid gap-3 mx-6'>
-            <div className='grid gap-2'>
-              <Label htmlFor='sku' className={errors.sku?.length ? 'text-destructive' : ''}>
-                SKU
-              </Label>
-              <div className='space-y-px'>
-                <Input id='sku' type='text' name='sku' value={data.sku} onChange={handleInputChange} placeholder='Product SKU' />
-                <InputError message={errors.sku} />
-              </div>
-            </div>
-
             <div className='grid gap-2'>
               <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
                 Name
@@ -131,42 +125,23 @@ export default function AddProduct() {
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='quantity' className={errors.quantity?.length ? 'text-destructive' : ''}>
-                Quantity
+              <Label htmlFor='category' className={errors.category?.length ? 'text-destructive' : ''}>
+                Category
               </Label>
               <div className='space-y-px'>
-                <InputNumber id='quantity' type='number' name='quantity' value={data.quantity ?? ''} onChange={handleInputChange} placeholder='Quantity' />
-                <InputError message={errors.quantity} />
-              </div>
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='buying_price' className={errors.buying_price?.length ? 'text-destructive' : ''}>
-                Buying Price
-              </Label>
-              <div className='space-y-px'>
-                <InputNumber id='buying_price' type='number' name='buying_price' value={data.buying_price ?? ''} onChange={handleInputChange} placeholder='Buying Price' />
-                <InputError message={errors.buying_price} />
-              </div>
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='retail_price' className={errors.retail_price?.length ? 'text-destructive' : ''}>
-                Retail Price
-              </Label>
-              <div className='space-y-px'>
-                <InputNumber id='retail_price' type='number' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail Price' />
-                <InputError message={errors.retail_price} />
-              </div>
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='selling_price' className={errors.selling_price?.length ? 'text-destructive' : ''}>
-                Selling Price
-              </Label>
-              <div className='space-y-px'>
-                <InputNumber id='selling_price' type='number' name='selling_price' value={data.selling_price ?? ''} onChange={handleInputChange} placeholder='Selling Price' />
-                <InputError message={errors.selling_price} />
+                <Select name='category' value={data.category} onValueChange={value => setData('category', value)}>
+                  <SelectTrigger id='category' aria-label='Select category'>
+                    <SelectValue placeholder='Select category' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(category => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <InputError message={errors.category} />
               </div>
             </div>
 

@@ -48,7 +48,7 @@ export default function Login() {
                 Email
               </Label>
               <div className='space-y-px'>
-                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} placeholder='your@email.com' />
+                <Input id='email' type='text' name='email' value={data.email} onChange={handleInputChange} tabIndex={1} placeholder='your@email.com' autoComplete='email' />
                 <InputError message={errors.email} />
               </div>
             </div>
@@ -63,12 +63,12 @@ export default function Login() {
                 </Link>
               </div>
               <div className='space-y-px'>
-                <Input id='password' type='password' name='password' value={data.password} onChange={handleInputChange} placeholder='••••••••' />
+                <Input id='password' type='password' name='password' value={data.password} onChange={handleInputChange} tabIndex={2} placeholder='••••••••' autoComplete='current-password' />
                 <InputError message={errors.password} />
               </div>
             </div>
 
-            <Button type='submit' className='w-full'>
+            <Button type='submit' className='w-full' tabIndex={3}>
               Login
             </Button>
           </form>

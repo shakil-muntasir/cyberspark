@@ -75,7 +75,7 @@ export default function UpdatePasswordForm() {
               Current Password
             </Label>
             <div className='space-y-px'>
-              <Input id='current_password' type='password' name='current_password' value={data.current_password} onChange={handleInputChange} placeholder='Current Password' autoComplete='current_password' />
+              <Input id='current_password' type='password' name='current_password' value={data.current_password} onChange={handleInputChange} placeholder='Current Password' autoComplete='current-password' />
               <InputError message={errors.current_password} />
             </div>
           </div>

@@ -58,12 +58,12 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
     }
   }
 
-  const [saveButtonVariant, setSaveButtonVariant] = useState<'default' | 'disabled'>('disabled')
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
 
   useEffect(() => {
     const hasChanges = Object.keys(initialData).some(key => data[key as keyof UserForm] !== initialData[key as keyof UserForm])
 
-    setSaveButtonVariant(hasChanges ? 'default' : 'disabled')
+    setIsSaveButtonDisabled(hasChanges)
   }, [data])
 
   const deleteModalData = {
@@ -126,7 +126,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
               <Button variant='secondary' size='sm' onClick={() => reset()}>
                 Discard
               </Button>
-              <Button size='sm' variant={saveButtonVariant} >
+              <Button size='sm' disabled={isSaveButtonDisabled}>
                 Save User
               </Button>
             </div>
@@ -145,15 +145,15 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                     <div className='grid gap-6'>
                       <div className='grid gap-2'>
                         <Label htmlFor='name'>Name</Label>
-                        <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} className='w-full' />
+                        <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} className='w-full' autoComplete='name' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='email'>Email</Label>
-                        <Input id='email' type='email' name='email' value={data.email} onChange={handleInputChange} className='w-full' />
+                        <Input id='email' type='email' name='email' value={data.email} onChange={handleInputChange} className='w-full' autoComplete='email' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='phone'>Phone</Label>
-                        <Input id='phone' type='text' name='phone' value={data.phone} onChange={handleInputChange} className='w-full' />
+                        <Input id='phone' type='text' name='phone' value={data.phone} onChange={handleInputChange} className='w-full' autoComplete='phone' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='image' className={errors.image?.length ? 'text-destructive' : ''}>
@@ -213,11 +213,11 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                       <div className='grid gap-6'>
                         <div className='grid gap-2'>
                           <Label htmlFor='address'>Address</Label>
-                          <Input id='address' type='text' name='address' value={data.address} onChange={handleInputChange} className='w-full' />
+                          <Input id='address' type='text' name='address' value={data.address} onChange={handleInputChange} className='w-full' autoComplete='address' />
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='city'>City</Label>
-                          <Input id='city' type='text' name='city' value={data.city} onChange={handleInputChange} className='w-full' />
+                          <Input id='city' type='text' name='city' value={data.city} onChange={handleInputChange} className='w-full' autoComplete='address-level2' />
                         </div>
                         <div className='grid gap-2 '>
                           <Label htmlFor='state'>State</Label>
@@ -430,7 +430,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
             <Button variant='secondary' size='sm' onClick={() => reset()}>
               Discard
             </Button>
-            <Button size='sm' variant={saveButtonVariant}>
+            <Button size='sm' disabled={isSaveButtonDisabled}>
               Save User
             </Button>
           </div>

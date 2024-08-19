@@ -19,19 +19,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Product, ProductForm, ProductStatus } from '@/Pages/Product/type'
 import { useEffect, useState } from 'react'
 
-// TODO: refactor for lastest product changes
+// TODO: refactor for latest product changes
 
 export default function ShowProduct({ product: { data: product }, statuses }: { product: Product; statuses: ProductStatus[] }) {
   const initialData = {
-    sku: product.attributes.sku,
     name: product.attributes.name,
     description: product.attributes.description ?? '',
     category: '',
-    status: product.attributes.status,
-    quantity: product.attributes.quantity,
-    buying_price: product.attributes.buying_price,
-    retail_price: product.attributes.retail_price ?? null,
-    selling_price: product.attributes.selling_price
+    status: product.attributes.status
   }
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialData)
@@ -121,7 +116,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                   <div className='grid gap-6'>
                     <div className='grid gap-2'>
                       <Label htmlFor='name'>Name</Label>
-                      <Input id='name' type='text' name='name' className='w-full' value={data.name} onChange={handleInputChange} autoComplete='off' />
+                      <Input id='name' type='text' name='name' className='w-full' value={data.name} onChange={handleInputChange} autoComplete='name' />
                     </div>
                     <div className='grid gap-2'>
                       <Label htmlFor='description'>Description</Label>
@@ -180,31 +175,35 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                             <Label htmlFor='sku' className='sr-only'>
                               SKU
                             </Label>
-                            <Input id='sku' type='text' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                            <Input id='sku' type='text' name='sku' placeholder='SKU' />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor='quantity' className='sr-only'>
                               Quantity
                             </Label>
-                            <InputNumber id='quantity' name='quantity' type='number' value={data.quantity ?? ''} onChange={handleInputChange} />
+                            {/* TODO: Use InputNumber component */}
+                            <Input id='quantity' name='quantity' type='number' placeholder='Quantity' />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor='buying_price' className='sr-only'>
                               Buying Price
                             </Label>
-                            <InputNumber id='buying_price' name='buying_price' type='number' value={data.buying_price ?? ''} onChange={handleInputChange} />
+                            {/* TODO: Use InputNumber component */}
+                            <Input id='buying_price' name='buying_price' type='number' placeholder='Buying Price' />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor='selling_price' className='sr-only'>
                               Selling Price
                             </Label>
-                            <InputNumber id='selling_price' name='selling_price' type='number' value={data.selling_price ?? ''} onChange={handleInputChange} />
+                            {/* TODO: Use InputNumber component */}
+                            <Input id='selling_price' name='selling_price' type='number' placeholder='Selling Price' />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor='retail_price' className='sr-only'>
                               Retail Price
                             </Label>
-                            <InputNumber id='retail_price' name='retail_price' type='number' value={data.retail_price ?? ''} onChange={handleInputChange} />
+                            {/* TODO: Use InputNumber component */}
+                            <Input id='retail_price' name='retail_price' type='number' placeholder='Retail Price' />
                           </TableCell>
                           <TableCell>
                             <span className='sr-only'>Actions</span>
@@ -257,23 +256,33 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                   </Table>
                   <Accordion type='single' collapsible className='w-full lg:hidden '>
                     <AccordionItem value='item-1'>
-                      <AccordionTrigger className='py-0'>SKU: {data.sku}</AccordionTrigger>
+                      <AccordionTrigger className='py-0'>SKU: ABC123</AccordionTrigger>
                       <AccordionContent className='space-y-2 pt-4 pb-0 mr-0.5'>
                         <div className='flex items-center justify-between'>
                           <Label htmlFor='quantity'>Quantity</Label>
-                          <InputNumber id='quantity' name='quantity' type='number' value={data.quantity ?? ''} onChange={handleInputChange} />
+                          <div>
+                            <Input id='quantity' name='quantity' type='number' placeholder='Quantity' />
+                          </div>
                         </div>
                         <div className='flex items-center justify-between'>
                           <Label htmlFor='buying_price'>Buying Price</Label>
-                          <InputNumber id='buying_price' name='buying_price' type='number' value={data.buying_price ?? ''} onChange={handleInputChange} />
+                          <div>
+                            <Input id='buying_price' name='buying_price' type='text' placeholder='Buying Price' />
+                          </div>
                         </div>
                         <div className='flex items-center justify-between'>
                           <Label htmlFor='selling_price'>Selling Price</Label>
-                          <InputNumber id='selling_price' name='selling_price' type='number' value={data.selling_price ?? ''} onChange={handleInputChange} />
+                          {/* TODO: Use InputNumber component */}
+                          <div>
+                            <Input id='selling_price' name='selling_price' type='text' placeholder='Selling Price' />
+                          </div>
                         </div>
                         <div className='flex items-center justify-between'>
                           <Label htmlFor='retail_price'>Retail Price</Label>
-                          <InputNumber id='retail_price' name='retail_price' type='number' value={data.retail_price ?? ''} onChange={handleInputChange} />
+                          {/* TODO: Use InputNumber component */}
+                          <div>
+                            <Input id='retail_price' name='retail_price' type='number' placeholder='Retail Price' />
+                          </div>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
