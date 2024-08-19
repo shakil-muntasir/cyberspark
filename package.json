@@ -44,6 +44,7 @@
         "@radix-ui/react-tooltip": "^1.0.7",
         "@tanstack/react-table": "^8.17.3",
         "class-variance-authority": "^0.7.0",
+        "clockwork-browser": "^1.1.2",
         "clsx": "^2.1.1",
         "cmdk": "^1.0.0",
         "lucide-react": "^0.390.0",
