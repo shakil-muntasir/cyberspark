@@ -90,7 +90,7 @@ export default function AddProduct() {
           <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Product</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className='px-0'>
+      <SheetContent className='px-0' fullscreen={true}>
         <SheetHeader className='px-6'>
           <SheetTitle>Add Product</SheetTitle>
           <SheetDescription>Fill in the form to add a new product to your store.</SheetDescription>

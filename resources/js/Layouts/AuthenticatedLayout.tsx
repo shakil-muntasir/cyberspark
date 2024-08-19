@@ -21,7 +21,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
                         <DynamicBreadcrumb />
                         <div className='relative ml-auto flex-1 md:grow-0'>
                             <SearchIcon className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
-                            <Input className='w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' type='search' />
+                            <Input id='search' type='search' name='search' className='w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...'/>
                         </div>
                         <DarkModeToggle />
                         <UserDropdown />
