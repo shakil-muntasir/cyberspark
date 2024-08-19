@@ -22,23 +22,20 @@ class ProductResource extends JsonResource
                 'name' => $this->name,
                 'description' => $this->description,
                 'status' => $this->status,
-                'variants' => $this->variants()->count(),
+                'variants_count' => $this->variants_count,
                 'total_stock' => $this->total_stock,
                 'stock_status' => $this->stock_status,
                 'created_by_id' => (string) $this->created_by_id,
                 'updated_by_id' => (string) $this->updated_by_id,
-                'created_by' => $this->createdBy->name,
-                'updated_by' => $this->updatedBy->name,
+                'created_by' => $this->whenLoaded('createdBy', fn() => $this->createdBy->name),
+                'updated_by' => $this->whenLoaded('updatedBy', fn() => $this->updatedBy->name),
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
-            ]
+            ],
         ];
 
-        $relationships = $this->loadRelationships([
-            'variants' => ProductVariantResource::class,
-            // Add new relationships here as needed
-            // 'newRelationship' => NewRelationshipResource::class,
-        ]);
+        // Dynamically load relationships
+        $relationships = $this->dynamicLoadRelationships();
 
         if (!empty($relationships)) {
             $data['relationships'] = $relationships;
@@ -48,21 +45,42 @@ class ProductResource extends JsonResource
     }
 
     /**
-     * Load and format relationships dynamically.
+     * Dynamically load and format relationships based on what's loaded.
      *
-     * @param  array<string, string>  $relationships
      * @return array<string, mixed>
      */
-    protected function loadRelationships(array $relationships): array
+    protected function dynamicLoadRelationships(): array
     {
         $result = [];
 
-        foreach ($relationships as $relation => $resource) {
-            if ($this->relationLoaded($relation) && $this->$relation->isNotEmpty()) {
-                $result[$relation] = $resource::collection($this->$relation);
+        // Loop through the loaded relationships and transform them
+        foreach ($this->getRelations() as $relation => $value) {
+            if ($this->relationLoaded($relation)) {
+                $resourceClass = $this->getRelationshipResourceClass($relation);
+                if ($resourceClass) {
+                    $result[$relation] = $resourceClass::collection($this->$relation);
+                }
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Determine the appropriate resource class for a given relationship.
+     *
+     * @param  string  $relation
+     * @return string|null
+     */
+    protected function getRelationshipResourceClass(string $relation): ?string
+    {
+        // Define a mapping of relationship names to resource classes
+        $relationshipResources = [
+            'variants' => ProductVariantResource::class,
+            // Add more relationships as needed
+            // 'newRelationship' => NewRelationshipResource::class,
+        ];
+
+        return $relationshipResources[$relation] ?? null;
     }
 }

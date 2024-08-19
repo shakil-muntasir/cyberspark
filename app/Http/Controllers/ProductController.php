@@ -43,7 +43,7 @@ class ProductController extends Controller
         Gate::authorize('view', $product);
 
         return inertia('Product/Show', [
-            'product' => new ProductResource($product->load('variants')),
+            'product' => new ProductResource($product->withRelationships()),
             'statuses' => ProductStatus::getAllStatuses()
         ]);
     }

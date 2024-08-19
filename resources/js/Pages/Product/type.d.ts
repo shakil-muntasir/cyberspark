@@ -7,7 +7,7 @@ export type Product = {
             name: string
             description?: string
             status: 'active' | 'inactive'
-            variants: string
+            variants_count: string
             total_stock: string
             stock_status: string
             created_by_id: string

@@ -37,6 +37,30 @@ class Product extends Model
     }
 
     /**
+     * Accessor to get total stock of variants.
+     */
+    public function getTotalStockAttribute(): int
+    {
+        return $this->attributes['variants_sum_quantity'] ?? 0;
+    }
+
+    /**
+     * Accessor to get stock status based on total stock.
+     */
+    public function getStockStatusAttribute(): string
+    {
+        $totalStock = $this->total_stock;
+
+        if ($totalStock > 10) {
+            return 'available';
+        } elseif ($totalStock > 0) {
+            return 'low';
+        } else {
+            return 'out of stock';
+        }
+    }
+
+    /**
      * Scope a query to search products based on given search query.
      *
      * @param  Builder $query
@@ -79,16 +103,12 @@ class Product extends Model
         return $query->where('status', ProductStatus::INACTIVE->value);
     }
 
-    /**
-     * Filter, sort, and paginate products based on given parameters.
-     *
-     * @param  array<string, mixed>  $params
-     * @return LengthAwarePaginator
-     */
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['variants', 'createdBy', 'updatedBy'])
+            ->with(['createdBy:id,name', 'updatedBy:id,name'])
+            ->withCount('variants') // This will add 'variants_counts' to the result
+            ->withSum('variants', 'quantity') // This will add 'variants_sum_quantity' to the result
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
@@ -96,37 +116,25 @@ class Product extends Model
             ->paginate($params['per_page'] ?? 10);
     }
 
-    public function getActiveCountAttribute(): int
-    {
-        return $this->active()->count();
-    }
-
-    public function getInactiveCountAttribute(): int
-    {
-        return $this->inactive()->count();
-    }
-
     /**
-     * Accessor to get total stock of variants.
+     * Load necessary relationships for the product instance.
+     *
+     * @param  array $additionalRelations
+     * @return $this
      */
-    public function getTotalStockAttribute(): int
+    public function withRelationships(array $additionalRelations = []): self
     {
-        return $this->variants()->sum('quantity');
-    }
+        $defaultRelations = [
+            'variants.createdBy:id,name',
+            'variants.updatedBy:id,name',
+            // add more relationships as needed
+        ];
 
-    /**
-     * Accessor to get stock status based on total stock.
-     */
-    public function getStockStatusAttribute(): string
-    {
-        $totalStock = $this->total_stock;
+        // Merge default relations with any additional relations passed in
+        $relations = array_merge($defaultRelations, $additionalRelations);
 
-        if ($totalStock > 10) {
-            return 'available';
-        } elseif ($totalStock > 0) {
-            return 'low';
-        } else {
-            return 'out of stock';
-        }
+        $this->load($relations);
+
+        return $this;
     }
 }

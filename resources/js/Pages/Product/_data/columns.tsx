@@ -39,7 +39,7 @@ const columns: TableColumn<Product>[] = createColumns([
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
-    id: 'variants',
+    id: 'variants_count',
     label: 'Variants',
     header: column => <DataTableColumnHeader column={column} title='Variants' />
   },
