@@ -14,6 +14,8 @@ class UserController extends Controller
 {
     public function index(UserRequest $request): InertiaResponse
     {
+        Gate::authorize('viewAny', User::class);
+
         $users = User::filterAndSort($request->validatedParams());
 
         return inertia('User/Index', [
@@ -28,11 +30,10 @@ class UserController extends Controller
 
     public function show(User $user): InertiaResponse
     {
-        // TODO: commented this out due to unauthorized access to view details page
-        //Gate::authorize('view', $user);
+        Gate::authorize('view', $user);
 
         return inertia('User/Show', [
-            'user' => new UserResource($user),
+            'user' => new UserResource($user->withRelationships()),
         ]);
     }
 }
