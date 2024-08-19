@@ -18,10 +18,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { cn, getImageData } from '@/Lib/utils'
 import { User, UserForm } from '@/Pages/User/type'
 import { useForm } from '@inertiajs/react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function ShowUser({ user: { data: user } }: { user: User }) {
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>({
+  const initialData = {
     name: user.attributes.name,
     email: user.attributes.email,
     gender: '',
@@ -34,7 +34,9 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
     state: '',
     zip: '',
     password: ''
-  })
+  }
+
+  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>(initialData)
 
   const [previewImage, setPreviewImage] = useState<string>('')
 
@@ -55,6 +57,14 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
       imageRef.current.value = ''
     }
   }
+
+  const [saveButtonVariant, setSaveButtonVariant] = useState<'default' | 'disabled'>('disabled')
+
+  useEffect(() => {
+    const hasChanges = Object.keys(initialData).some(key => data[key as keyof UserForm] !== initialData[key as keyof UserForm])
+
+    setSaveButtonVariant(hasChanges ? 'default' : 'disabled')
+  }, [data])
 
   const deleteModalData = {
     id: user.attributes.id,
@@ -116,7 +126,9 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
               <Button variant='secondary' size='sm' onClick={() => reset()}>
                 Discard
               </Button>
-              <Button size='sm'>Save User</Button>
+              <Button size='sm' variant={saveButtonVariant} >
+                Save User
+              </Button>
             </div>
           </div>
 
@@ -233,7 +245,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                 <div className='w-full'>
                   <Tabs defaultValue='week'>
                     <div className='lg:flex items-center justify-end'>
-                      <TabsList className='w-full flex justify-center lg:justify-end'>
+                      <TabsList className='flex justify-center lg:justify-end'>
                         <TabsTrigger value='week'>Week</TabsTrigger>
                         <TabsTrigger value='month'>Month</TabsTrigger>
                         <TabsTrigger value='year'>Year</TabsTrigger>
@@ -418,7 +430,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
             <Button variant='secondary' size='sm' onClick={() => reset()}>
               Discard
             </Button>
-            <Button size='sm' variant='default'>
+            <Button size='sm' variant={saveButtonVariant}>
               Save User
             </Button>
           </div>

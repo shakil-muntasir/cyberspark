@@ -1,6 +1,6 @@
 import { Link, useForm } from '@inertiajs/react'
 
-import { ChevronLeft, PlusCircle } from 'lucide-react'
+import { ChevronLeft, LockKeyholeIcon, PlusCircle, SquareIcon, Trash2Icon } from 'lucide-react'
 
 import DeleteModal from '@/Components/DeleteModal'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
@@ -17,9 +17,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Product, ProductForm } from '@/Pages/Product/type'
+import { useEffect, useState } from 'react'
 
 export default function ShowProduct({ product: { data: product } }: { product: Product }) {
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
+  const initialData = {
     sku: product.attributes.sku,
     name: product.attributes.name,
     description: product.attributes.description ?? '',
@@ -29,7 +30,9 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     buying_price: product.attributes.buying_price,
     retail_price: product.attributes.retail_price ?? null,
     selling_price: product.attributes.selling_price
-  })
+  }
+
+  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialData)
 
   const { initializeDeleteModal } = useDeleteModal()
 
@@ -38,6 +41,14 @@ export default function ShowProduct({ product: { data: product } }: { product: P
     setData(name as keyof ProductForm, value)
     clearErrors(name as keyof ProductForm)
   }
+
+  const [saveButtonVariant, setSaveButtonVariant] = useState<'default' | 'disabled'>('disabled')
+
+  useEffect(() => {
+    const hasChanges = Object.keys(initialData).some(key => data[key as keyof ProductForm] !== initialData[key as keyof ProductForm])
+
+    setSaveButtonVariant(hasChanges ? 'default' : 'disabled')
+  }, [data])
 
   const deleteModalData = {
     id: product.attributes.id,
@@ -83,7 +94,9 @@ export default function ShowProduct({ product: { data: product } }: { product: P
               <Button variant='secondary' size='sm' onClick={() => reset()}>
                 Discard
               </Button>
-              <Button size='sm'>Save Product</Button>
+              <Button size='sm' variant={saveButtonVariant}>
+                Save Product
+              </Button>
             </div>
           </div>
           <div className='flex flex-col lg:flex-row gap-4 lg:gap-8'>
@@ -146,6 +159,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                         <TableHead>Buying Price</TableHead>
                         <TableHead>Selling Price</TableHead>
                         <TableHead>Retail Price</TableHead>
+                        <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -179,6 +193,53 @@ export default function ShowProduct({ product: { data: product } }: { product: P
                             Retail Price
                           </Label>
                           <InputNumber id='retail_price' name='retail_price' type='number' value={data.retail_price ?? ''} onChange={handleInputChange} />
+                        </TableCell>
+                        <TableCell>
+                          <Label htmlFor='actions' className='sr-only'>
+                            Delete Variant
+                          </Label>
+                          <div className='flex items-center justify-center h-full'>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                    <LockKeyholeIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                    <span className='sr-only'>Lock price</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Lock price</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                    <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                    <span className='sr-only'>Status</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Status</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                    <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                    <span className='sr-only'>Remove picture</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Remove</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -283,7 +344,7 @@ export default function ShowProduct({ product: { data: product } }: { product: P
             <Button variant='secondary' size='sm' onClick={() => reset()}>
               Discard
             </Button>
-            <Button size='sm' variant='default'>
+            <Button size='sm' variant={saveButtonVariant}>
               Save Product
             </Button>
           </div>
