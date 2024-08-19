@@ -115,26 +115,4 @@ class Product extends Model
             ->orderBy($params['sort_by'] ?? 'id', $params['sort_to'] ?? 'asc')
             ->paginate($params['per_page'] ?? 10);
     }
-
-    /**
-     * Load necessary relationships for the product instance.
-     *
-     * @param  array $additionalRelations
-     * @return $this
-     */
-    public function withRelationships(array $additionalRelations = []): self
-    {
-        $defaultRelations = [
-            'variants.createdBy:id,name',
-            'variants.updatedBy:id,name',
-            // add more relationships as needed
-        ];
-
-        // Merge default relations with any additional relations passed in
-        $relations = array_merge($defaultRelations, $additionalRelations);
-
-        $this->load($relations);
-
-        return $this;
-    }
 }

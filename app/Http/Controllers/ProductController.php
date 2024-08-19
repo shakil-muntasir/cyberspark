@@ -42,8 +42,16 @@ class ProductController extends Controller
     {
         Gate::authorize('view', $product);
 
+        $product->load([
+            'variants',
+            'createdBy:id,name',
+            'updatedBy:id,name',
+            'variants.createdBy:id,name',
+            'variants.updatedBy:id,name',
+        ]);
+
         return inertia('Product/Show', [
-            'product' => new ProductResource($product->withRelationships()),
+            'product' => new ProductResource($product),
             'statuses' => ProductStatus::getAllStatuses()
         ]);
     }
