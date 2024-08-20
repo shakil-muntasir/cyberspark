@@ -4,15 +4,15 @@ import { Input } from '@/Components/ui/input'
 
 interface CustomNumberInputProps {
   id: string
-  type: 'number'
   name: string
   value: string | number
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  className?: string
   allowNegative?: boolean
   placeholder?: string
 }
 
-const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, allowNegative = false, placeholder }) => {
+const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, className, allowNegative = false, placeholder }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const changeValue = (delta: number, e: React.MouseEvent) => {
@@ -45,7 +45,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
 
   return (
     <div className='flex relative group'>
-      <Input id={id} type='text' name={name} value={value} onChange={onChange} ref={inputRef} className='no-spin' placeholder={placeholder} />
+      <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} />
       <div className='absolute flex flex-col right-2 top-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity h-10'>
         <button
           type='button'

@@ -1,6 +1,6 @@
 import { Link, useForm } from '@inertiajs/react'
 
-import { ChevronLeft, LockKeyholeIcon, PlusCircle, SquareIcon, Trash2Icon } from 'lucide-react'
+import { CheckIcon, ChevronLeft, PlusCircle, SquareCheckBig, SquareIcon, Trash2Icon, X } from 'lucide-react'
 
 import DeleteModal from '@/Components/DeleteModal'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
@@ -8,7 +8,6 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
-import { InputNumber } from '@/Components/ui/input-number'
 import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
@@ -16,10 +15,13 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Product, ProductForm, ProductStatus, ProductVariantForm } from '@/Pages/Product/type'
-import { useEffect, useState } from 'react'
-import { formatCurrency } from '@/Lib/utils'
+import { cn, formatCurrency, toTitleCase } from '@/Lib/utils'
+import { Product, ProductForm, ProductStatus, ProductVariant } from '@/Pages/Product/type'
 import { Pencil2Icon } from '@radix-ui/react-icons'
+import { useEffect, useState } from 'react'
+import { InputNumber } from '@/Components/ui/input-number'
+import { Separator } from '@/Components/ui/separator'
+import { useTheme } from '@/Providers/theme-provider'
 
 // TODO: add product variant form
 
@@ -33,11 +35,86 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
 
+  const [variants, setVariants] = useState<ProductVariant[]>(product.relationships.variants)
+
+  const [newVariant, setNewVariant] = useState<ProductVariant>({
+    type: 'product_variants',
+    id: crypto.randomUUID(),
+    attributes: {
+      id: crypto.randomUUID(),
+      product_id: product.id,
+      sku: '',
+      quantity: '',
+      buying_price: '',
+      retail_price: '',
+      selling_price: '',
+      status: 'active',
+      created_by_id: '',
+      updated_by_id: '',
+      created_by: 'john doe',
+      updated_by: 'jane doe',
+      created_at: '',
+      updated_at: ''
+    }
+  })
+
+  const handleVariantInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setNewVariant(prevVariant => ({
+      ...prevVariant,
+      attributes: {
+        ...prevVariant.attributes,
+        [name]: value
+      }
+    }))
+  }
+
   const [addVariantIsOpen, setAddVariantIsOpen] = useState(false)
 
   const addNewVariant = () => {
-    setAddVariantIsOpen(true)
-    // setVariants([...variants, { sku: '', quantity: '', buying_price: '', selling_price: '', retail_price: '' }])
+    setAddVariantIsOpen(false)
+    setVariants([...variants, newVariant])
+    setNewVariant({
+      type: 'product_variants',
+      id: crypto.randomUUID(),
+      attributes: {
+        id: crypto.randomUUID(),
+        product_id: product.id,
+        sku: '',
+        quantity: '',
+        buying_price: '',
+        retail_price: '',
+        selling_price: '',
+        status: 'active',
+        created_by_id: '',
+        updated_by_id: '',
+        created_by: 'john doe',
+        updated_by: 'jane doe',
+        created_at: '',
+        updated_at: ''
+      }
+    })
+  }
+
+  const deleteVariant = (id: string) => {
+    const filteredVariants = variants.filter(variant => variant.id !== id)
+    setVariants(filteredVariants)
+  }
+
+  const handleVariantStatus = (id: string) => {
+    setVariants(prevVariants =>
+      prevVariants.map(variant =>
+        variant.id === id
+          ? {
+              ...variant,
+              attributes: {
+                ...variant.attributes,
+                status: variant.attributes.status === 'active' ? 'inactive' : 'active'
+              }
+            }
+          : variant
+      )
+    )
   }
 
   const { initializeDeleteModal } = useDeleteModal()
@@ -56,6 +133,8 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
     setIsSaveButtonDisabled(!hasChanges)
   }, [data])
 
+  const { theme } = useTheme()
+
   const deleteModalData = {
     id: product.attributes.id,
     name: product.attributes.name,
@@ -68,11 +147,6 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
     { label: 'Electronics', value: 'electronics' },
     { label: 'Accessories', value: 'accessories' }
   ]
-
-  // const statuses = [
-  //   { label: 'Active', value: 'active' },
-  //   { label: 'Inactive', value: 'inactive' }
-  // ]
 
   return (
     <AuthenticatedLayout title='Product Details'>
@@ -169,81 +243,156 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {product.relationships.variants.map(variant => (
-                        <TableRow key={variant.id}>
-                          <TableCell>
-                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
-                            <div>{variant.attributes.sku}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.quantity)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <span className='sr-only'>Actions</span>
-                            <div className='flex items-center justify-center h-full'>
-                              <TooltipProvider>
-                                <Tooltip delayDuration={0}>
-                                  <TooltipTrigger asChild>
-                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                      <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                      <span className='sr-only'>Edit</span>
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Edit</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip delayDuration={0}>
-                                  <TooltipTrigger asChild>
-                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                      <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                      <span className='sr-only'>Status</span>
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Status</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                      {variants.length === 0 ? (
+                        <TableRow>
+                          <div className='flex h-12 px-4 text-center align-middle font-medium text-muted-foreground'>Nothing to show</div>
+                        </TableRow>
+                      ) : (
+                        variants.map(variant => (
+                          <TableRow key={variant.id}>
+                            <TableCell>
+                              <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                              <div>{variant.attributes.sku}</div>
+                            </TableCell>
+                            <TableCell>
+                              <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                              <div className='text-right font-medium'>{variant.attributes.quantity}</div>
+                            </TableCell>
+                            <TableCell>
+                              <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                              <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                            </TableCell>
+                            <TableCell>
+                              <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                              <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                            </TableCell>
+                            <TableCell>
+                              <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                              <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                            </TableCell>
+                            <TableCell>
+                              <span className='sr-only'>Actions</span>
+                              <div className='flex items-center justify-center h-full'>
+                                <TooltipProvider>
+                                  <Tooltip delayDuration={0}>
+                                    <TooltipTrigger asChild>
+                                      <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                                        <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                        <span className='sr-only'>Edit</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Edit</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <TooltipProvider>
+                                  <Tooltip delayDuration={0}>
+                                    <TooltipTrigger asChild>
+                                      {variant.attributes.status === 'active' ? (
+                                        <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatus(variant.id)}>
+                                          <SquareCheckBig className='h-4 w-4 text-foreground group-hover:text-foreground' />
+                                          <span className='sr-only'>Status</span>
+                                        </Button>
+                                      ) : (
+                                        <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatus(variant.id)}>
+                                          <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                          <span className='sr-only'>Status</span>
+                                        </Button>
+                                      )}
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>{toTitleCase(variant.attributes.status)}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
 
+                                <TooltipProvider>
+                                  <Tooltip delayDuration={0}>
+                                    <TooltipTrigger asChild>
+                                      <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => deleteVariant(variant.id)}>
+                                        <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                        <span className='sr-only'>Remove</span>
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Remove</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                      {addVariantIsOpen && (
+                        <TableRow>
+                          <TableCell className='px-1'>
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                            <div>
+                              <Input className='px-2' name='sku' value={newVariant.attributes.sku} onChange={handleVariantInput} placeholder='SKU' />
+                            </div>
+                          </TableCell>
+                          <TableCell className='px-1'>
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                            <div>
+                              <InputNumber className='px-2' id='quantity' name='quantity' value={newVariant.attributes.quantity} onChange={handleVariantInput} placeholder='Quantity' />
+                            </div>
+                          </TableCell>
+                          <TableCell className='px-1'>
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                            <div>
+                              <InputNumber className='px-2' id='buying_price' name='buying_price' value={newVariant.attributes.buying_price} onChange={handleVariantInput} placeholder='Buying price' />
+                            </div>
+                          </TableCell>
+                          <TableCell className='px-1'>
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                            <InputNumber className='px-2' id='retail_price' name='retail_price' value={newVariant.attributes.retail_price} onChange={handleVariantInput} placeholder='Retail price' />
+                          </TableCell>
+                          <TableCell className='px-1'>
+                            <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                            <InputNumber className='px-2' id='selling_price' name='selling_price' value={newVariant.attributes.selling_price} onChange={handleVariantInput} placeholder='Selling price' />
+                          </TableCell>
+
+                          <TableCell className='px-1'>
+                            <span className='sr-only'>Actions</span>
+                            <div className='flex items-center justify-center h-full gap-3'>
                               <TooltipProvider>
                                 <Tooltip delayDuration={0}>
                                   <TooltipTrigger asChild>
-                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                                      <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                                      <span className='sr-only'>Remove picture</span>
+                                    <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500' onClick={addNewVariant}>
+                                      <CheckIcon className={cn('h-4 w-4', theme === 'dark' ? 'text-primary-foreground/80 group-hover:text-primary-foreground' : 'text-foreground')} />
+                                      <span className='sr-only'>Add</span>
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Remove</p>
+                                    <p>Add</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <TooltipProvider>
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 bg-red-500 hover:bg-red-600' onClick={() => setAddVariantIsOpen(false)}>
+                                      <X className='h-4 w-4 text-foreground/80 group-hover:text-foreground' />
+                                      <span className='sr-only'>Discard</span>
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Discard</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             </div>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                   <Accordion type='single' collapsible className='w-full lg:hidden space-y-4'>
-                    {product.relationships.variants.map(variant => (
+                    {variants.map((variant, index) => (
                       <AccordionItem key={variant.id} value={variant.id}>
-                        <AccordionTrigger className='py-0 '>
+                        <AccordionTrigger className={`pt-0 pb-2 ${index !== variants.length - 1 ? 'border-b' : ''}`}>
                           <div>
                             <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
                           </div>
@@ -251,7 +400,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                         <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
                           <div className='flex items-center justify-between'>
                             <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.quantity)}</div>
+                            <div className='text-right font-medium'>{variant.attributes.quantity}</div>
                           </div>
                           <div className='flex items-center justify-between'>
                             <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
@@ -266,28 +415,80 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
 
                             <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
                           </div>
-                          <div className='flex items-center justify-center space-x-2'>
-                            <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 flex items-center' onClick={() => null}>
-                              <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                              <span className='tracking-wider'>Edit</span>
+                          <div className='grid grid-cols-3 space-x-2'>
+                            <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                              <div className='flex items-center gap-1'>
+                                <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                <span className='tracking-wider'>Edit</span>
+                              </div>
                             </Button>
-                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => null}>
-                              <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                              <span className='tracking-wider'>Status</span>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatus(variant.id)}>
+                              <div className='flex items-center gap-1'>
+                                {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
+                                <span className='tracking-wider'>{toTitleCase(variant.attributes.status)}</span>
+                              </div>
                             </Button>
 
-                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => null}>
-                              <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                              <span className='tracking-wider'>Remove</span>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => deleteVariant(variant.id)}>
+                              <div className=' flex items-center gap-1'>
+                                <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                <span className='tracking-wider'>Remove</span>
+                              </div>
                             </Button>
                           </div>
                         </AccordionContent>
                       </AccordionItem>
                     ))}
                   </Accordion>
+                  <div className={`lg:hidden overflow-hidden transition-all ease-in-out duration-700 ${addVariantIsOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`} style={{ transitionProperty: 'max-height, opacity' }}>
+                    {addVariantIsOpen && (
+                      <div className={`overflow-hidden transition-all ease-in-out duration-300 ${addVariantIsOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} space-y-3 pb-0`}>
+                        <Separator className='mb-6' />
+                        <div className='flex items-center justify-between'>
+                          <Label htmlFor='sku'>SKU</Label>
+                          <div>
+                            <Input id='sku' name='sku' value={newVariant.attributes.sku} onChange={handleVariantInput} placeholder='SKU'></Input>
+                          </div>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                          <Label htmlFor='quantity'>Quantity</Label>
+                          <div>
+                            <InputNumber id='quantity' name='quantity' value={newVariant.attributes.quantity} onChange={handleVariantInput} placeholder='Quantity'></InputNumber>
+                          </div>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                          <Label htmlFor='buying_price'>Buying Price</Label>
+                          <div>
+                            <InputNumber id='buying_price' name='buying_price' value={newVariant.attributes.buying_price} onChange={handleVariantInput} placeholder='Buying price'></InputNumber>
+                          </div>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                          <Label htmlFor='retail_price'>Retail Price</Label>
+                          <div>
+                            <InputNumber id='retail_price' name='retail_price' value={newVariant.attributes.retail_price} onChange={handleVariantInput} placeholder='Retail price'></InputNumber>
+                          </div>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                          <Label htmlFor='selling_price'>Selling Price</Label>
+                          <div>
+                            <InputNumber id='selling_price' name='selling_price' value={newVariant.attributes.selling_price} onChange={handleVariantInput} placeholder='Selling price'></InputNumber>
+                          </div>
+                        </div>
+                        <div className='grid grid-cols-2 items-center justify-center space-x-2 '>
+                          <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='sm' className={theme === 'dark' ? 'text-primary-foreground/80 group-hover:text-primary-foreground' : 'text-foreground'} onClick={addNewVariant}>
+                            Add
+                          </Button>
+
+                          <Button type='button' variant='destructive' size='sm' className='bg-destructive text-foreground' onClick={() => setAddVariantIsOpen(false)}>
+                            Discard
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
                 <CardFooter className='justify-center border-t p-1 lg:p-2'>
-                  <Button size='sm' variant='ghost' className='gap-1' onClick={addNewVariant}>
+                  <Button size='sm' variant='ghost' className='gap-1' onClick={() => setAddVariantIsOpen(true)}>
                     <PlusCircle className='h-4 w-4' />
                     Add Variant
                   </Button>

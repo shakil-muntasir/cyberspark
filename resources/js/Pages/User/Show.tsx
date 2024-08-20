@@ -145,15 +145,15 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                     <div className='grid gap-6'>
                       <div className='grid gap-2'>
                         <Label htmlFor='name'>Name</Label>
-                        <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} className='w-full' autoComplete='name' />
+                        <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} className='w-full' placeholder='Name' autoComplete='name' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='email'>Email</Label>
-                        <Input id='email' type='email' name='email' value={data.email} onChange={handleInputChange} className='w-full' autoComplete='email' />
+                        <Input id='email' type='email' name='email' value={data.email} onChange={handleInputChange} className='w-full' placeholder='Email' autoComplete='email' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='phone'>Phone</Label>
-                        <Input id='phone' type='text' name='phone' value={data.phone} onChange={handleInputChange} className='w-full' autoComplete='phone' />
+                        <Input id='phone' type='text' name='phone' value={data.phone} onChange={handleInputChange} className='w-full' placeholder='Phone' autoComplete='phone' />
                       </div>
                       <div className='grid gap-2'>
                         <Label htmlFor='image' className={errors.image?.length ? 'text-destructive' : ''}>
@@ -213,11 +213,11 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                       <div className='grid gap-6'>
                         <div className='grid gap-2'>
                           <Label htmlFor='address'>Address</Label>
-                          <Input id='address' type='text' name='address' value={data.address} onChange={handleInputChange} className='w-full' autoComplete='address' />
+                          <Input id='address' type='text' name='address' value={data.address} onChange={handleInputChange} className='w-full' placeholder='Address' autoComplete='address' />
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='city'>City</Label>
-                          <Input id='city' type='text' name='city' value={data.city} onChange={handleInputChange} className='w-full' autoComplete='address-level2' />
+                          <Input id='city' type='text' name='city' value={data.city} onChange={handleInputChange} className='w-full' placeholder='City' autoComplete='address-level2' />
                         </div>
                         <div className='grid gap-2 '>
                           <Label htmlFor='state'>State</Label>
@@ -236,7 +236,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='zip'>Zip</Label>
-                          <InputNumber id='zip' type='number' value={data.zip} onChange={handleInputChange} name='zip' placeholder='Zip' />
+                          <InputNumber id='zip' value={data.zip} onChange={handleInputChange} name='zip' placeholder='Zip' />
                         </div>
                       </div>
                     </CardContent>
