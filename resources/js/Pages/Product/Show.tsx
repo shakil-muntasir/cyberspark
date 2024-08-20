@@ -8,6 +8,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
+import { InputNumber } from '@/Components/ui/input-number'
 import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
@@ -17,13 +18,11 @@ import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { cn, formatCurrency, toTitleCase } from '@/Lib/utils'
 import { Product, ProductForm, ProductStatus, ProductVariant } from '@/Pages/Product/type'
+import { useTheme } from '@/Providers/theme-provider'
 import { Pencil2Icon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
-import { InputNumber } from '@/Components/ui/input-number'
-import { Separator } from '@/Components/ui/separator'
-import { useTheme } from '@/Providers/theme-provider'
 
-// TODO: add product variant form
+// TODO: fix width
 
 export default function ShowProduct({ product: { data: product }, statuses }: { product: Product; statuses: ProductStatus[] }) {
   const initialProductData = {
@@ -73,6 +72,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
 
   const addNewVariant = () => {
     setAddVariantIsOpen(false)
+    setAccordionValue('')
     setVariants([...variants, newVariant])
     setNewVariant({
       type: 'product_variants',
@@ -134,6 +134,8 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
   }, [data])
 
   const { theme } = useTheme()
+
+  const [accordionValue, setAccordionValue] = useState('')
 
   const deleteModalData = {
     id: product.attributes.id,
@@ -230,7 +232,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                   <CardTitle>Variants</CardTitle>
                   <CardDescription>Add/update the buying, selling and retail prices of product variants.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='lg:p-6 pb-3'>
                   <Table className='hidden lg:block'>
                     <TableHeader>
                       <TableRow className='hover:bg-inherit'>
@@ -311,7 +313,7 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                                   <Tooltip delayDuration={0}>
                                     <TooltipTrigger asChild>
                                       <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => deleteVariant(variant.id)}>
-                                        <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                        <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
                                         <span className='sr-only'>Remove</span>
                                       </Button>
                                     </TooltipTrigger>
@@ -360,8 +362,8 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                               <TooltipProvider>
                                 <Tooltip delayDuration={0}>
                                   <TooltipTrigger asChild>
-                                    <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500' onClick={addNewVariant}>
-                                      <CheckIcon className={cn('h-4 w-4', theme === 'dark' ? 'text-primary-foreground/80 group-hover:text-primary-foreground' : 'text-foreground')} />
+                                    <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900' onClick={addNewVariant}>
+                                      <CheckIcon className='h-4 w-4 dark:file:text-primary-foreground/80 dark:file:group-hover:text-green-600' />
                                       <span className='sr-only'>Add</span>
                                     </Button>
                                   </TooltipTrigger>
@@ -373,8 +375,8 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                               <TooltipProvider>
                                 <Tooltip delayDuration={0}>
                                   <TooltipTrigger asChild>
-                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 bg-red-500 hover:bg-red-600' onClick={() => setAddVariantIsOpen(false)}>
-                                      <X className='h-4 w-4 text-foreground/80 group-hover:text-foreground' />
+                                    <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setAddVariantIsOpen(false)}>
+                                      <X className='h-4 w-4 text-white/80 group-hover:text-white' />
                                       <span className='sr-only'>Discard</span>
                                     </Button>
                                   </TooltipTrigger>
@@ -389,10 +391,10 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                       )}
                     </TableBody>
                   </Table>
-                  <Accordion type='single' collapsible className='w-full lg:hidden space-y-4'>
+                  <Accordion type='single' value={accordionValue} onValueChange={setAccordionValue} collapsible className='w-full lg:hidden'>
                     {variants.map((variant, index) => (
                       <AccordionItem key={variant.id} value={variant.id}>
-                        <AccordionTrigger className={`pt-0 pb-2 ${index !== variants.length - 1 ? 'border-b' : ''}`}>
+                        <AccordionTrigger className={`py-2.5 ${index !== variants.length - 1 ? 'border-b' : ''}`}>
                           <div>
                             <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
                           </div>
@@ -417,20 +419,20 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                           </div>
                           <div className='grid grid-cols-3 space-x-2'>
                             <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                              <div className='flex items-center gap-1'>
+                              <div className='flex items-center gap-2'>
                                 <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                                 <span className='tracking-wider'>Edit</span>
                               </div>
                             </Button>
                             <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatus(variant.id)}>
-                              <div className='flex items-center gap-1'>
+                              <div className='flex items-center gap-2'>
                                 {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
-                                <span className='tracking-wider'>{toTitleCase(variant.attributes.status)}</span>
+                                <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
                               </div>
                             </Button>
 
                             <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => deleteVariant(variant.id)}>
-                              <div className=' flex items-center gap-1'>
+                              <div className=' flex items-center gap-2'>
                                 <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
                                 <span className='tracking-wider'>Remove</span>
                               </div>
@@ -439,56 +441,78 @@ export default function ShowProduct({ product: { data: product }, statuses }: { 
                         </AccordionContent>
                       </AccordionItem>
                     ))}
+                    <AccordionItem value='add_variant'>
+                      <AccordionContent className='pb-0 mr-0.5'>
+                        <div className={`space-y-3 pt-2.5 border-t`}>
+                          <h1 className='text-lg font-semibold tracking-wide py-0.5'>Add new Variant</h1>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor='sku_2'>SKU</Label>
+                            <div>
+                              <Input id='sku_2' name='sku' value={newVariant.attributes.sku} onChange={handleVariantInput} placeholder='SKU'></Input>
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor='quantity_2'>Quantity</Label>
+                            <div>
+                              <InputNumber id='quantity_2' name='quantity' value={newVariant.attributes.quantity} onChange={handleVariantInput} placeholder='Quantity'></InputNumber>
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor='buying_price_2'>Buying Price</Label>
+                            <div>
+                              <InputNumber id='buying_price_2' name='buying_price' value={newVariant.attributes.buying_price} onChange={handleVariantInput} placeholder='Buying price'></InputNumber>
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor='retail_price_2'>Retail Price</Label>
+                            <div>
+                              <InputNumber id='retail_price_2' name='retail_price' value={newVariant.attributes.retail_price} onChange={handleVariantInput} placeholder='Retail price'></InputNumber>
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor='selling_price_2'>Selling Price</Label>
+                            <div>
+                              <InputNumber id='selling_price_2' name='selling_price' value={newVariant.attributes.selling_price} onChange={handleVariantInput} placeholder='Selling price'></InputNumber>
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-center space-x-2'>
+                            <Button
+                              type='button'
+                              variant='outline'
+                              size='sm'
+                              className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center'
+                              onClick={() => {
+                                setAddVariantIsOpen(false)
+                                setAccordionValue('')
+                              }}
+                            >
+                              <div className=' flex items-center gap-2'>
+                                <X className='h-4 w-4 text-red-400' />
+                                <span className='tracking-wider'>Discard</span>
+                              </div>
+                            </Button>
+                            <Button type='button' variant='outline' size='sm' className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={addNewVariant}>
+                              <div className='flex items-center gap-2'>
+                                <CheckIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                <span className='tracking-wider'>Add</span>
+                              </div>
+                            </Button>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
                   </Accordion>
-                  <div className={`lg:hidden overflow-hidden transition-all ease-in-out duration-700 ${addVariantIsOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`} style={{ transitionProperty: 'max-height, opacity' }}>
-                    {addVariantIsOpen && (
-                      <div className={`overflow-hidden transition-all ease-in-out duration-300 ${addVariantIsOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} space-y-3 pb-0`}>
-                        <Separator className='mb-6' />
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='sku'>SKU</Label>
-                          <div>
-                            <Input id='sku' name='sku' value={newVariant.attributes.sku} onChange={handleVariantInput} placeholder='SKU'></Input>
-                          </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='quantity'>Quantity</Label>
-                          <div>
-                            <InputNumber id='quantity' name='quantity' value={newVariant.attributes.quantity} onChange={handleVariantInput} placeholder='Quantity'></InputNumber>
-                          </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='buying_price'>Buying Price</Label>
-                          <div>
-                            <InputNumber id='buying_price' name='buying_price' value={newVariant.attributes.buying_price} onChange={handleVariantInput} placeholder='Buying price'></InputNumber>
-                          </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='retail_price'>Retail Price</Label>
-                          <div>
-                            <InputNumber id='retail_price' name='retail_price' value={newVariant.attributes.retail_price} onChange={handleVariantInput} placeholder='Retail price'></InputNumber>
-                          </div>
-                        </div>
-                        <div className='flex items-center justify-between'>
-                          <Label htmlFor='selling_price'>Selling Price</Label>
-                          <div>
-                            <InputNumber id='selling_price' name='selling_price' value={newVariant.attributes.selling_price} onChange={handleVariantInput} placeholder='Selling price'></InputNumber>
-                          </div>
-                        </div>
-                        <div className='grid grid-cols-2 items-center justify-center space-x-2 '>
-                          <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='sm' className={theme === 'dark' ? 'text-primary-foreground/80 group-hover:text-primary-foreground' : 'text-foreground'} onClick={addNewVariant}>
-                            Add
-                          </Button>
-
-                          <Button type='button' variant='destructive' size='sm' className='bg-destructive text-foreground' onClick={() => setAddVariantIsOpen(false)}>
-                            Discard
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </CardContent>
                 <CardFooter className='justify-center border-t p-1 lg:p-2'>
-                  <Button size='sm' variant='ghost' className='gap-1' onClick={() => setAddVariantIsOpen(true)}>
+                  <Button
+                    size='sm'
+                    variant='ghost'
+                    className='gap-1'
+                    onClick={() => {
+                      setAddVariantIsOpen(true)
+                      setAccordionValue('add_variant')
+                    }}
+                  >
                     <PlusCircle className='h-4 w-4' />
                     Add Variant
                   </Button>
