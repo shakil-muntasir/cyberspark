@@ -1,6 +1,8 @@
 import { Button } from '@/Components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog'
-import { PlusIcon, ShoppingBagIcon } from 'lucide-react'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+import { PlusIcon } from 'lucide-react'
 
 const MakeSell = () => {
   return (
@@ -15,6 +17,20 @@ const MakeSell = () => {
         <DialogHeader>
           <DialogTitle>Sell Product</DialogTitle>
           <DialogDescription>Please fill out this form to sell a product.</DialogDescription>
+          <div className='grid gap-4 py-4'>
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='name' className='text-right'>
+                Name
+              </Label>
+              <Input id='name' defaultValue='Pedro Duarte' className='col-span-3' />
+            </div>
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='username' className='text-right'>
+                Username
+              </Label>
+              <Input id='username' defaultValue='@peduarte' className='col-span-3' />
+            </div>
+          </div>
         </DialogHeader>
       </DialogContent>
     </Dialog>
