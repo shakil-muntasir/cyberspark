@@ -4,10 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserStatus;
+use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, HasUserTracking, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +30,8 @@ class User extends Authenticatable
         'phone',
         'image',
         'password',
+        'created_by_id',
+        'updated_by_id',
     ];
 
     /**
@@ -65,17 +69,7 @@ class User extends Authenticatable
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'created_by');
-    }
-
-    public function users(): HasMany
-    {
-        return $this->hasMany(self::class, 'created_by');
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(self::class, 'created_by');
+        return $this->hasMany(Product::class, 'created_by_id');
     }
 
     /**
@@ -98,7 +92,7 @@ class User extends Authenticatable
                             ->orWhere('state', 'like', "%{$search}%")
                             ->orWhere('zip', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('creator', function ($q) use ($search) {
+                    ->orWhereHas('createdBy', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
             });
@@ -138,7 +132,7 @@ class User extends Authenticatable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['address', 'creator'])
+            ->with(['address', 'createdBy:id,name'])
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())

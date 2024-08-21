@@ -35,7 +35,7 @@ class UserController extends Controller
         $user->load([
             'address',
             'roles',
-            'creator:id,name',
+            'createdBy:id,name',
         ]);
 
         return inertia('User/Show', [

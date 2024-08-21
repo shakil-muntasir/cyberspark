@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::post('/', [ProductController::class, 'store'])->name('store');
         Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+
+        Route::prefix('{product}/variants')->name('variants.')->group(function () {
+            Route::post('/', [ProductVariantController::class, 'store'])->name('store');
+        });
     });
 
     Route::prefix('orders')->name('orders.')->group(function () {

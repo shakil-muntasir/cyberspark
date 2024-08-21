@@ -15,22 +15,21 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $randomUser = User::inRandomOrder()->first();
-        auth()->setUser($randomUser);
+        Product::withoutEvents(function () {
+            foreach (range(1, 25) as $i) {
+                $product = Product::factory()->create([
+                    'created_by_id' => User::inRandomOrder()->first()->id,
+                    'updated_by_id' => User::inRandomOrder()->first()->id,
+                ]);
 
-        foreach (range(1, 25) as $i) {
-            $product = Product::factory()->create([
-                'created_by_id' => User::inRandomOrder()->first()->id,
-                'updated_by_id' => User::inRandomOrder()->first()->id,
-            ]);
-
-            // Create 3-5 random variants for each product
-            $variantsCount = rand(3, 5);
-            ProductVariant::factory($variantsCount)->create([
-                'product_id' => $product->id,
-                'created_by_id' => User::inRandomOrder()->first()->id,
-                'updated_by_id' => User::inRandomOrder()->first()->id,
-            ]);
-        }
+                // Create 3-5 random variants for each product
+                $variantsCount = rand(3, 5);
+                ProductVariant::factory($variantsCount)->create([
+                    'product_id' => $product->id,
+                    'created_by_id' => User::inRandomOrder()->first()->id,
+                    'updated_by_id' => User::inRandomOrder()->first()->id,
+                ]);
+            }
+        });
     }
 }

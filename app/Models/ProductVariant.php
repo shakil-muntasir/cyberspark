@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\ProductVariantStatus;
+use App\Traits\HasUserTracking;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductVariant extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUserTracking, SoftDeletes;
 
     protected $fillable = [
         'product_id',
@@ -17,7 +19,9 @@ class ProductVariant extends Model
         'quantity',
         'buying_price',
         'retail_price',
-        'selling_price'
+        'selling_price',
+        'created_by_id',
+        'updated_by_id',
     ];
 
     protected $casts = [
@@ -27,15 +31,5 @@ class ProductVariant extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
-    }
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by_id');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by_id');
     }
 }

@@ -26,7 +26,8 @@ class UserResource extends JsonResource
                 'address' => $this->whenLoaded('address', fn() => $this->address->street) ?? 'N/A',
                 'status' => $this->status,
                 'roles' => $this->whenLoaded('roles', fn() => $this->roles->pluck('name'), []),
-                'created_by' => $this->whenLoaded('creator', fn() => $this->creator->name) ?? 'N/A',
+                'created_by_id' => $this->created_by_id,
+                'created_by' => $this->whenLoaded('createdBy', fn() => $this->createdBy->name) ?? 'N/A',
                 'email_verified_at' => $this->email_verified_at,
             ]
         ];

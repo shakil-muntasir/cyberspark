@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProductStatus;
+use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,11 +11,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUserTracking;
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'created_by_id',
+        'updated_by_id',
     ];
 
     protected $casts = [
@@ -24,16 +27,6 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
-    }
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by_id');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**

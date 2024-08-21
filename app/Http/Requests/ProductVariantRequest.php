@@ -32,21 +32,4 @@ class ProductVariantRequest extends FormRequest
             'selling_price' => 'required|numeric',
         ];
     }
-
-    /**
-     * Sanitize and retrieve query parameters.
-     *
-     * @return array<string, mixed>
-     */
-
-    // TODO: if needed
-    // public function validatedParams(): array
-    // {
-    //     return [
-    //         'search' => $this->query('search', ''),
-    //         'sort_by' => $this->query('sortBy', 'id'),
-    //         'sort_to' => $this->query('sortTo', 'asc'),
-    //         'per_page' => (int) $this->query('per_page', 10),
-    //     ];
-    // }
 }

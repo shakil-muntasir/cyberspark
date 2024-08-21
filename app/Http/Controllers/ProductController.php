@@ -30,10 +30,7 @@ class ProductController extends Controller
         /** @var \App\Models\User */
         $user = $request->user();
 
-        Product::create(array_merge($request->validated(), [
-            'created_by_id' => $user->id,
-            'updated_by_id' => $user->id,
-        ]));
+        $user->products()->create($request->validated(),);
 
         return redirect()->back();
     }

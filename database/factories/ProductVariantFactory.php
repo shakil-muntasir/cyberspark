@@ -20,16 +20,17 @@ class ProductVariantFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
-            'sku' => strtoupper($this->faker->bothify('??###')),
+            'sku' => fake()->unique()->bothify('??###'),
             'quantity' => fake()->numberBetween(1, 100),
-            'buying_price' => fake()->randomFloat(2, 1, 1999),
-            'retail_price' => fake()->randomFloat(2, 1, 1999),
-            'selling_price' => fake()->randomFloat(2, 1, 1999),
+            'quantity' => fake()->numberBetween(10, 100),
+            'buying_price' => fake()->randomFloat(2, 1000, 2000),
+            'retail_price' => fake()->randomFloat(2, 1500, 2500),
+            'selling_price' => fake()->randomFloat(2, 2000, 3000),
             'status' => fake()->randomElement(['active', 'inactive']),
             'created_by_id' => User::factory(),
             'updated_by_id' => User::factory(),
             'created_at' => fake()->dateTimeBetween('-15 days', '-7 days'),
-            'updated_at' => fake()->dateTimeBetween('-6 days', '-1 days')
+            'updated_at' => fake()->dateTimeBetween('-6 days', '-1 days'),
         ];
     }
 }
