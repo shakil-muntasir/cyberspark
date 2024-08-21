@@ -27,7 +27,6 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
   const [accordionValue, setAccordionValue] = useState('')
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductVariantForm>({
-    product_id: product.data.id,
     sku: '',
     quantity: '',
     buying_price: '',
@@ -108,8 +107,8 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
               <TableHead>SKU</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Buying Price</TableHead>
-              <TableHead>Selling Price</TableHead>
               <TableHead>Retail Price</TableHead>
+              <TableHead>Selling Price</TableHead>
               <TableHead className='text-center'>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -134,12 +133,12 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                   </TableCell>
                   <TableCell>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
-                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                    <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                   </TableCell>
                   <TableCell>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
-                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                   </TableCell>
                   <TableCell>
                     <span className='sr-only'>Actions</span>
@@ -279,13 +278,13 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                 </div>
                 <div className='flex items-center justify-between'>
-                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
-                </div>
-                <div className='flex items-center justify-between'>
                   <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
 
-                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                  <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                 </div>
                 <div className='grid grid-cols-3 space-x-2'>
                   <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>

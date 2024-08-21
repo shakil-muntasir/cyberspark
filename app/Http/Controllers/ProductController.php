@@ -30,7 +30,7 @@ class ProductController extends Controller
         /** @var \App\Models\User */
         $user = $request->user();
 
-        $user->products()->create($request->validated(),);
+        $user->products()->create($request->validated());
 
         return redirect()->back();
     }

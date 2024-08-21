@@ -14,14 +14,11 @@ class ProductVariant extends Model
     use HasFactory, HasUserTracking, SoftDeletes;
 
     protected $fillable = [
-        'product_id',
         'sku',
         'quantity',
         'buying_price',
         'retail_price',
         'selling_price',
-        'created_by_id',
-        'updated_by_id',
     ];
 
     protected $casts = [

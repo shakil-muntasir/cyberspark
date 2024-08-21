@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->integer('quantity');
             $table->decimal('buying_price', 10, 2);
-            $table->decimal('retail_price', 10, 2);
+            $table->decimal('retail_price', 10, 2)->nullable();
             $table->decimal('selling_price', 10, 2);
             $table->string('status')->default(ProductVariantStatus::ACTIVE);
             $table->foreignId('created_by_id')->nullable()->constrained('users')->nullOnDelete();

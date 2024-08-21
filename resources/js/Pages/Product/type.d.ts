@@ -32,7 +32,7 @@ export type ProductVariant = {
         sku: string
         quantity: string
         buying_price: string
-        retail_price: string
+        retail_price?: string
         selling_price: string
         status: string
         created_by_id: string
@@ -52,7 +52,6 @@ export type ProductForm = {
 }
 
 export type ProductVariantForm = {
-    product_id: string
     sku: string
     quantity: string
     buying_price: string

@@ -20,7 +20,6 @@ class ProductVariantRequest extends FormRequest
         }
 
         return [
-            'product_id' => 'required|exists:products,id',
             'sku' => [
                 'required',
                 'string',

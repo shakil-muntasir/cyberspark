@@ -30,8 +30,6 @@ class User extends Authenticatable
         'phone',
         'image',
         'password',
-        'created_by_id',
-        'updated_by_id',
     ];
 
     /**

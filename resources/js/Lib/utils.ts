@@ -68,7 +68,10 @@ export function toTitleCase(str: string) {
         .join(' ')
 }
 
-export function formatCurrency(amount: string, currency = 'USD') {
+export function formatCurrency(amount: string, currency = 'USD'): string {
+    if (amount === '') {
+        return 'N/A'
+    }
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency
