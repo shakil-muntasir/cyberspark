@@ -5,10 +5,10 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { toast } from '@/Components/ui/use-toast'
-import { useDeleteModal } from '@/Contexts/DeleteModalContext'
+import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { User } from '@/Pages/User/type'
 import { TableColumn } from '@/Types'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 
 const handleCopyId = (id: string): void => {
@@ -91,11 +91,11 @@ const columns: TableColumn<User>[] = createColumns([
     cell: ({ id, name }) => {
       const { initializeDeleteModal } = useDeleteModal()
 
-      const deleteModalData = {
+      const deleteModalData: DeleteModalData = {
         id,
         name,
         title: 'user',
-        url: '/users'
+        onConfirm: () => router.visit('/products')
       }
 
       return (
