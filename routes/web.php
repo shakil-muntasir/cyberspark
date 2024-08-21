@@ -18,6 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('/{product}/variants')->name('variants.')->group(function () {
             Route::post('/', [ProductVariantController::class, 'store'])->name('store');
+            Route::patch('/{variant}', [ProductVariantController::class, 'update'])->name('update');
+            Route::delete('/{variant}', [ProductVariantController::class, 'destroy'])->name('destroy');
         });
     });
 
