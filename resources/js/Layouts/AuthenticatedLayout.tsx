@@ -13,9 +13,9 @@ import { useTheme } from '@/Providers/theme-provider'
 import SprintDevsFullDark from '@/public/assets/sprint_devs_full_dark.svg'
 import SprintDevsFullLight from '@/public/assets/sprint_devs_full_light.svg'
 import { Head } from '@inertiajs/react'
-import { FacebookCircle } from '@styled-icons/boxicons-logos/FacebookCircle'
-import { Instagram } from '@styled-icons/boxicons-logos/Instagram'
-import { Linkedin } from '@styled-icons/boxicons-logos/Linkedin'
+import { FacebookIcon } from '@/Icons/FacebookIcon'
+import { InstagramIcon } from '@/Icons/InstagramIcon'
+import { LinkedInIcon } from '@/Icons/LinkedInIcon'
 
 export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -25,7 +25,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
       <Head title={title} />
       <div className='flex min-h-screen w-full flex-col bg-muted/40'>
         <PcNavigation />
-        <div className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14'>
+        <div className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14 min-h-screen'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
             <MobileNavigation />
             <DynamicBreadcrumb />
@@ -43,13 +43,13 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
               {theme === 'dark' ? <img className='h-12 p-2' src={SprintDevsFullDark} /> : <img className='h-12 p-2' src={SprintDevsFullLight} />}
               <div className='flex items-center justify-end lg:justify-center gap-2 px-2'>
                 <a href='#'>
-                  <FacebookCircle className='h-6 text-foreground/70 hover:text-foreground' />
+                  <FacebookIcon className='h-6 text-foreground/70 hover:text-foreground' />
                 </a>
                 <a href='#'>
-                  <Instagram className='h-7 text-foreground/70 hover:text-foreground' />
+                  <InstagramIcon className='h-6 text-foreground/70 hover:text-foreground' />
                 </a>
                 <a href='#'>
-                  <Linkedin className='h-6 text-foreground/70 hover:text-foreground' />
+                  <LinkedInIcon className='h-6 text-foreground/70 hover:text-foreground' />
                 </a>
               </div>
               <span></span>
@@ -57,7 +57,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
             <Separator />
             <div className='flex items-center justify-center text-sm text-muted-foreground my-4 gap-1 lg:mb-0'>
               <span>Copyright &copy;{currentDate.getFullYear()} </span>
-              <a href='https://sprintdevs.com' target='_blank' className='text-[#C4161C] font-semibold hover:underline underline-offset-2'>
+              <a href='https://sprintdevs.com' target='_blank' className='text-brand font-semibold hover:underline underline-offset-2'>
                 Sprint Devs
               </a>
             </div>

@@ -16,6 +16,7 @@ const config = {
     },
     extend: {
       colors: {
+        brand: '#C4161C',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
