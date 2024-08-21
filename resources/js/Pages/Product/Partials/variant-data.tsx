@@ -1,0 +1,386 @@
+import { CheckIcon, PlusCircle, SquareCheckBig, SquareIcon, Trash2Icon, X } from 'lucide-react'
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
+import { Button } from '@/Components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
+import { Input } from '@/Components/ui/input'
+import { InputNumber } from '@/Components/ui/input-number'
+import { Label } from '@/Components/ui/label'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import { toast } from '@/Components/ui/use-toast'
+import { cn, formatCurrency, toTitleCase } from '@/Lib/utils'
+import { Product, ProductVariant, ProductVariantForm } from '@/Pages/Product/type'
+import { useTheme } from '@/Providers/theme-provider'
+import { useForm } from '@inertiajs/react'
+import { Pencil2Icon } from '@radix-ui/react-icons'
+import { useState } from 'react'
+
+interface ProductVariantDataProps {
+  product: Product
+  variants: ProductVariant[]
+}
+
+const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, variants }) => {
+  const { theme } = useTheme()
+  const [formIsOpen, setFormIsOpen] = useState(false)
+  const [accordionValue, setAccordionValue] = useState('')
+
+  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductVariantForm>({
+    product_id: product.data.id,
+    sku: '',
+    quantity: '',
+    buying_price: '',
+    retail_price: '',
+    selling_price: ''
+  })
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setData(name as keyof ProductVariantForm, value)
+    clearErrors(name as keyof ProductVariantForm)
+  }
+
+  const handleAddVariant = async (event: React.FormEvent) => {
+    event.preventDefault()
+
+    setTimeout(() => {
+      post(route('products.variants.store', product.data.id), {
+        preserveScroll: true,
+        onSuccess: handleSuccess,
+        onError: handleError
+      })
+    }, 500)
+  }
+
+  const handleSuccess = () => {
+    setFormIsOpen(false)
+    setAccordionValue('')
+    setTimeout(() => {
+      reset()
+      toast({
+        title: 'Success!',
+        description: 'New product variant has been added successfully.',
+        duration: 2000
+      })
+    }, 200)
+  }
+
+  const handleError = (errors: Partial<Record<keyof ProductVariantForm, string>>) => {
+    toast({
+      variant: 'destructive',
+      title: 'Error adding variant!',
+      description: (
+        <div className='space-y-1'>
+          {Object.values(errors).map((error, index) => (
+            <p key={index}>• {error}</p>
+          ))}
+        </div>
+      ),
+      duration: 3000
+    })
+  }
+
+  const showForm = () => {
+    setFormIsOpen(true)
+    setAccordionValue('add_variant')
+  }
+
+  const handleVariantStatusChange = () => {
+    // TODO: implement update variant status
+  }
+
+  const handleDeleteVariant = () => {
+    // TODO: implement delete variant
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Variants</CardTitle>
+        <CardDescription>Add/update the buying, selling and retail prices of product variants.</CardDescription>
+      </CardHeader>
+      <CardContent className='lg:p-6 pb-3'>
+        {/* Desktop view */}
+        <Table className='hidden lg:block'>
+          <TableHeader>
+            <TableRow className='hover:bg-inherit'>
+              <TableHead>SKU</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Buying Price</TableHead>
+              <TableHead>Selling Price</TableHead>
+              <TableHead>Retail Price</TableHead>
+              <TableHead className='text-center'>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {variants.length === 0 ? (
+              <TableRow>
+                <div className='flex h-12 px-4 text-center align-middle font-medium text-muted-foreground'>Nothing to show</div>
+              </TableRow>
+            ) : (
+              variants.map(variant => (
+                <TableRow key={variant.id}>
+                  <TableCell>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                    <div>{variant.attributes.sku}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                    <div className='text-right font-medium'>{variant.attributes.quantity}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className='sr-only'>Actions</span>
+                    <div className='flex items-center justify-center h-full'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                              <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                              <span className='sr-only'>Edit</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            {variant.attributes.status === 'active' ? (
+                              <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
+                                <SquareCheckBig className='h-4 w-4 text-foreground group-hover:text-foreground' />
+                                <span className='sr-only'>Status</span>
+                              </Button>
+                            ) : (
+                              <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
+                                <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                <span className='sr-only'>Status</span>
+                              </Button>
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{toTitleCase(variant.attributes.status)}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant()}>
+                              <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                              <span className='sr-only'>Remove</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+            {formIsOpen && (
+              <TableRow>
+                <TableCell className='px-1'>
+                  <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                  <div>
+                    <Input className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                  </div>
+                </TableCell>
+                <TableCell className='px-1'>
+                  <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                  <div>
+                    <InputNumber className='px-2' id='quantity' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
+                  </div>
+                </TableCell>
+                <TableCell className='px-1'>
+                  <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                  <div>
+                    <InputNumber className='px-2' id='buying_price' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
+                  </div>
+                </TableCell>
+                <TableCell className='px-1'>
+                  <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                  <InputNumber className='px-2' id='retail_price' name='retail_price' value={data.retail_price} onChange={handleInputChange} placeholder='Retail price' />
+                </TableCell>
+                <TableCell className='px-1'>
+                  <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                  <InputNumber className='px-2' id='selling_price' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
+                </TableCell>
+
+                <TableCell className='px-1'>
+                  <span className='sr-only'>Actions</span>
+                  <div className='flex items-center justify-center h-full gap-3'>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900' onClick={handleAddVariant}>
+                            <CheckIcon className='h-4 w-4 dark:file:text-primary-foreground/80 dark:file:group-hover:text-green-600' />
+                            <span className='sr-only'>Add</span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Add</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setFormIsOpen(false)}>
+                            <X className='h-4 w-4 text-white/80 group-hover:text-white' />
+                            <span className='sr-only'>Discard</span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Discard</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        {/* Mobile view */}
+        <Accordion type='single' value={accordionValue} onValueChange={setAccordionValue} collapsible className='w-full lg:hidden'>
+          {variants.map((variant, index) => (
+            <AccordionItem key={variant.id} value={variant.id}>
+              <AccordionTrigger className={`py-2.5 ${index !== variants.length - 1 ? 'border-b' : ''}`}>
+                <div>
+                  <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                  <div className='text-right font-medium'>{variant.attributes.quantity}</div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+
+                  <div className='text-right font-medium'>{formatCurrency(variant.attributes.retail_price)}</div>
+                </div>
+                <div className='grid grid-cols-3 space-x-2'>
+                  <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
+                    <div className='flex items-center gap-2'>
+                      <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                      <span className='tracking-wider'>Edit</span>
+                    </div>
+                  </Button>
+                  <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatusChange()}>
+                    <div className='flex items-center gap-2'>
+                      {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
+                      <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
+                    </div>
+                  </Button>
+
+                  <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => handleDeleteVariant()}>
+                    <div className=' flex items-center gap-2'>
+                      <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                      <span className='tracking-wider'>Remove</span>
+                    </div>
+                  </Button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+          <AccordionItem value='add_variant'>
+            <AccordionContent className='pb-0 mr-0.5'>
+              <div className={`space-y-3 pt-2.5 border-t`}>
+                <h1 className='text-lg font-semibold tracking-wide py-0.5'>Add new Variant</h1>
+                <div className='flex items-center justify-between'>
+                  <Label htmlFor='sku_2'>SKU</Label>
+                  <div>
+                    <Input id='sku_2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU'></Input>
+                  </div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <Label htmlFor='quantity_2'>Quantity</Label>
+                  <div>
+                    <InputNumber id='quantity_2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity'></InputNumber>
+                  </div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <Label htmlFor='buying_price_2'>Buying Price</Label>
+                  <div>
+                    <InputNumber id='buying_price_2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price'></InputNumber>
+                  </div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <Label htmlFor='retail_price_2'>Retail Price</Label>
+                  <div>
+                    <InputNumber id='retail_price_2' name='retail_price' value={data.retail_price} onChange={handleInputChange} placeholder='Retail price'></InputNumber>
+                  </div>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <Label htmlFor='selling_price_2'>Selling Price</Label>
+                  <div>
+                    <InputNumber id='selling_price_2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price'></InputNumber>
+                  </div>
+                </div>
+                <div className='flex items-center justify-center space-x-2'>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    size='sm'
+                    className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center'
+                    onClick={() => {
+                      setFormIsOpen(false)
+                      setAccordionValue('')
+                    }}
+                  >
+                    <div className=' flex items-center gap-2'>
+                      <X className='h-4 w-4 text-red-400' />
+                      <span className='tracking-wider'>Discard</span>
+                    </div>
+                  </Button>
+                  <Button type='button' variant='outline' size='sm' className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleAddVariant}>
+                    <div className='flex items-center gap-2'>
+                      <CheckIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                      <span className='tracking-wider'>Add</span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+      <CardFooter className='justify-center border-t p-1 lg:p-2'>
+        <Button size='sm' variant='ghost' className='gap-1' onClick={showForm}>
+          <PlusCircle className='h-4 w-4' />
+          Add Variant
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+export default ProductVariantData
