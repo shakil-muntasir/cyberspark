@@ -122,10 +122,6 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     // TODO: implement update variant status
   }
 
-  const handleEditForm = (variant: ProductVariant) => {
-    setData(variant.attributes)
-  }
-
   return (
     <>
       <Card>
@@ -149,7 +145,9 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
             <TableBody>
               {variants.length === 0 ? (
                 <TableRow>
-                  <div className='flex h-12 px-4 text-center align-middle font-medium text-muted-foreground'>Nothing to show</div>
+                  <TableCell colSpan={6} className='text-center'>
+                    No variants found.
+                  </TableCell>
                 </TableRow>
               ) : (
                 variants.map(variant => (
@@ -236,7 +234,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           <TooltipProvider>
                             <Tooltip delayDuration={0}>
                               <TooltipTrigger asChild>
-                                <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleEditForm(variant)}>
+                                <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
                                   <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                                   <span className='sr-only'>Edit</span>
                                 </Button>
@@ -383,51 +381,114 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
           <Accordion type='single' value={accordionValue} onValueChange={setAccordionValue} collapsible className='w-full lg:hidden'>
             {variants.map((variant, index) => (
               <AccordionItem key={variant.id} value={variant.id}>
-                <AccordionTrigger className={`py-2.5 ${index !== variants.length - 1 ? 'border-b' : ''}`}>
-                  <div>
-                    <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
-                    <div className='text-right font-medium'>{variant.attributes.quantity}</div>
-                  </div>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
-                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
-                  </div>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+                {variant.id !== data.id ? (
+                  <>
+                    <AccordionTrigger className={cn('py-2.5', index !== variants.length - 1 ? 'border-b' : '')}>
+                      <div>
+                        <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                        <div className='text-right font-medium'>{variant.attributes.quantity}</div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                        <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
 
-                    <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
-                  </div>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                    <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
-                  </div>
-                  <div className='grid grid-cols-3 space-x-2'>
-                    <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => null}>
-                      <div className='flex items-center gap-2'>
-                        <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                        <span className='tracking-wider'>Edit</span>
+                        <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                       </div>
-                    </Button>
-                    <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatusChange()}>
-                      <div className='flex items-center gap-2'>
-                        {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
-                        <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
+                      <div className='flex items-center justify-between'>
+                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                        <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                       </div>
-                    </Button>
+                      <div className='grid grid-cols-3 space-x-2'>
+                        <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                          <div className='flex items-center gap-2'>
+                            <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                            <span className='tracking-wider'>Edit</span>
+                          </div>
+                        </Button>
+                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatusChange()}>
+                          <div className='flex items-center gap-2'>
+                            {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
+                            <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
+                          </div>
+                        </Button>
 
-                    <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => handleDeleteVariant(variant)}>
-                      <div className=' flex items-center gap-2'>
-                        <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                        <span className='tracking-wider'>Remove</span>
+                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => handleDeleteVariant(variant)}>
+                          <div className=' flex items-center gap-2'>
+                            <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                            <span className='tracking-wider'>Remove</span>
+                          </div>
+                        </Button>
                       </div>
-                    </Button>
-                  </div>
-                </AccordionContent>
+                    </AccordionContent>
+                  </>
+                ) : (
+                  <AccordionContent className='pb-0 mr-0.5'>
+                    <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
+                      <h1 className='text-lg font-semibold tracking-wide py-0.5'>Edit Variant</h1>
+                      <div className='flex items-center justify-between'>
+                        <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
+                        <div>
+                          <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU'></Input>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
+                        <div>
+                          <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity'></InputNumber>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <Label htmlFor={`edit_buying_price_2_${variant.id}`}>Buying Price</Label>
+                        <div>
+                          <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price'></InputNumber>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <Label htmlFor={`edit_retail_price_2_${variant.id}`}>Retail Price</Label>
+                        <div>
+                          <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price'></InputNumber>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <Label htmlFor={`edit_selling_price_2_${variant.id}`}>Selling Price</Label>
+                        <div>
+                          <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price'></InputNumber>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-center space-x-2'>
+                        <Button
+                          type='button'
+                          variant='outline'
+                          size='sm'
+                          className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center'
+                          onClick={() => {
+                            setData(initialFormData)
+                            setAccordionValue('')
+                          }}
+                        >
+                          <div className=' flex items-center gap-2'>
+                            <X className='h-4 w-4 text-red-400' />
+                            <span className='tracking-wider'>Discard</span>
+                          </div>
+                        </Button>
+                        <Button type='button' variant='outline' size='sm' className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleEditVariant}>
+                          <div className='flex items-center gap-2'>
+                            <CheckIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                            <span className='tracking-wider'>Add</span>
+                          </div>
+                        </Button>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                )}
               </AccordionItem>
             ))}
             <AccordionItem value='add_variant'>
