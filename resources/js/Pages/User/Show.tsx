@@ -13,11 +13,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import UserAvatar from '@/Components/UserAvatar'
-import { useDeleteModal } from '@/Contexts/DeleteModalContext'
+import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { cn, getImageData } from '@/Lib/utils'
 import { User, UserForm } from '@/Pages/User/type'
-import { useForm } from '@inertiajs/react'
+import { router, useForm } from '@inertiajs/react'
 import { useEffect, useRef, useState } from 'react'
 
 export default function ShowUser({ user: { data: user } }: { user: User }) {
@@ -66,11 +66,11 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
     setIsSaveButtonDisabled(hasChanges)
   }, [data])
 
-  const deleteModalData = {
+  const deleteModalData: DeleteModalData = {
     id: user.attributes.id,
     name: user.attributes.name,
     title: 'user',
-    url: '/users'
+    onConfirm: () => router.visit('/users')
   }
 
   const roles = [

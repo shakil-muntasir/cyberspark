@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 
-interface Data {
+export interface DeleteModalData {
   id: string
   name: string
   title: string
-  url: string
+  onConfirm: () => void
 }
 
 interface DeleteModalContextProps {
-  data: Data
+  data: DeleteModalData
   isOpen: boolean
-  initializeDeleteModal: (payload: Data) => void
+  initializeDeleteModal: (payload: DeleteModalData) => void
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -23,14 +23,14 @@ export const DeleteModalContext = React.createContext<DeleteModalContextProps | 
 export const DeleteModalProvider: React.FC<ProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const [data, setData] = useState<Data>({
+  const [data, setData] = useState<DeleteModalData>({
     id: '',
     name: '',
     title: '',
-    url: ''
+    onConfirm: () => null
   })
 
-  const initializeDeleteModal = (payload: Data) => {
+  const initializeDeleteModal = (payload: DeleteModalData) => {
     setData(payload)
     setIsOpen(true)
   }

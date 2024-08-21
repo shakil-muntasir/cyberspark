@@ -7,11 +7,11 @@ import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-import { useDeleteModal } from '@/Contexts/DeleteModalContext'
+import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
 import { Product, ProductForm, ProductStatus } from '@/Pages/Product/type'
-import { Link, useForm } from '@inertiajs/react'
+import { Link, router, useForm } from '@inertiajs/react'
 import { ChevronLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -42,11 +42,11 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
     setIsSaveButtonDisabled(!hasChanges)
   }, [data])
 
-  const deleteModalData = {
+  const deleteModalData: DeleteModalData = {
     id: product.data.attributes.id,
     name: product.data.attributes.name,
     title: 'product',
-    url: '/products'
+    onConfirm: () => router.visit('/products')
   }
 
   const categories = [

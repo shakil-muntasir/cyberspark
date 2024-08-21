@@ -52,10 +52,11 @@ export type ProductForm = {
 }
 
 export type ProductVariantForm = {
+    id?: string
     sku: string
     quantity: string
     buying_price: string
-    retail_price: string
+    retail_price?: string
     selling_price: string
 }
 

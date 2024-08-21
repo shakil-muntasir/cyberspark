@@ -1,15 +1,9 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/Components/ui/alert-dialog'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { toTitleCase } from '@/Lib/utils'
-import { router } from '@inertiajs/react'
 
 const DeleteModal = () => {
   const { data, isOpen, setIsOpen } = useDeleteModal()
-
-  const onConfirm = () => {
-    setIsOpen(false)
-    router.visit(data.url)
-  }
 
   return (
     <AlertDialog open={isOpen}>
@@ -28,7 +22,13 @@ const DeleteModal = () => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className='bg-destructive text-destructive-foreground hover:bg-destructive/90'>
+          <AlertDialogAction
+            onClick={() => {
+              data.onConfirm()
+              setIsOpen(false)
+            }}
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+          >
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
