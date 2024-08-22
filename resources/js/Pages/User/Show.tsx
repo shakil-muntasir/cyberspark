@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, Trash2Icon } from 'lucide-react'
-import { router, useForm } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
@@ -21,7 +21,9 @@ import InputError from '@/Components/InputError'
 import UserAvatar from '@/Components/UserAvatar'
 
 import { cn, getImageData } from '@/Lib/utils'
-import { User, UserForm } from '@/Pages/User/type'
+import { Role, User, UserForm } from '@/Pages/User/type'
+import useForm from '@/Hooks/form'
+import { MultiSelect } from '@/Components/MultiSelect'
 
 type SelectProps = {
   label: string
@@ -37,24 +39,27 @@ interface UserProps {
 }
 
 const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses }) => {
+  console.log(user)
   const { initializeDeleteModal } = useDeleteModal()
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
   const [previewImage, setPreviewImage] = useState<string>('')
   const imageRef = useRef<HTMLInputElement>(null)
 
-  const initialData = {
+  const initialData: UserForm = {
     name: user.data.attributes.name,
     email: user.data.attributes.email,
     gender: '',
     phone: user.data.attributes.phone,
     image: undefined,
-    roles: user.data.attributes.roles,
+    password: '',
+    roles: extractRoles(user.data.relationships?.roles),
     status: user.data.attributes.status,
-    address: user.data.attributes.address ?? '',
-    city: '',
-    state: '',
-    zip: '',
-    password: ''
+    address: {
+      street: user.data.relationships?.address?.attributes.street ?? '',
+      city: user.data.relationships?.address?.attributes.city ?? '',
+      state: user.data.relationships?.address?.attributes.state ?? '',
+      zip: user.data.relationships?.address?.attributes.zip ?? ''
+    }
   }
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>(initialData)
 
@@ -77,6 +82,23 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
       imageRef.current.value = ''
     }
   }
+
+  function extractRoles(roles?: Role[]): string[] {
+    return (
+      roles?.map((role: Role) => {
+        return role.attributes.value
+      }) || []
+    )
+  }
+
+  // function extractRoles(roles: Role[]): SelectProps[] {
+  //   return roles?.map((role: Role) => {
+  //     return {
+  //       label: role.attributes.label,
+  //       value: role.attributes.value
+  //     }
+  //   }) || []
+  // }
 
   const deleteModalData: DeleteModalData = {
     id: user.data.attributes.id,
@@ -105,9 +127,9 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
             </TooltipProvider>
             <h1 className='flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0'>{user.data.attributes.name}</h1>
             <div className='flex items-center space-x-1'>
-              {user.data.attributes.roles.map((role, index) => (
+              {user.data.relationships?.roles?.map((role, index) => (
                 <Badge key={index} variant='outline' className='ml-auto sm:ml-0'>
-                  {role}
+                  {role.attributes.label}
                 </Badge>
               ))}
             </div>
@@ -201,16 +223,16 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                     <CardContent>
                       <div className='grid gap-6'>
                         <div className='grid gap-2'>
-                          <Label htmlFor='address'>Address</Label>
-                          <Input id='address' type='text' name='address' value={data.address} onChange={handleInputChange} className='w-full' placeholder='Address' autoComplete='address' />
+                          <Label htmlFor='street'>Street</Label>
+                          <Input id='street' type='text' name='street' value={data.address.street} onChange={handleInputChange} className='w-full' placeholder='street' autoComplete='street' />
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='city'>City</Label>
-                          <Input id='city' type='text' name='city' value={data.city} onChange={handleInputChange} className='w-full' placeholder='City' autoComplete='address-level2' />
+                          <Input id='city' type='text' name='city' value={data.address.city} onChange={handleInputChange} className='w-full' placeholder='City' autoComplete='address-level2' />
                         </div>
                         <div className='grid gap-2 '>
                           <Label htmlFor='state'>State</Label>
-                          <Select name='state' value={data.state} onValueChange={value => setData('state', value)}>
+                          <Select name='state' value={data.address.state} onValueChange={value => setData('address.state', value)}>
                             <SelectTrigger id='state' aria-label='Select state'>
                               <SelectValue placeholder='Select state' />
                             </SelectTrigger>
@@ -225,7 +247,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='zip'>Zip</Label>
-                          <InputNumber id='zip' value={data.zip} onChange={handleInputChange} name='zip' placeholder='Zip' />
+                          <InputNumber id='zip' value={data.address.zip} onChange={handleInputChange} name='zip' placeholder='Zip' />
                         </div>
                       </div>
                     </CardContent>
@@ -359,19 +381,16 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                 <CardContent>
                   <div className='grid gap-6'>
                     <div className='grid gap-2'>
-                      <Label htmlFor='role'>Role</Label>
-                      <Select name='role'>
-                        <SelectTrigger id='role' aria-label='Select Role'>
-                          <SelectValue placeholder='Select role' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roles.map(role => (
-                            <SelectItem key={role.value} value={role.value}>
-                              {role.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 -mb-2'>Role</span>
+                      <MultiSelect
+                        values={roles}
+                        defaultSelectedValues={roles.filter(role => data.roles.includes(role.value))}
+                        onValueChange={value => {
+                          setData('roles', value)
+                          clearErrors('roles')
+                        }}
+                        placeholder='Select roles'
+                      />
                     </div>
                   </div>
                 </CardContent>

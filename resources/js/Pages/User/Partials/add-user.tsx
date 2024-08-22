@@ -9,16 +9,22 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { useToast } from '@/Components/ui/use-toast'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import InputError from '@/Components/InputError'
-import { useForm } from '@inertiajs/react'
 import { UserForm } from '@/Pages/User/type'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { CheckCircledIcon } from '@radix-ui/react-icons'
 import { Avatar, AvatarImage } from '@/Components/ui/avatar'
 import { cn, generatePassword, getImageData } from '@/Lib/utils'
 
+import useForm from '@/Hooks/form'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
+import { FormErrors } from '@/Types'
+import { MultiSelect } from '@/Components/MultiSelect'
 
-export default function AddUser() {
+interface AddUserProps {
+  roles: { label: string; value: string }[]
+}
+
+const AddUser: React.FC<AddUserProps> = ({ roles }) => {
   const { toast } = useToast()
 
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>({
@@ -28,11 +34,13 @@ export default function AddUser() {
     phone: '',
     image: undefined,
     roles: [],
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
-    password: ''
+    password: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      zip: ''
+    }
   })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -44,7 +52,6 @@ export default function AddUser() {
 
   const handleAddUser = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log(data)
     setLoading(true)
     setSubmitButtonText('Saving')
 
@@ -70,7 +77,8 @@ export default function AddUser() {
     }, 200)
   }
 
-  const handleError = () => {
+  const handleError = (errors: FormErrors<UserForm>) => {
+    console.log(errors)
     setSubmitButtonText('Error')
     setTimeout(() => {
       setLoading(false)
@@ -102,6 +110,7 @@ export default function AddUser() {
     navigator.clipboard.writeText(password)
 
     setData('password', password)
+    clearErrors('password')
     setShowPassword(true)
   }
 
@@ -156,7 +165,14 @@ export default function AddUser() {
                 Gender
               </Label>
               <div className='space-y-px'>
-                <Select name='gender' value={data.gender} onValueChange={value => setData('gender', value)}>
+                <Select
+                  name='gender'
+                  value={data.gender}
+                  onValueChange={value => {
+                    setData('gender', value)
+                    clearErrors('gender')
+                  }}
+                >
                   <SelectTrigger id='gender'>
                     <SelectValue placeholder='Select Gender' />
                   </SelectTrigger>
@@ -168,7 +184,7 @@ export default function AddUser() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                <InputError message={errors.roles} />
+                <InputError message={errors.gender} />
               </div>
             </div>
 
@@ -304,51 +320,49 @@ export default function AddUser() {
                 Role
               </Label>
               <div className='space-y-px'>
-                <Select name='role'>
-                  <SelectTrigger id='role'>
-                    <SelectValue placeholder='Select Role' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value='admin'>Admin</SelectItem>
-                      <SelectItem value='sales_rep'>Sales Representative</SelectItem>
-                      <SelectItem value='customer'>Customer</SelectItem>
-                      <SelectItem value='delivery_man'>Delivery-Man</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <MultiSelect
+                  values={roles}
+                  onValueChange={value => {
+                    setData('roles', value)
+                    clearErrors('roles')
+                  }}
+                  placeholder='Select roles'
+                />
                 <InputError message={errors.roles} />
               </div>
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='address' className={errors.address?.length ? 'text-destructive' : ''}>
-                Address
+              <Label htmlFor='address.street' className={errors['address.street']?.length ? 'text-destructive' : ''}>
+                Street
               </Label>
               <div className='space-y-px'>
-                <Input id='address' type='text' name='address' value={data.address !== null ? data.address : ''} onChange={handleInputChange} placeholder='Address' />
-                <InputError message={errors.address} />
+                <Input id='address.street' type='text' name='address.street' value={data.address.state !== null ? data.address.street : ''} onChange={handleInputChange} placeholder='Street' />
+                <InputError message={errors['address.street']} />
               </div>
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='city' className={errors.city?.length ? 'text-destructive' : ''}>
+              <Label htmlFor='address.city' className={errors['address.city']?.length ? 'text-destructive' : ''}>
                 City
               </Label>
               <div className='space-y-px'>
-                <Input id='city' type='text' name='city' value={data.city !== null ? data.city : ''} onChange={handleInputChange} placeholder='City' />
-                <InputError message={errors.city} />
+                <Input id='address.city' type='text' name='address.city' value={data.address.city !== null ? data.address.city : ''} onChange={handleInputChange} placeholder='City' />
+                <InputError message={errors['address.city']} />
               </div>
             </div>
 
             <div className='space-x-2 grid grid-cols-2'>
               <div className='grid gap-2'>
-                <Label htmlFor='state' className={errors.state?.length ? 'text-destructive' : ''}>
+                <Label htmlFor='address.state' className={errors['address.state']?.length ? 'text-destructive' : ''}>
                   State
                 </Label>
                 <div className='space-y-px'>
-                  <Select name='state' value={data.state} onValueChange={value => setData('state', value)}>
-                    <SelectTrigger id='state'>
+                  <Select name='address.state' value={data.address.state} onValueChange={value => {
+                    setData('address.state', value)
+                    clearErrors('address.state')
+                  }}>
+                    <SelectTrigger id='address.state'>
                       <SelectValue placeholder='Select State' />
                     </SelectTrigger>
                     <SelectContent>
@@ -364,17 +378,17 @@ export default function AddUser() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <InputError message={errors.state} />
+                  <InputError message={errors['address.state']} />
                 </div>
               </div>
 
               <div className='grid gap-2'>
-                <Label htmlFor='zip' className={errors.zip?.length ? 'text-destructive' : ''}>
+                <Label htmlFor='address.zip' className={errors['address.zip']?.length ? 'text-destructive' : ''}>
                   ZIP
                 </Label>
                 <div className='space-y-px'>
-                  <Input id='zip' type='text' name='zip' value={data.zip !== null ? data.zip : ''} onChange={handleInputChange} placeholder='ZIP' />
-                  <InputError message={errors.zip} />
+                  <Input id='address.zip' type='text' name='address.zip' value={data.address.zip !== null ? data.address.zip : ''} onChange={handleInputChange} placeholder='ZIP' />
+                  <InputError message={errors['address.zip']} />
                 </div>
               </div>
             </div>
@@ -402,3 +416,5 @@ export default function AddUser() {
     </Sheet>
   )
 }
+
+export default AddUser

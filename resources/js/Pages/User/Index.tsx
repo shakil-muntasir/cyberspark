@@ -11,7 +11,12 @@ import { columns as initialColumns } from '@/Pages/User/_data/columns'
 import { TableData } from '@/Types'
 import { User } from '@/Pages/User/type'
 
-export default function UsersList({ users }: { users: TableData<User> }) {
+interface UsersListProps {
+  users: TableData<User>
+  roles: { label: string; value: string }[]
+}
+
+const UsersList: React.FC<UsersListProps> = ({ users, roles }) => {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 
@@ -41,7 +46,7 @@ export default function UsersList({ users }: { users: TableData<User> }) {
     <AuthenticatedLayout title='Users'>
       <div className='flex items-center justify-between'>
         <PageHeader title='Users' description='This is the users page. You can view, edit, and delete users here.' />
-        <AddUser />
+        <AddUser roles={roles} />
       </div>
 
       <Separator className='mt-4' />
@@ -59,3 +64,5 @@ export default function UsersList({ users }: { users: TableData<User> }) {
     </AuthenticatedLayout>
   )
 }
+
+export default UsersList

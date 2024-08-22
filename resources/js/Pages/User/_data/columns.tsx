@@ -10,6 +10,7 @@ import { User } from '@/Pages/User/type'
 import { TableColumn } from '@/Types'
 import { Link, router } from '@inertiajs/react'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+import { toTitleCase } from '@/Lib/utils'
 
 const handleCopyId = (id: string): void => {
   navigator.clipboard.writeText(id)
@@ -36,27 +37,26 @@ const columns: TableColumn<User>[] = createColumns([
   {
     id: 'name',
     label: 'Name',
-    header: column => <DataTableColumnHeader column={column} title='Name' />
+    header: column => <DataTableColumnHeader column={column} title='Name' />,
+    cell: ({ name }) => <div className='font-medium'>{name}</div>
   },
   {
     id: 'email',
     label: 'Email',
-    header: column => <DataTableColumnHeader column={column} title='Email' />
+    header: column => <DataTableColumnHeader column={column} title='Email' />,
+    cell: ({ email }) => <div className='font-medium'>{email}</div>
   },
   {
     id: 'phone',
     label: 'Phone',
-    header: column => <DataTableColumnHeader column={column} title='Phone' />
+    header: column => <DataTableColumnHeader column={column} title='Phone' />,
+    cell: ({ phone }) => <div className='font-medium'>{phone}</div>
   },
   {
-    id: 'address',
-    label: 'Address',
-    header: column => <DataTableColumnHeader column={column} title='Address' />
-  },
-  {
-    id: 'created_by',
-    label: 'Created By',
-    header: column => <DataTableColumnHeader column={column} title='Created by' />
+    id: 'gender',
+    label: 'Gender',
+    header: column => <DataTableColumnHeader column={column} title='Gender' />,
+    cell: ({gender}) => <>{toTitleCase(gender)}</>
   },
   {
     id: 'status',
@@ -64,7 +64,7 @@ const columns: TableColumn<User>[] = createColumns([
     header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
     cell: ({ status }) => (
       <span className='flex justify-center'>
-        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{status}</Badge>
+        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{toTitleCase(status)}</Badge>
       </span>
     ),
     options: [
@@ -79,6 +79,11 @@ const columns: TableColumn<User>[] = createColumns([
         icon: CrossCircledIcon
       }
     ]
+  },
+  {
+    id: 'created_by',
+    label: 'Created By',
+    header: column => <DataTableColumnHeader column={column} title='Created by' />
   },
   {
     id: 'actions',
