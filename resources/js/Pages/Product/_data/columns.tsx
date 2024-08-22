@@ -10,6 +10,7 @@ import { Product } from '@/Pages/Product/type'
 import { TableColumn } from '@/Types'
 import { Link, router } from '@inertiajs/react'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+import { toTitleCase } from '@/Lib/utils'
 
 const handleCopyId = (id: string): void => {
   navigator.clipboard.writeText(id)
@@ -50,14 +51,23 @@ const columns: TableColumn<Product>[] = createColumns([
     header: column => <DataTableColumnHeader column={column} title='Variants' align='end' />,
     cell: ({ variants_count }) => <div className='text-right font-medium mr-4'>{variants_count}</div>
   },
-
   {
     id: 'stock_status',
     label: 'Stock Status',
     header: column => <DataTableColumnHeader column={column} title='Stock Status' align='center' />,
     cell: ({ stock_status }) => (
       <span className='flex justify-center'>
-        <Badge variant={stock_status === 'available' ? 'default' : 'secondary'}>{stock_status}</Badge>
+        <Badge variant={stock_status === 'available' ? 'default' : 'secondary'}>{toTitleCase(stock_status)}</Badge>
+      </span>
+    )
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
+    cell: ({ status }) => (
+      <span className='flex justify-center'>
+        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{toTitleCase(status)}</Badge>
       </span>
     ),
     options: [
@@ -77,28 +87,6 @@ const columns: TableColumn<Product>[] = createColumns([
     id: 'created_by',
     label: 'Created by',
     header: column => <DataTableColumnHeader column={column} title='Created by' />
-  },
-  {
-    id: 'status',
-    label: 'Status',
-    header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
-    cell: ({ status }) => (
-      <span className='flex justify-center'>
-        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{status}</Badge>
-      </span>
-    ),
-    options: [
-      {
-        label: 'Active',
-        value: 'active',
-        icon: CheckCircledIcon
-      },
-      {
-        label: 'Inactive',
-        value: 'inactive',
-        icon: CrossCircledIcon
-      }
-    ]
   },
   {
     id: 'actions',

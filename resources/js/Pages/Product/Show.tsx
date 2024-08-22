@@ -134,7 +134,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
               </Card>
 
               {/* The Product Variants table and add form will be rendered here */}
-              <ProductVariantData product={product} variants={product.data.relationships.variants} />
+              {product.data.relationships?.variants?.length && <ProductVariantData product={product} variants={product.data.relationships?.variants} />}
             </div>
             <div className='grid auto-rows-max items-start gap-4 lg:gap-8 w-full lg:max-w-72'>
               <Card>
