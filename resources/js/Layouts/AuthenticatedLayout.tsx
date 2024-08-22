@@ -39,9 +39,11 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
           </header>
           <main className='flex-1 items-start px-6 py-4 md:py-0'>{children}</main>
           <footer className='px-6'>
-            <div className='grid grid-cols-2 lg:grid-cols-3 items-center justify-between my-3'>
-              {theme === 'dark' ? <img className='h-12 p-2' src={SprintDevsFullDark} /> : <img className='h-12 p-2' src={SprintDevsFullLight} />}
-              <div className='flex items-center justify-end lg:justify-center gap-2 px-2'>
+            <div className='flex flex-row-reverse lg:flex-row items-center my-3'>
+              <div className='flex justify-end lg:justify-start w-1/2'>
+                <img className='h-12 p-2 ' src={theme === 'dark' ? SprintDevsFullDark : SprintDevsFullLight} />
+              </div>
+              <div className='flex items-center lg:justify-start w-1/2 gap-2 px-2 lg:-ml-14'>
                 <a href='#'>
                   <FacebookIcon className='h-6 text-foreground/70 hover:text-foreground' />
                 </a>
