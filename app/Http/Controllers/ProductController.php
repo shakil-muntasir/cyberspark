@@ -49,7 +49,7 @@ class ProductController extends Controller
 
         return inertia('Product/Show', [
             'product' => new ProductResource($product),
-            'statuses' => ProductStatus::getAllStatuses()
+            'statuses' => ProductStatus::getAllOptions(),
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Gender;
 use App\Enums\UserStatus;
 use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,6 +57,7 @@ class User extends Authenticatable
     }
 
     protected $casts = [
+        'gender' => Gender::class,
         'status' => UserStatus::class
     ];
 
@@ -68,6 +70,11 @@ class User extends Authenticatable
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'created_by_id');
+    }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'created_by_id');
     }
 
     /**
@@ -119,6 +126,33 @@ class User extends Authenticatable
     public function scopeInactive(Builder $query): Builder
     {
         return $query->where('status', UserStatus::INACTIVE->value);
+    }
+
+    /**
+     * Scope a query to only include users of given gender
+     * 
+     * @param  Builder $query
+     * @return Builder
+     */
+    public function scopeWhereGender(Builder $query, string $gender): Builder
+    {
+        if (!in_array($gender, Gender::values())) {
+            throw new \InvalidArgumentException("Invalid gender value: $gender");
+        }
+
+        return $query->where('gender', $gender);
+    }
+
+    /**
+     * Scope a query to only include updated by given user.
+     *
+     * @param  Builder $query
+     * @param  int $userId
+     * @return Builder
+     */
+    public function scopeUpdatedBy(Builder $query, int $userId): Builder
+    {
+        return $query->where('updated_by_id', $userId);
     }
 
     /**
