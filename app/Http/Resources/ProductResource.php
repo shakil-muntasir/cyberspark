@@ -2,19 +2,25 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-
 class ProductResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Define the relationships and their corresponding resource classes.
+     *
+     * @var array<string, string>
+     */
+    protected array $relationships = [
+        'variants' => ProductVariantResource::class,
+    ];
+
+    /**
+     * Get the attributes of the resource.
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    protected function getAttributes(): array
     {
-        $data = [
+        return [
             'type' => 'products',
             'id' => (string) $this->id,
             'attributes' => [
@@ -33,54 +39,5 @@ class ProductResource extends JsonResource
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],
         ];
-
-        // Dynamically load relationships
-        $relationships = $this->dynamicLoadRelationships();
-
-        if (!empty($relationships)) {
-            $data['relationships'] = $relationships;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Dynamically load and format relationships based on what's loaded.
-     *
-     * @return array<string, mixed>
-     */
-    protected function dynamicLoadRelationships(): array
-    {
-        $result = [];
-
-        // Loop through the loaded relationships and transform them
-        foreach ($this->getRelations() as $relation => $value) {
-            if ($this->relationLoaded($relation)) {
-                $resourceClass = $this->getRelationshipResourceClass($relation);
-                if ($resourceClass) {
-                    $result[$relation] = $resourceClass::collection($this->$relation);
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Determine the appropriate resource class for a given relationship.
-     *
-     * @param  string  $relation
-     * @return string|null
-     */
-    protected function getRelationshipResourceClass(string $relation): ?string
-    {
-        // Define a mapping of relationship names to resource classes
-        $relationshipResources = [
-            'variants' => ProductVariantResource::class,
-            // Add more relationships as needed
-            // 'newRelationship' => NewRelationshipResource::class,
-        ];
-
-        return $relationshipResources[$relation] ?? null;
     }
 }
