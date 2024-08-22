@@ -62,3 +62,11 @@ export interface TableProps<T> {
     filterColumnBy: string
     searchPlaceholder: string
 }
+
+export type FormKeyOf<ObjectType> = {
+    [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object ? `${Key}` | `${Key}.${FormKeyOf<ObjectType[Key]>}` : `${Key}`
+}[keyof ObjectType & (string | number)]
+
+export type FormErrors<ObjectType> = Partial<{
+    [Key in FormKeyOf<ObjectType>]: string;
+}>;

@@ -17,8 +17,8 @@ export type Product = {
             created_at: string
             updated_at: string
         }
-        relationships: {
-            variants: ProductVariant[]
+        relationships?: {
+            variants?: ProductVariant[]
         }
     }
 }
