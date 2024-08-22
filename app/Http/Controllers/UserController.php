@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
+use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -24,11 +25,20 @@ class UserController extends Controller
 
         return inertia('User/Index', [
             'users' => UserResource::collection($users),
+            'roles' => Role::getAllOptions()
         ]);
     }
 
-    public function store(): RedirectResponse
+    public function store(UserRequest $request): RedirectResponse
     {
+        Gate::authorize('create', User::class);
+
+        DB::transaction(function () use ($request) {
+            $user = User::create($request->validated());
+            $user->syncRoles($request->roles);
+            $user->address()->create($request->address);
+        });
+
         return redirect()->back();
     }
 

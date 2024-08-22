@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Gender;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,11 +23,32 @@ class UserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
-            'password' => ['required', 'string', 'min:8'],
-            'phone' => ['nullable', 'string', 'max:255'],
+            'gender' => ['required', 'string', Rule::enum(Gender::class)],
+            'phone' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'password' => ['required', 'string', 'min:8'],
+            'roles' => ['array', 'exists:roles,name', 'min:1'],
+            'address.street' => ['required', 'string', 'max:255'],
+            'address.city' => ['required', 'string', 'max:255'],
+            'address.state' => ['required', 'string', 'max:255'],
+            'address.zip' => ['required', 'string', 'max:20'],
         ];
     }
+
+    public function messages()
+{
+    return [
+        'address.street.required' => 'The street field is required.',
+        'address.street.max' => 'The street field must not be greater than 255 characters.',
+        'address.city.required' => 'The city field is required.',
+        'address.city.max' => 'The city field must not be greater than 255 characters.',
+        'address.state.required' => 'The state field is required.',
+        'address.state.max' => 'The state field must not be greater than 255 characters.',
+        'address.zip.required' => 'The zip field is required.',
+        'address.zip.max' => 'The zip field must not be greater than 20 characters.',
+    ];
+}
+
 
     /**
      * Sanitize and retrieve query parameters.

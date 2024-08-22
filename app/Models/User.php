@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\Permission\Traits\HasRoles;
+use Str;
 
 class User extends Authenticatable
 {
@@ -28,6 +29,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'gender',
         'phone',
         'image',
         'password',
@@ -75,6 +77,26 @@ class User extends Authenticatable
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'created_by_id');
+    }
+
+    /**
+     * Get the current roles of the user.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getCurrentRolesAttribute()
+    {
+        // Check if the user has roles
+        if ($this->roles->isEmpty()) {
+            return [];
+        }
+
+        return $this->roles->map(function ($role) {
+            return [
+                'label' => Str::title(str_replace('_', ' ', $role->name)),
+                'value' => $role->name
+            ];
+        })->toArray();
     }
 
     /**
@@ -164,7 +186,7 @@ class User extends Authenticatable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['address', 'createdBy:id,name'])
+            ->with(['createdBy:id,name'])
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
