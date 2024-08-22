@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, Trash2Icon } from 'lucide-react'
+import { router, useForm } from '@inertiajs/react'
 
-import DeleteModal from '@/Components/DeleteModal'
-import InputError from '@/Components/InputError'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
@@ -12,37 +14,55 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-import UserAvatar from '@/Components/UserAvatar'
+
+import DeleteModal from '@/Components/DeleteModal'
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import InputError from '@/Components/InputError'
+import UserAvatar from '@/Components/UserAvatar'
+
 import { cn, getImageData } from '@/Lib/utils'
 import { User, UserForm } from '@/Pages/User/type'
-import { router, useForm } from '@inertiajs/react'
-import { useEffect, useRef, useState } from 'react'
 
-export default function ShowUser({ user: { data: user } }: { user: User }) {
+type SelectProps = {
+  label: string
+  value: string
+}
+
+interface UserProps {
+  user: User
+  genders: SelectProps[]
+  roles: SelectProps[]
+  states: SelectProps[]
+  statuses: SelectProps[]
+}
+
+const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses }) => {
+  const { initializeDeleteModal } = useDeleteModal()
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
+  const [previewImage, setPreviewImage] = useState<string>('')
+  const imageRef = useRef<HTMLInputElement>(null)
+
   const initialData = {
-    name: user.attributes.name,
-    email: user.attributes.email,
+    name: user.data.attributes.name,
+    email: user.data.attributes.email,
     gender: '',
-    phone: user.attributes.phone,
+    phone: user.data.attributes.phone,
     image: undefined,
-    roles: user.attributes.roles,
-    status: user.attributes.status,
-    address: user.attributes.address ?? '',
+    roles: user.data.attributes.roles,
+    status: user.data.attributes.status,
+    address: user.data.attributes.address ?? '',
     city: '',
     state: '',
     zip: '',
     password: ''
   }
-
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>(initialData)
 
-  const [previewImage, setPreviewImage] = useState<string>('')
+  useEffect(() => {
+    const hasChanges = Object.keys(initialData).some(key => data[key as keyof UserForm] !== initialData[key as keyof UserForm])
 
-  const imageRef = useRef<HTMLInputElement>(null)
-
-  const { initializeDeleteModal } = useDeleteModal()
+    setIsSaveButtonDisabled(hasChanges)
+  }, [data])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
@@ -58,43 +78,12 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
     }
   }
 
-  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
-
-  useEffect(() => {
-    const hasChanges = Object.keys(initialData).some(key => data[key as keyof UserForm] !== initialData[key as keyof UserForm])
-
-    setIsSaveButtonDisabled(hasChanges)
-  }, [data])
-
   const deleteModalData: DeleteModalData = {
-    id: user.attributes.id,
-    name: user.attributes.name,
+    id: user.data.attributes.id,
+    name: user.data.attributes.name,
     title: 'user',
     onConfirm: () => router.visit('/users')
   }
-
-  const roles = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'Sales Representative', value: 'sales_rep' },
-    { label: 'Customer', value: 'customer' },
-    { label: 'Delivery-Man', value: 'delivery_man' }
-  ]
-
-  const statuses = [
-    { label: 'Active', value: 'active' },
-    { label: 'Inactive', value: 'inactive' }
-  ]
-
-  const states = [
-    { label: 'Dhaka', value: 'dhaka' },
-    { label: 'Chattogram', value: 'chattogram' },
-    { label: 'Khulna', value: 'khulna' },
-    { label: 'Rajshahi', value: 'rajshahi' },
-    { label: 'Barishal', value: 'barishal' },
-    { label: 'Sylhet', value: 'sylhet' },
-    { label: 'Rangpur', value: 'rangpur' },
-    { label: 'Mymensingh', value: 'mymensingh' }
-  ]
 
   return (
     <AuthenticatedLayout title='User Details'>
@@ -114,9 +103,9 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <h1 className='flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0'>{user.attributes.name}</h1>
+            <h1 className='flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0'>{user.data.attributes.name}</h1>
             <div className='flex items-center space-x-1'>
-              {user.attributes.roles.map((role, index) => (
+              {user.data.attributes.roles.map((role, index) => (
                 <Badge key={index} variant='outline' className='ml-auto sm:ml-0'>
                   {role}
                 </Badge>
@@ -135,7 +124,7 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
           <div className='flex flex-col lg:flex-row gap-4 lg:gap-8'>
             <div className='flex flex-col gap-4 lg:gap-8'>
               <div className='flex flex-col lg:flex-row flex-1 auto-rows-max items-start gap-4 lg:gap-8'>
-                <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='mx-auto' />
+                <UserAvatar inputRef={imageRef} processing={processing} src={user.data.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='mx-auto' />
                 <Card className='w-full'>
                   <CardHeader>
                     <CardTitle>User Information</CardTitle>
@@ -440,3 +429,5 @@ export default function ShowUser({ user: { data: user } }: { user: User }) {
     </AuthenticatedLayout>
   )
 }
+
+export default ShowUser
