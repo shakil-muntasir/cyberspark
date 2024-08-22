@@ -39,7 +39,6 @@ interface UserProps {
 }
 
 const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses }) => {
-  console.log(user)
   const { initializeDeleteModal } = useDeleteModal()
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
   const [previewImage, setPreviewImage] = useState<string>('')
