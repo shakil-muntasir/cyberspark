@@ -388,7 +388,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className='space-y-3 pt-4 pb-0 mr-0.5 '>
+                    <AccordionContent className='space-y-3 pt-4 pb-0 '>
                       <div className='flex items-center justify-between'>
                         <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                         <div className='text-right font-medium'>{variant.attributes.quantity}</div>
@@ -430,7 +430,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     </AccordionContent>
                   </>
                 ) : (
-                  <AccordionContent className='pb-0 mr-0.5'>
+                  <AccordionContent className='pb-0'>
                     <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
                       <h1 className='text-lg font-semibold tracking-wide py-0.5'>Edit Variant</h1>
                       <div className='flex items-center justify-between'>
@@ -492,7 +492,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
               </AccordionItem>
             ))}
             <AccordionItem value='add_variant'>
-              <AccordionContent className='pb-0 mr-0.5'>
+              <AccordionContent className='pb-0'>
                 <div className={`space-y-3 pt-2.5 border-t`}>
                   <h1 className='text-lg font-semibold tracking-wide py-0.5'>Add new Variant</h1>
                   <div className='flex items-center justify-between'>

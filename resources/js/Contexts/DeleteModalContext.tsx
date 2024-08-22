@@ -43,7 +43,7 @@ import { useContext } from 'react'
 export const useDeleteModal = () => {
   const context = useContext(DeleteModalContext)
   if (context === undefined) {
-    throw new Error('use delete modal should be ')
+    throw new Error('useDeleteModal must be used within a DeleteModalProvider')
   }
   return context
 }
