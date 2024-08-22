@@ -12,6 +12,8 @@ import { Link, router } from '@inertiajs/react'
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 import { toTitleCase } from '@/Lib/utils'
 
+// TODO: add orders to product
+
 const handleCopyId = (id: string): void => {
   navigator.clipboard.writeText(id)
   setTimeout(() => {

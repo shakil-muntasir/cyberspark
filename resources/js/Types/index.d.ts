@@ -44,7 +44,6 @@ export type Attributes<T> = T extends { data: { attributes: infer A } } ? A : ne
 
 export interface TableColumn<T> {
     id: keyof Attributes<T> | ((row: Attributes<T>) => JSX.Element) | 'actions'
-    // id: keyof T | ((row: T) => any) | 'actions'
     label: string
     header: string | ((column: TableColumn<T>) => JSX.Element)
     cell?: keyof Attributes<T> | ((row: Attributes<T>) => JSX.Element)

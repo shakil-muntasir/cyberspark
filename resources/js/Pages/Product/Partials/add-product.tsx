@@ -95,7 +95,7 @@ export default function AddProduct() {
         </Button>
       </SheetTrigger>
       <SheetContent className='px-0' fullscreen={true}>
-        <SheetHeader className='px-6'>
+        <SheetHeader className='px-6 space-y-0'>
           <SheetTitle>Add Product</SheetTitle>
           <SheetDescription>Fill in the form to add a new product to your store.</SheetDescription>
         </SheetHeader>
@@ -146,21 +146,26 @@ export default function AddProduct() {
             </div>
 
             <SheetFooter>
-              <Button type='submit' className='w-32' disabled={loading}>
-                {submitButtonText === 'Saving' ? (
-                  <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              <div className='flex justify-end gap-2'>
+                <Button variant='secondary' onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type='submit' className='w-32' disabled={loading}>
+                  {submitButtonText === 'Saving' ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      <span>{submitButtonText}</span>
+                    </>
+                  ) : submitButtonText === 'Error' ? (
+                    <>
+                      <AlertCircle className='mr-2 h-4 w-4 text-destructive' />
+                      <span>Failed</span>
+                    </>
+                  ) : (
                     <span>{submitButtonText}</span>
-                  </>
-                ) : submitButtonText === 'Error' ? (
-                  <>
-                    <AlertCircle className='mr-2 h-4 w-4 text-destructive' />
-                    <span>Failed</span>
-                  </>
-                ) : (
-                  <span>{submitButtonText}</span>
-                )}
-              </Button>
+                  )}
+                </Button>
+              </div>
             </SheetFooter>
           </form>
         </ScrollArea>

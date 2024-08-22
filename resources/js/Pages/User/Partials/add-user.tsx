@@ -78,7 +78,6 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
   }
 
   const handleError = (errors: FormErrors<UserForm>) => {
-    console.log(errors)
     setSubmitButtonText('Error')
     setTimeout(() => {
       setLoading(false)
@@ -121,7 +120,6 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
       imageRef.current.value = ''
     }
   }
-  // TODO: make the form take full width in mobile view
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>
@@ -131,7 +129,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
         </Button>
       </SheetTrigger>
       <SheetContent className='px-0' fullscreen={true}>
-        <SheetHeader className='px-6'>
+        <SheetHeader className='px-6 space-y-0'>
           <SheetTitle>Add User</SheetTitle>
           <SheetDescription>Fill in the form to add a new user to your store.</SheetDescription>
         </SheetHeader>
@@ -358,10 +356,14 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                   State
                 </Label>
                 <div className='space-y-px'>
-                  <Select name='address.state' value={data.address.state} onValueChange={value => {
-                    setData('address.state', value)
-                    clearErrors('address.state')
-                  }}>
+                  <Select
+                    name='address.state'
+                    value={data.address.state}
+                    onValueChange={value => {
+                      setData('address.state', value)
+                      clearErrors('address.state')
+                    }}
+                  >
                     <SelectTrigger id='address.state'>
                       <SelectValue placeholder='Select State' />
                     </SelectTrigger>
@@ -394,21 +396,26 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
             </div>
 
             <SheetFooter>
-              <Button type='submit' className='w-32' disabled={loading}>
-                {submitButtonText === 'Saving' ? (
-                  <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              <div className='flex justify-end gap-2'>
+                <Button variant='secondary' onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type='submit' className='w-32' disabled={loading}>
+                  {submitButtonText === 'Saving' ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      <span>{submitButtonText}</span>
+                    </>
+                  ) : submitButtonText === 'Error' ? (
+                    <>
+                      <AlertCircle className='mr-2 h-4 w-4 text-destructive' />
+                      <span>Failed</span>
+                    </>
+                  ) : (
                     <span>{submitButtonText}</span>
-                  </>
-                ) : submitButtonText === 'Error' ? (
-                  <>
-                    <AlertCircle className='mr-2 h-4 w-4 text-destructive' />
-                    <span>Failed</span>
-                  </>
-                ) : (
-                  <span>{submitButtonText}</span>
-                )}
-              </Button>
+                  )}
+                </Button>
+              </div>
             </SheetFooter>
           </form>
         </ScrollArea>
