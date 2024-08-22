@@ -2,17 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Traits\HasRelationships;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-
 class AddressResource extends JsonResource
 {
-    use HasRelationships;
-
-    protected array $relationships = [];
-
-    protected function getAttributes(Request $request = null): array
+    protected function getAttributes(): array
     {
         return [
             'type' => 'addresses',
