@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 
 import { cn } from '@/Lib/utils'
 import { CircleCheck } from '@/Icons/CircleCheck'
+import { ScrollArea } from '@/Components/ui/scroll-area'
 
 const MakeSell = () => {
   const [openProductPopover, setOpenProductPopover] = useState(false)
@@ -48,7 +49,7 @@ const MakeSell = () => {
   ]
 
   {
-    /* TODO: add animated sell button, turn radiobox to toggle, add payment methods*/
+    /* TODO: add payment methods*/
   }
 
   return (
@@ -258,65 +259,98 @@ const MakeSell = () => {
                 <p className='text-sm text-muted-foreground'>Please confirm the information to sell a product.</p>
               </div>
               <Card>
-                <CardContent className='py-6 flex justify-between'>
-                  <div className='flex gap-4'>
-                    <img className='rounded-md h-28 w-20' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
-                    <div className='flex flex-col justify-between'>
-                      <div>
-                        <Label>Basic Tee</Label>
-                        <p className='text-sm text-muted-foreground tracking-tight'>Black</p>
-                        <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                <ScrollArea className='lg:h-[20.1rem]'>
+                  <CardContent className='py-6 flex justify-between'>
+                    <div className='flex gap-4'>
+                      <img className='rounded-md h-28 w-20' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
+                      <div className='flex flex-col justify-between'>
+                        <div>
+                          <Label>Basic Tee</Label>
+                          <p className='text-sm text-muted-foreground tracking-tight'>White</p>
+                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                        </div>
+                        <p className='text-sm font-medium'>$32.00</p>
                       </div>
-                      <p className='text-sm font-medium'>$32.00</p>
                     </div>
-                  </div>
-                  <div className='flex flex-col items-end justify-between'>
-                    <TooltipProvider>
-                      <Tooltip delayDuration={0}>
-                        <TooltipTrigger asChild>
-                          <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
-                            <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
-                            <span className='sr-only'>Remove</span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Remove</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
-                  </div>
-                </CardContent>
-                <Separator />
-                <CardContent className='py-6 flex justify-between'>
-                  <div className='flex gap-4'>
-                    <img className='rounded-md h-28 w-20' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
-                    <div className='flex flex-col justify-between'>
-                      <div>
-                        <Label>Basic Tee</Label>
-                        <p className='text-sm text-muted-foreground tracking-tight'>Black</p>
-                        <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                    <div className='flex flex-col items-end justify-between'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
+                              <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                              <span className='sr-only'>Remove</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                    </div>
+                  </CardContent>
+                  <Separator />
+                  <CardContent className='py-6 flex justify-between'>
+                    <div className='flex gap-4'>
+                      <img className='rounded-md h-28 w-20' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
+                      <div className='flex flex-col justify-between'>
+                        <div>
+                          <Label>Printed Tee</Label>
+                          <p className='text-sm text-muted-foreground tracking-tight'>Black</p>
+                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                        </div>
+                        <p className='text-sm font-medium'>$45.00</p>
                       </div>
-                      <p className='text-sm font-medium'>$32.00</p>
                     </div>
-                  </div>
-                  <div className='flex flex-col items-end justify-between'>
-                    <TooltipProvider>
-                      <Tooltip delayDuration={0}>
-                        <TooltipTrigger asChild>
-                          <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
-                            <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
-                            <span className='sr-only'>Remove</span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Remove</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
-                  </div>
-                </CardContent>
+                    <div className='flex flex-col items-end justify-between'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
+                              <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                              <span className='sr-only'>Remove</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                    </div>
+                  </CardContent>
+                  <Separator />
+                  <CardContent className='py-6 flex justify-between'>
+                    <div className='flex gap-4'>
+                      <img className='rounded-md h-28 w-20' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
+                      <div className='flex flex-col justify-between'>
+                        <div>
+                          <Label>Basic Tee</Label>
+                          <p className='text-sm text-muted-foreground tracking-tight'>Beige</p>
+                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                        </div>
+                        <p className='text-sm font-medium'>$32.00</p>
+                      </div>
+                    </div>
+                    <div className='flex flex-col items-end justify-between'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
+                              <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                              <span className='sr-only'>Remove</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                    </div>
+                  </CardContent>
+                  <Separator />
+                </ScrollArea>
                 <Separator />
                 <CardContent className='py-6 space-y-6'>
                   <div className='flex items-center justify-between'>
