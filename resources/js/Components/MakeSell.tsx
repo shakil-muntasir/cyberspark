@@ -45,14 +45,16 @@ const MakeSell = () => {
     }
   ]
 
-  {/* TODO: add animated sell button, turn radiobox to toggle, add payment methods*/}
+  {
+    /* TODO: add animated sell button, turn radiobox to toggle, add payment methods*/
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='fixed bottom-8 right-8 rounded-full h-12 w-12 space-x-1 p-0'>
-          <PlusIcon className='h-6 w-6 ' />
-          {/* <span className='hidden sm:inline'>Sell Product</span> */}
+        <Button className='fixed bottom-5 right-5 flex items-center justify-center h-12 w-12 hover:w-36 font-medium rounded-full transition-all duration-500 group'>
+          <span className='inline-block max-w-0 overflow-hidden transition-all duration-500 group-hover:max-w-xs -translate-x-3.5'>Make a Sale</span>
+          <PlusIcon className='fixed right-6 rounded-full bg-white transform transition-transform duration-500 group-hover:rotate-180 ml-2 p-2 h-10 w-10' />
         </Button>
       </DialogTrigger>
       <DialogContent className='flex-1 max-w-7xl bg-primary-foreground h-screen lg:h-auto overflow-y-auto'>
