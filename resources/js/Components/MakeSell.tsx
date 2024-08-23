@@ -15,11 +15,13 @@ import { Separator } from '@/Components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 
 import { cn } from '@/Lib/utils'
+import { CircleCheck } from '@/Icons/CircleCheck'
 
 const MakeSell = () => {
   const [openProductPopover, setOpenProductPopover] = useState(false)
   const [openDeliveryManPopover, setOpenDeliveryManPopover] = useState(false)
   const [value, setValue] = useState('')
+  const [activeRadioItem, setActiveRadioItem] = useState('standard')
   const commandSourceRef = useRef<HTMLDivElement>(null)
 
   const frameworks = [
@@ -52,9 +54,9 @@ const MakeSell = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='fixed bottom-5 right-5 flex items-center justify-center h-12 w-12 hover:w-36 font-medium rounded-full transition-all duration-500 group'>
-          <span className='inline-block max-w-0 overflow-hidden transition-all duration-500 group-hover:max-w-xs -translate-x-3.5'>Make a Sale</span>
-          <PlusIcon className='fixed right-6 rounded-full bg-white transform transition-transform duration-500 group-hover:rotate-180 ml-2 p-2 h-10 w-10' />
+        <Button className='fixed bottom-5 right-5 flex items-center justify-center h-12 w-12 hover:w-36 font-medium rounded-full transition-all duration-500 group hover:bg-foreground'>
+          <span className='inline-block max-w-0 overflow-hidden transition-all duration-500 group-hover:max-w-xs -translate-x-3.5'>Make a Sell</span>
+          <PlusIcon className='fixed right-5 rounded-full bg-foreground transform transition-transform duration-500 group-hover:rotate-180 p-3 h-12 w-12' />
         </Button>
       </DialogTrigger>
       <DialogContent className='flex-1 max-w-7xl bg-primary-foreground h-screen lg:h-auto overflow-y-auto'>
@@ -186,30 +188,28 @@ const MakeSell = () => {
             <Separator className='mb-4 lg:mb-6 lg:mt-2' />
             <div className='space-y-6'>
               <Label className='text-lg'>Delivery method</Label>
-              <RadioGroup defaultValue='standard' className='grid grid-cols-2 mb-2'>
-                <Card className='relative border-2 border-blue-500'>
+              <RadioGroup defaultValue='standard' value={activeRadioItem} className='grid grid-cols-2 mb-2'>
+                <Card className={cn('relative cursor-pointer', activeRadioItem === 'standard' ? 'outline-2 border-blue-500' : '')} onClick={() => setActiveRadioItem('standard')}>
                   <CardHeader className='space-y-0'>
-                    <Label className='text-sm' htmlFor='standard'>
-                      Standard
-                    </Label>
+                    <p className='text-sm font-medium'>Standard</p>
                     <p className='text-sm text-muted-foreground tracking-tight'>4–10 business days</p>
                   </CardHeader>
                   <CardContent>
                     <p className='text-sm font-medium'>$5.00</p>
                   </CardContent>
-                  <RadioGroupItem className='absolute top-4 right-4 text-blue-500' value='standard' id='standard' />
+                  <RadioGroupItem className='absolute top-4 right-4 opacity-0 z-10' value='standard' />
+                  <CircleCheck className={cn('absolute top-4 right-4 text-blue-500 transition-all duration-100', activeRadioItem === 'standard' ? '' : 'opacity-0')} aria-hidden='true' />
                 </Card>
-                <Card className='relative'>
+                <Card className={cn('relative cursor-pointer', activeRadioItem === 'express' ? 'outline-2 border-blue-500' : '')} onClick={() => setActiveRadioItem('express')}>
                   <CardHeader className='space-y-0'>
-                    <Label className='text-sm' htmlFor='express'>
-                      Express
-                    </Label>
+                    <p className='text-sm font-medium'>Express</p>
                     <p className='text-sm text-muted-foreground tracking-tight'>2–5 business days</p>
                   </CardHeader>
                   <CardContent>
                     <p className='text-sm font-medium'>$16.00</p>
                   </CardContent>
-                  <RadioGroupItem className='absolute top-4 right-4 text-blue-500' value='express' id='express' />
+                  <RadioGroupItem className='absolute top-4 right-4 opacity-0 z-10' value='express' id='express' />
+                  <CircleCheck className={cn('absolute top-4 right-4 text-blue-500 transition-all duration-100', activeRadioItem === 'express' ? '' : 'opacity-0')} aria-hidden='true' />
                 </Card>
               </RadioGroup>
               <div className='flex flex-col'>
