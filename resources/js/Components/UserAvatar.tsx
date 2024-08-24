@@ -18,21 +18,21 @@ interface AvatarProps {
 
 const UserAvatar: React.FC<AvatarProps> = ({ inputRef, processing, src, previewImage, className = '', handleImageClear }) => {
   return (
-    <div className={cn('flex justify-center flex-1 items-center relative rounded-full', className)}>
-      <Avatar className='relative w-72 h-72 rounded-full overflow-hidden'>
+    <div className={cn('relative flex flex-1 items-center justify-center rounded-full', className)}>
+      <Avatar className='relative h-72 w-72 overflow-hidden rounded-full'>
         {/* Show spinner if processing state is true */}
         {previewImage && processing && (
-          <div className='absolute inset-0 rounded-full flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50'>
             <Spinner size='large' />
           </div>
         )}
 
         {/* Avatar Image Logic */}
-        <div className='relative rounded-full w-full h-full group hover:cursor-pointer'>
-          <AvatarImage className='object-cover w-full h-full rounded-full' src={previewImage || src || UserPlaceholder} />
+        <div className='group relative h-full w-full rounded-full hover:cursor-pointer'>
+          <AvatarImage className='h-full w-full rounded-full object-cover' src={previewImage || src || UserPlaceholder} />
 
-          <button onClick={() => inputRef.current?.click()} className='absolute inset-0 bg-gray-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full'>
-            <CameraIcon className='text-white h-12 w-12' />
+          <button onClick={() => inputRef.current?.click()} className='absolute inset-0 flex items-center justify-center rounded-full bg-gray-900/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+            <CameraIcon className='h-12 w-12 text-white' />
           </button>
         </div>
 
@@ -44,7 +44,7 @@ const UserAvatar: React.FC<AvatarProps> = ({ inputRef, processing, src, previewI
       </Avatar>
 
       {previewImage && (
-        <button onClick={handleImageClear} className='absolute rounded-full mt-52 ml-52 bg-red-500 outline-red-700 hover:outline  outline-offset-1 hover:cursor-pointer p-2.5 hover:bg-red-700 transition-all duration-75 ease-linear'>
+        <button onClick={handleImageClear} className='absolute ml-52 mt-52 rounded-full bg-red-500 p-2.5 outline-offset-1 outline-red-700 transition-all duration-75 ease-linear hover:cursor-pointer hover:bg-red-700 hover:outline'>
           <span className='h-8 w-8'>
             <Trash2Icon className='h-4 w-4 text-white' />
             <span className='sr-only'>Remove picture</span>

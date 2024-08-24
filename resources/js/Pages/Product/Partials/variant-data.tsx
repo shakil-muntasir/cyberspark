@@ -129,7 +129,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
           <CardTitle>Variants</CardTitle>
           <CardDescription>Add/update the buying, selling and retail prices of product variants.</CardDescription>
         </CardHeader>
-        <CardContent className='lg:p-6 pb-3'>
+        <CardContent className='pb-3 lg:p-6'>
           {/* Desktop view */}
           <Table className='hidden lg:block'>
             <TableHeader>
@@ -155,7 +155,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       {variant.id !== data.id ? (
                         <>
-                          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
                           <div>{variant.attributes.sku}</div>
                         </>
                       ) : (
@@ -170,7 +170,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       {variant.id !== data.id ? (
                         <>
-                          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                           <div>{variant.attributes.quantity}</div>
                         </>
                       ) : (
@@ -185,7 +185,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       {variant.id !== data.id ? (
                         <>
-                          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                           <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                         </>
                       ) : (
@@ -200,7 +200,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       {variant.id !== data.id ? (
                         <>
-                          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
                           <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                         </>
                       ) : (
@@ -215,7 +215,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       {variant.id !== data.id ? (
                         <>
-                          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
                           <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                         </>
                       ) : (
@@ -230,7 +230,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     <TableCell>
                       <span className='sr-only'>Actions</span>
                       {variant.id !== data.id ? (
-                        <div className='flex items-center justify-center h-full'>
+                        <div className='flex h-full items-center justify-center'>
                           <TooltipProvider>
                             <Tooltip delayDuration={0}>
                               <TooltipTrigger asChild>
@@ -280,7 +280,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </TooltipProvider>
                         </div>
                       ) : (
-                        <div className='flex items-center justify-center h-full gap-3'>
+                        <div className='flex h-full items-center justify-center gap-3'>
                           <TooltipProvider>
                             <Tooltip delayDuration={0}>
                               <TooltipTrigger asChild>
@@ -316,35 +316,35 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
               {isAddFormOpen && (
                 <TableRow>
                   <TableCell className='px-1'>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>SKU</span>
+                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
                     <div>
                       <Input className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Quantity</span>
+                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                     <div>
                       <InputNumber className='px-2' id='quantity' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Buying Price</span>
+                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                     <div>
                       <InputNumber className='px-2' id='buying_price' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Retail Price</span>
+                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
                     <InputNumber className='px-2' id='retail_price' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                   </TableCell>
                   <TableCell className='px-1'>
-                    <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only'>Selling Price</span>
+                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
                     <InputNumber className='px-2' id='selling_price' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                   </TableCell>
 
                   <TableCell className='px-1'>
                     <span className='sr-only'>Actions</span>
-                    <div className='flex items-center justify-center h-full gap-3'>
+                    <div className='flex h-full items-center justify-center gap-3'>
                       <TooltipProvider>
                         <Tooltip delayDuration={0}>
                           <TooltipTrigger asChild>
@@ -385,43 +385,43 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   <>
                     <AccordionTrigger className={cn('py-2.5', index !== variants.length - 1 ? 'border-b' : '')}>
                       <div>
-                        <span className='text-muted-foreground font-semibold'>SKU:</span> {variant.attributes.sku}
+                        <span className='font-semibold text-muted-foreground'>SKU:</span> {variant.attributes.sku}
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className='space-y-3 pt-4 pb-0 '>
+                    <AccordionContent className='space-y-3 pb-0 pt-4'>
                       <div className='flex items-center justify-between'>
-                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                         <div className='text-right font-medium'>{variant.attributes.quantity}</div>
                       </div>
                       <div className='flex items-center justify-between'>
-                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                         <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
                       </div>
                       <div className='flex items-center justify-between'>
-                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
 
                         <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                       </div>
                       <div className='flex items-center justify-between'>
-                        <span className='text-sm text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
                         <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                       </div>
                       <div className='grid grid-cols-3 space-x-2'>
-                        <Button type='button' variant='ghost' size='sm' className='group  text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
                           <div className='flex items-center gap-2'>
                             <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                             <span className='tracking-wider'>Edit</span>
                           </div>
                         </Button>
-                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ' onClick={() => handleVariantStatusChange()}>
+                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
                           <div className='flex items-center gap-2'>
-                            {variant.attributes.status === 'active' ? <SquareCheckBig className='h-4 w-4 text-foreground bg-' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
+                            {variant.attributes.status === 'active' ? <SquareCheckBig className='bg- h-4 w-4 text-foreground' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
                             <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
                           </div>
                         </Button>
 
-                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center' onClick={() => handleDeleteVariant(variant)}>
-                          <div className=' flex items-center gap-2'>
+                        <Button type='button' variant='ghost' size='sm' className='group inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant(variant)}>
+                          <div className='flex items-center gap-2'>
                             <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
                             <span className='tracking-wider'>Remove</span>
                           </div>
@@ -432,7 +432,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                 ) : (
                   <AccordionContent className='pb-0'>
                     <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
-                      <h1 className='text-lg font-semibold tracking-wide py-0.5'>Edit Variant</h1>
+                      <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Edit Variant</h1>
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
                         <div>
@@ -468,13 +468,13 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           type='button'
                           variant='outline'
                           size='sm'
-                          className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center'
+                          className='group inline-flex min-w-24 items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                           onClick={() => {
                             setData(initialFormData)
                             setAccordionValue('')
                           }}
                         >
-                          <div className=' flex items-center gap-2'>
+                          <div className='flex items-center gap-2'>
                             <X className='h-4 w-4 text-red-400' />
                             <span className='tracking-wider'>Discard</span>
                           </div>
@@ -493,8 +493,8 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
             ))}
             <AccordionItem value='add_variant'>
               <AccordionContent className='pb-0'>
-                <div className={`space-y-3 pt-2.5 border-t`}>
-                  <h1 className='text-lg font-semibold tracking-wide py-0.5'>Add new Variant</h1>
+                <div className={`space-y-3 border-t pt-2.5`}>
+                  <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Add new Variant</h1>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='sku_2'>SKU</Label>
                     <div>
@@ -530,13 +530,13 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       type='button'
                       variant='outline'
                       size='sm'
-                      className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 gap-1 inline-flex items-center'
+                      className='group inline-flex min-w-24 items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                       onClick={() => {
                         setIsAddFormOpen(false)
                         setAccordionValue('')
                       }}
                     >
-                      <div className=' flex items-center gap-2'>
+                      <div className='flex items-center gap-2'>
                         <X className='h-4 w-4 text-red-400' />
                         <span className='tracking-wider'>Discard</span>
                       </div>

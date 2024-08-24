@@ -55,12 +55,12 @@ const MakeSell = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='fixed bottom-5 right-5 flex items-center justify-center h-12 w-12 hover:w-36 font-medium rounded-full transition-all duration-500 group hover:bg-foreground'>
-          <span className='inline-block max-w-0 overflow-hidden transition-all duration-500 group-hover:max-w-xs -translate-x-3.5'>Make a Sell</span>
-          <PlusIcon className='fixed right-5 rounded-full bg-foreground transform transition-transform duration-500 group-hover:rotate-180 p-3 h-12 w-12' />
+        <Button className='group fixed bottom-5 right-5 flex h-12 w-12 items-center justify-center rounded-full font-medium transition-all duration-500 hover:w-36 hover:bg-foreground'>
+          <span className='inline-block max-w-0 -translate-x-3.5 overflow-hidden transition-all duration-500 group-hover:max-w-xs'>Make a Sell</span>
+          <PlusIcon className='fixed right-5 h-12 w-12 transform rounded-full bg-foreground p-3 transition-transform duration-500 group-hover:rotate-180' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='flex-1 max-w-7xl bg-primary-foreground h-screen lg:h-auto overflow-y-auto'>
+      <DialogContent className='h-screen max-w-7xl flex-1 overflow-y-auto bg-primary-foreground lg:h-auto'>
         <DialogHeader className='space-y-0'>
           <DialogTitle className='text-xl'>Sell Product</DialogTitle>
           <DialogDescription>Please fill out this form to sell a product.</DialogDescription>
@@ -107,7 +107,7 @@ const MakeSell = () => {
                 <p className='h-4'></p>
               </div>
             </div>
-            <Separator className='mb-4 lg:mb-6 lg:mt-2 ' />
+            <Separator className='mb-4 lg:mb-6 lg:mt-2' />
             <div className='flex flex-col gap-4'>
               <Label className='text-lg'>Customer information</Label>
               <div>
@@ -159,10 +159,10 @@ const MakeSell = () => {
             </div>
           </div>
           <Separator orientation='vertical' className='mx-6 hidden lg:block' />
-          <Separator className='lg:hidden mb-4' />
+          <Separator className='mb-4 lg:hidden' />
           <div className='w-full'>
             <div className='flex flex-col'>
-              <Label className='text-lg mb-4'>Payment</Label>
+              <Label className='mb-4 text-lg'>Payment</Label>
               <div className='space-y-2'>
                 <Label>Card number</Label>
                 <Input id='card_number' placeholder='Card number' />
@@ -174,7 +174,7 @@ const MakeSell = () => {
                 <p className='h-4'></p>
               </div>
               <div className='flex gap-2'>
-                <div className='space-y-2 w-11/12'>
+                <div className='w-11/12 space-y-2'>
                   <Label>Expiration date</Label>
                   <Input id='name' placeholder='(MM/YY)' />
                   <p className='h-4'></p>
@@ -189,40 +189,40 @@ const MakeSell = () => {
             <Separator className='mb-4 lg:mb-6 lg:mt-2' />
             <div className='space-y-6'>
               <Label className='text-lg'>Delivery method</Label>
-              <RadioGroup defaultValue='standard' value={activeRadioItem} className='grid grid-cols-2 mb-2'>
-                <Card className={cn('relative cursor-pointer', activeRadioItem === 'standard' ? 'outline-2 border-blue-500' : '')} onClick={() => setActiveRadioItem('standard')}>
+              <RadioGroup defaultValue='standard' value={activeRadioItem} className='mb-2 grid grid-cols-2'>
+                <Card className={cn('relative cursor-pointer', activeRadioItem === 'standard' ? 'border-blue-500 outline-2' : '')} onClick={() => setActiveRadioItem('standard')}>
                   <CardHeader className='space-y-0'>
                     <p className='text-sm font-medium'>Standard</p>
-                    <p className='text-sm text-muted-foreground tracking-tight'>4–10 business days</p>
+                    <p className='text-sm tracking-tight text-muted-foreground'>4–10 business days</p>
                   </CardHeader>
                   <CardContent>
                     <p className='text-sm font-medium'>$5.00</p>
                   </CardContent>
-                  <RadioGroupItem className='absolute top-4 right-4 opacity-0 z-10' value='standard' />
-                  <CircleCheck className={cn('absolute top-4 right-4 text-blue-500 transition-all duration-100', activeRadioItem === 'standard' ? '' : 'opacity-0')} aria-hidden='true' />
+                  <RadioGroupItem className='absolute right-4 top-4 z-10 opacity-0' value='standard' />
+                  <CircleCheck className={cn('absolute right-4 top-4 text-blue-500 transition-all duration-100', activeRadioItem === 'standard' ? '' : 'opacity-0')} aria-hidden='true' />
                 </Card>
-                <Card className={cn('relative cursor-pointer', activeRadioItem === 'express' ? 'outline-2 border-blue-500' : '')} onClick={() => setActiveRadioItem('express')}>
+                <Card className={cn('relative cursor-pointer', activeRadioItem === 'express' ? 'border-blue-500 outline-2' : '')} onClick={() => setActiveRadioItem('express')}>
                   <CardHeader className='space-y-0'>
                     <p className='text-sm font-medium'>Express</p>
-                    <p className='text-sm text-muted-foreground tracking-tight'>2–5 business days</p>
+                    <p className='text-sm tracking-tight text-muted-foreground'>2–5 business days</p>
                   </CardHeader>
                   <CardContent>
                     <p className='text-sm font-medium'>$16.00</p>
                   </CardContent>
-                  <RadioGroupItem className='absolute top-4 right-4 opacity-0 z-10' value='express' id='express' />
-                  <CircleCheck className={cn('absolute top-4 right-4 text-blue-500 transition-all duration-100', activeRadioItem === 'express' ? '' : 'opacity-0')} aria-hidden='true' />
+                  <RadioGroupItem className='absolute right-4 top-4 z-10 opacity-0' value='express' id='express' />
+                  <CircleCheck className={cn('absolute right-4 top-4 text-blue-500 transition-all duration-100', activeRadioItem === 'express' ? '' : 'opacity-0')} aria-hidden='true' />
                 </Card>
               </RadioGroup>
               <div className='flex flex-col'>
                 <Label htmlFor='delivery_man'>Delivery Man</Label>
                 <Popover open={openDeliveryManPopover} onOpenChange={setOpenDeliveryManPopover}>
                   <PopoverTrigger asChild>
-                    <Button id='delivery_man' variant='outline' role='combobox' className='justify-between mt-2'>
+                    <Button id='delivery_man' variant='outline' role='combobox' className='mt-2 justify-between'>
                       {value ? frameworks.find(framework => framework.value === value)?.label : 'Search delivery man...'}
                       <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className='p-0 ' style={{ width: commandSourceRef.current?.offsetWidth ?? 'auto' }} align='end'>
+                  <PopoverContent className='p-0' style={{ width: commandSourceRef.current?.offsetWidth ?? 'auto' }} align='end'>
                     <Command>
                       <CommandInput placeholder='Search delivery man...' />
                       <CommandList>
@@ -251,8 +251,8 @@ const MakeSell = () => {
             </div>
           </div>
           <Separator orientation='vertical' className='mx-6 hidden lg:block' />
-          <Separator className='lg:hidden mb-4 mt-2 lg:mt-0 lg:mb-6' />
-          <div className='w-full flex flex-col justify-between space-y-6'>
+          <Separator className='mb-4 mt-2 lg:mb-6 lg:mt-0 lg:hidden' />
+          <div className='flex w-full flex-col justify-between space-y-6'>
             <div className='space-y-4'>
               <div>
                 <Label className='text-lg'>Order summary</Label>
@@ -260,14 +260,14 @@ const MakeSell = () => {
               </div>
               <Card>
                 <ScrollArea className='lg:h-[20.1rem]'>
-                  <CardContent className='py-6 flex justify-between'>
+                  <CardContent className='flex justify-between py-6'>
                     <div className='flex gap-4'>
-                      <img className='rounded-md h-28 w-20' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
+                      <img className='h-28 w-20 rounded-md' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Basic Tee</Label>
-                          <p className='text-sm text-muted-foreground tracking-tight'>White</p>
-                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>White</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
                         </div>
                         <p className='text-sm font-medium'>$32.00</p>
                       </div>
@@ -290,14 +290,14 @@ const MakeSell = () => {
                     </div>
                   </CardContent>
                   <Separator />
-                  <CardContent className='py-6 flex justify-between'>
+                  <CardContent className='flex justify-between py-6'>
                     <div className='flex gap-4'>
-                      <img className='rounded-md h-28 w-20' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
+                      <img className='h-28 w-20 rounded-md' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Printed Tee</Label>
-                          <p className='text-sm text-muted-foreground tracking-tight'>Black</p>
-                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>Black</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
                         </div>
                         <p className='text-sm font-medium'>$45.00</p>
                       </div>
@@ -320,14 +320,14 @@ const MakeSell = () => {
                     </div>
                   </CardContent>
                   <Separator />
-                  <CardContent className='py-6 flex justify-between'>
+                  <CardContent className='flex justify-between py-6'>
                     <div className='flex gap-4'>
-                      <img className='rounded-md h-28 w-20' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
+                      <img className='h-28 w-20 rounded-md' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Basic Tee</Label>
-                          <p className='text-sm text-muted-foreground tracking-tight'>Beige</p>
-                          <p className='text-sm text-muted-foreground tracking-tight'>Large</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>Beige</p>
+                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
                         </div>
                         <p className='text-sm font-medium'>$32.00</p>
                       </div>
@@ -352,7 +352,7 @@ const MakeSell = () => {
                   <Separator />
                 </ScrollArea>
                 <Separator />
-                <CardContent className='py-6 space-y-6'>
+                <CardContent className='space-y-6 py-6'>
                   <div className='flex items-center justify-between'>
                     <Label className='font-medium'>Subtotal</Label>
                     <p className='text-sm'>$64.00</p>
@@ -375,7 +375,7 @@ const MakeSell = () => {
                 </CardContent>
               </Card>
             </div>
-            <div className='flex gap-2 justify-end'>
+            <div className='flex justify-end gap-2'>
               <Button variant='secondary' className='lg:hidden'>
                 Cancel
               </Button>

@@ -44,13 +44,13 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
   }
 
   return (
-    <div className='flex relative group'>
+    <div className='group relative flex'>
       <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} />
-      <div className='absolute flex flex-col right-2 top-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity h-10'>
+      <div className='absolute right-2 top-1 flex h-10 flex-col opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100'>
         <button
           type='button'
           tabIndex={-1}
-          className='p-0 m-0 text-muted-foreground hover:text-foreground'
+          className='m-0 p-0 text-muted-foreground hover:text-foreground'
           onMouseDown={e => {
             const input = inputRef.current
             if (input && document.activeElement === input) {
@@ -59,12 +59,12 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
           }}
           onClick={e => changeValue(1, e)}
         >
-          <ChevronUp className='h-4 -mb-0.5' />
+          <ChevronUp className='-mb-0.5 h-4' />
         </button>
         <button
           type='button'
           tabIndex={-1}
-          className='p-0 m-0'
+          className='m-0 p-0'
           onMouseDown={e => {
             const input = inputRef.current
             if (input && document.activeElement === input) {
@@ -73,7 +73,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
           }}
           onClick={e => changeValue(-1, e)}
         >
-          <ChevronDown className='h-4 -mb-0.5  text-muted-foreground hover:text-foreground' />
+          <ChevronDown className='-mb-0.5 h-4 text-muted-foreground hover:text-foreground' />
         </button>
       </div>
     </div>

@@ -25,7 +25,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
       <Head title={title} />
       <div className='flex min-h-screen w-full flex-col bg-muted/40'>
         <PcNavigation />
-        <div className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14 min-h-screen'>
+        <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4 sm:pl-14'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
             <MobileNavigation />
             <DynamicBreadcrumb />
@@ -39,11 +39,11 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
           </header>
           <main className='flex-1 items-start px-6 py-4 md:py-0'>{children}</main>
           <footer className='px-6'>
-            <div className='flex flex-row-reverse lg:flex-row items-center my-3'>
-              <div className='flex justify-end lg:justify-start w-1/2'>
-                <img className='h-12 p-2 ' src={theme === 'dark' ? SprintDevsFullDark : SprintDevsFullLight} />
+            <div className='my-3 flex flex-row-reverse items-center lg:flex-row'>
+              <div className='flex w-1/2 justify-end lg:justify-start'>
+                <img className='h-12 p-2' src={theme === 'dark' ? SprintDevsFullDark : SprintDevsFullLight} />
               </div>
-              <div className='flex items-center lg:justify-start w-1/2 gap-2 px-2 lg:-ml-14'>
+              <div className='flex w-1/2 items-center gap-2 px-2 lg:-ml-14 lg:justify-start'>
                 <a href='#'>
                   <FacebookIcon className='h-6 text-foreground/70 hover:text-foreground' />
                 </a>
@@ -57,9 +57,9 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
               <span></span>
             </div>
             <Separator />
-            <div className='flex items-center justify-center text-sm text-muted-foreground my-4 gap-1 lg:mb-0'>
+            <div className='my-4 flex items-center justify-center gap-1 text-sm text-muted-foreground lg:mb-0'>
               <span>Copyright &copy;{currentDate.getFullYear()} </span>
-              <a href='https://sprintdevs.com' target='_blank' className='text-brand font-semibold hover:underline underline-offset-2'>
+              <a href='https://sprintdevs.com' target='_blank' className='font-semibold text-brand underline-offset-2 hover:underline'>
                 Sprint Devs
               </a>
             </div>

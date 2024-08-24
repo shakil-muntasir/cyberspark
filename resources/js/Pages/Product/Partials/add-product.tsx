@@ -95,7 +95,7 @@ export default function AddProduct() {
         </Button>
       </SheetTrigger>
       <SheetContent className='px-0' fullscreen={true}>
-        <SheetHeader className='px-6 space-y-0'>
+        <SheetHeader className='space-y-0 px-6'>
           <SheetTitle>Add Product</SheetTitle>
           <SheetDescription>Fill in the form to add a new product to your store.</SheetDescription>
         </SheetHeader>
@@ -103,7 +103,7 @@ export default function AddProduct() {
         <Separator className='my-2' />
 
         <ScrollArea className='h-[calc(100vh-80px)]'>
-          <form onSubmit={handleAddProduct} className='mt-3 mb-8 grid gap-3 mx-6'>
+          <form onSubmit={handleAddProduct} className='mx-6 mb-8 mt-3 grid gap-3'>
             <div className='grid gap-2'>
               <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
                 Name

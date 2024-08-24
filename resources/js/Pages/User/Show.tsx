@@ -90,15 +90,6 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
     )
   }
 
-  // function extractRoles(roles: Role[]): SelectProps[] {
-  //   return roles?.map((role: Role) => {
-  //     return {
-  //       label: role.attributes.label,
-  //       value: role.attributes.value
-  //     }
-  //   }) || []
-  // }
-
   const deleteModalData: DeleteModalData = {
     id: user.data.attributes.id,
     name: user.data.attributes.name,
@@ -108,7 +99,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
 
   return (
     <AuthenticatedLayout title='User Details'>
-      <main className='grid mx-auto max-w-[80rem] flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
+      <main className='mx-auto grid max-w-[80rem] flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
         <div className='grid auto-rows-max gap-4'>
           <div className='flex items-center gap-4'>
             <TooltipProvider>
@@ -142,9 +133,9 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
             </div>
           </div>
 
-          <div className='flex flex-col lg:flex-row gap-4 lg:gap-8'>
+          <div className='flex flex-col gap-4 lg:flex-row lg:gap-8'>
             <div className='flex flex-col gap-4 lg:gap-8'>
-              <div className='flex flex-col lg:flex-row flex-1 auto-rows-max items-start gap-4 lg:gap-8'>
+              <div className='flex flex-1 auto-rows-max flex-col items-start gap-4 lg:flex-row lg:gap-8'>
                 <UserAvatar inputRef={imageRef} processing={processing} src={user.data.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='mx-auto' />
                 <Card className='w-full'>
                   <CardHeader>
@@ -177,7 +168,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                               type='file'
                               accept='image/*'
                               name='image'
-                              className='dark:file:text-foreground pr-8'
+                              className='pr-8 dark:file:text-foreground'
                               onChange={e => {
                                 if (e.target.files) {
                                   const { file, displayUrl } = getImageData(e)
@@ -187,11 +178,11 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                               }}
                             />
                             {previewImage && (
-                              <div className='flex items-center absolute right-1 top-1/2'>
+                              <div className='absolute right-1 top-1/2 flex items-center'>
                                 <TooltipProvider>
                                   <Tooltip delayDuration={0}>
                                     <TooltipTrigger asChild>
-                                      <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
+                                      <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
                                         <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
                                         <span className='sr-only'>Remove picture</span>
                                       </Button>
@@ -212,8 +203,8 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                   </CardContent>
                 </Card>
               </div>
-              <div className='flex flex-col-reverse lg:flex-row gap-4 lg:gap-8'>
-                <div className='grid auto-rows-max items-start gap-4 lg:gap-8 lg:min-w-72 lg:w-72 lg:-mt-40'>
+              <div className='flex flex-col-reverse gap-4 lg:flex-row lg:gap-8'>
+                <div className='grid auto-rows-max items-start gap-4 lg:-mt-40 lg:w-72 lg:min-w-72 lg:gap-8'>
                   <Card>
                     <CardHeader>
                       <CardTitle>Address Details</CardTitle>
@@ -229,7 +220,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                           <Label htmlFor='city'>City</Label>
                           <Input id='city' type='text' name='city' value={data.address.city} onChange={handleInputChange} className='w-full' placeholder='City' autoComplete='address-level2' />
                         </div>
-                        <div className='grid gap-2 '>
+                        <div className='grid gap-2'>
                           <Label htmlFor='state'>State</Label>
                           <Select name='state' value={data.address.state} onValueChange={value => setData('address.state', value)}>
                             <SelectTrigger id='state' aria-label='Select state'>
@@ -254,7 +245,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                 </div>
                 <div className='w-full'>
                   <Tabs defaultValue='week'>
-                    <div className='lg:flex items-center justify-end'>
+                    <div className='items-center justify-end lg:flex'>
                       <TabsList className='flex justify-center lg:justify-end'>
                         <TabsTrigger value='week'>Week</TabsTrigger>
                         <TabsTrigger value='month'>Month</TabsTrigger>
@@ -372,7 +363,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                 </div>
               </div>
             </div>
-            <div className='space-y-4 lg:space-y-8 lg:min-w-72 lg:w-72 '>
+            <div className='space-y-4 lg:w-72 lg:min-w-72 lg:space-y-8'>
               <Card>
                 <CardHeader>
                   <CardTitle>User Role</CardTitle>
@@ -380,7 +371,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
                 <CardContent>
                   <div className='grid gap-6'>
                     <div className='grid gap-2'>
-                      <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 -mb-2'>Role</span>
+                      <span className='-mb-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Role</span>
                       <MultiSelect
                         values={roles}
                         defaultSelectedValues={roles.filter(role => data.roles.includes(role.value))}

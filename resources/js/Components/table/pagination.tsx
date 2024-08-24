@@ -23,7 +23,7 @@ export default function DataTablePagination<T>({ meta, links }: PaginationData) 
   }
 
   return (
-    <div className='flex flex-col md:flex-row items-center justify-between md:px-2'>
+    <div className='flex flex-col items-center justify-between md:flex-row md:px-2'>
       <div className='flex items-center space-x-2 md:mr-4'>
         <p className='text-sm font-medium'>Rows per page</p>
         <Select value={`${pageSize}`} onValueChange={fetchPerPageData}>
@@ -40,7 +40,7 @@ export default function DataTablePagination<T>({ meta, links }: PaginationData) 
         </Select>
       </div>
 
-      <div className='w-full mt-4 md:mt-auto md:w-auto justify-end flex items-center space-x-6 lg:space-x-8'>
+      <div className='mt-4 flex w-full items-center justify-end space-x-6 md:mt-auto md:w-auto lg:space-x-8'>
         <div className='flex w-[100px] items-center justify-center text-sm font-medium'>
           Page {`${meta.current_page}`} of {meta.last_page}
         </div>

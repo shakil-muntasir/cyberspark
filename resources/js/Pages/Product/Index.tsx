@@ -47,15 +47,15 @@ export default function ProductsList({ products }: { products: TableData<Product
       <Separator className='mt-4' />
 
       <DataTable
-          data={products}
-          columns={columns.map(column => ({
-            ...column,
-            toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
-            toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
-          }))}
-          filterColumnBy='status'
-          searchPlaceholder='products'
-        />
+        data={products}
+        columns={columns.map(column => ({
+          ...column,
+          toggleSorting: (desc: boolean) => handleToggleSorting(String(column.id), desc),
+          toggleVisibility: (hidden: boolean) => handleToggleVisibility(String(column.id), hidden)
+        }))}
+        filterColumnBy='status'
+        searchPlaceholder='products'
+      />
     </AuthenticatedLayout>
   )
 }

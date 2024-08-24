@@ -11,7 +11,7 @@ const DeleteModal = () => {
         <AlertDialogHeader>
           <AlertDialogTitle className='text-xl'>Are you absolutely sure?</AlertDialogTitle>
           {data && (
-            <span className='pt-2 flex space-x-2 items-baseline'>
+            <span className='flex items-baseline space-x-2 pt-2'>
               <p>
                 {toTitleCase(data.title)}: {data?.name}
               </p>

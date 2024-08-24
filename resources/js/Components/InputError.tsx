@@ -10,7 +10,7 @@ interface InputErrorProps {
 export default function InputError({ message, className = '', isOutside = false, ...props }: InputErrorProps & HTMLAttributes<HTMLParagraphElement>) {
   if (message && message.length > 0) {
     return (
-      <p {...props} className={cn('text-destructive text-xs', className)}>
+      <p {...props} className={cn('text-xs text-destructive', className)}>
         {message}
       </p>
     )

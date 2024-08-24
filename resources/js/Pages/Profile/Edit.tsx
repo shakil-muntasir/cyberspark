@@ -6,7 +6,7 @@ import UpdateProfileInformationForm from './Partials/UpdateProfileInformationFor
 export default function Edit({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
   return (
     <AuthenticatedLayout title='Profile'>
-      <div className='max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4'>
+      <div className='mx-auto max-w-7xl space-y-4 sm:px-6 lg:px-8'>
         <UpdateProfileInformationForm mustVerifyEmail={mustVerifyEmail} status={status} />
 
         <UpdatePasswordForm />

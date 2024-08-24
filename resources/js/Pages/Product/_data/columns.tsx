@@ -45,13 +45,13 @@ const columns: TableColumn<Product>[] = createColumns([
     id: 'total_stock',
     label: 'Total Stock',
     header: column => <DataTableColumnHeader column={column} title='Total Stock' align='end' />,
-    cell: ({ total_stock }) => <div className='text-right font-medium mr-4'>{total_stock}</div>
+    cell: ({ total_stock }) => <div className='mr-4 text-right font-medium'>{total_stock}</div>
   },
   {
     id: 'variants_count',
     label: 'Variants',
     header: column => <DataTableColumnHeader column={column} title='Variants' align='end' />,
-    cell: ({ variants_count }) => <div className='text-right font-medium mr-4'>{variants_count}</div>
+    cell: ({ variants_count }) => <div className='mr-4 text-right font-medium'>{variants_count}</div>
   },
   {
     id: 'stock_status',
@@ -109,7 +109,7 @@ const columns: TableColumn<Product>[] = createColumns([
       }
 
       return (
-        <div className='flex justify-center items-center'>
+        <div className='flex items-center justify-center'>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>

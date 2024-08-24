@@ -67,5 +67,5 @@ export type FormKeyOf<ObjectType> = {
 }[keyof ObjectType & (string | number)]
 
 export type FormErrors<ObjectType> = Partial<{
-    [Key in FormKeyOf<ObjectType>]: string;
-}>;
+    [Key in FormKeyOf<ObjectType>]: string
+}>

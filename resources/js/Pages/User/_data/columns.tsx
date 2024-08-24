@@ -56,7 +56,7 @@ const columns: TableColumn<User>[] = createColumns([
     id: 'gender',
     label: 'Gender',
     header: column => <DataTableColumnHeader column={column} title='Gender' />,
-    cell: ({gender}) => <>{toTitleCase(gender)}</>
+    cell: ({ gender }) => <>{toTitleCase(gender)}</>
   },
   {
     id: 'status',
@@ -104,7 +104,7 @@ const columns: TableColumn<User>[] = createColumns([
       }
 
       return (
-        <div className='flex justify-center items-center'>
+        <div className='flex items-center justify-center'>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>

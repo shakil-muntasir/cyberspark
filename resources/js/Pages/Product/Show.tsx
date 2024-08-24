@@ -86,7 +86,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
               </Button>
             </div>
           </div>
-          <div className='flex flex-col lg:flex-row gap-4 lg:gap-8'>
+          <div className='flex flex-col gap-4 lg:flex-row lg:gap-8'>
             <div className='grid auto-rows-max items-start gap-4 lg:gap-8'>
               <Card>
                 <CardHeader>
@@ -105,7 +105,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className='grid gap-7 lg:gap-6 border-t py-6'>
+                <CardFooter className='grid gap-7 border-t py-6 lg:gap-6'>
                   <div className='grid gap-3'>
                     <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Created by</span>
                     <div className='flex items-center justify-between'>
@@ -136,7 +136,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
               {/* The Product Variants table and add form will be rendered here */}
               {product.data.relationships?.variants?.length && <ProductVariantData product={product} variants={product.data.relationships?.variants} />}
             </div>
-            <div className='grid auto-rows-max items-start gap-4 lg:gap-8 w-full lg:max-w-72'>
+            <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-8'>
               <Card>
                 <CardHeader>
                   <CardTitle>Product Category</CardTitle>

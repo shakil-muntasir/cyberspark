@@ -69,8 +69,8 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
   return (
     <section className='lg:pt-6'>
-      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex lg:hidden pb-4' />
-      <Card className='flex  flex-col-reverse lg:flex-row items-center'>
+      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex pb-4 lg:hidden' />
+      <Card className='flex flex-col-reverse items-center lg:flex-row'>
         <div className='max-w-xl flex-1'>
           <CardHeader className='max-w-xl'>
             <h2 className='text-lg font-medium text-foreground'>Profile Information</h2>
@@ -78,7 +78,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
             <p className='mt-1 text-sm text-muted-foreground'>Update your account's profile information and email address.</p>
           </CardHeader>
           <form onSubmit={submit}>
-            <CardContent className='pb-2 lg:pr-0 max-w-xl'>
+            <CardContent className='max-w-xl pb-2 lg:pr-0'>
               <div className='gap-2'>
                 <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
                   Name
@@ -111,7 +111,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                       type='file'
                       accept='image/*'
                       name='image'
-                      className='dark:file:text-foreground pr-8'
+                      className='pr-8 dark:file:text-foreground'
                       onChange={e => {
                         if (e.target.files) {
                           const { file, displayUrl } = getImageData(e)
@@ -121,11 +121,11 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                       }}
                     />
                     {previewImage && (
-                      <div className='flex items-center absolute right-1 top-1/2'>
+                      <div className='absolute right-1 top-1/2 flex items-center'>
                         <TooltipProvider>
                           <Tooltip delayDuration={0}>
                             <TooltipTrigger asChild>
-                              <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
+                              <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
                                 <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
                                 <span className='sr-only'>Remove picture</span>
                               </Button>
@@ -145,14 +145,14 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
               {mustVerifyEmail && user.attributes.email_verified_at === null && (
                 <div>
-                  <p className='text-sm mt-2 text-gray-800'>
+                  <p className='mt-2 text-sm text-gray-800'>
                     Your email address is unverified.
-                    <Link href={route('verification.send')} method='post' as='button' className='underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                    <Link href={route('verification.send')} method='post' as='button' className='rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
                       Click here to re-send the verification email.
                     </Link>
                   </p>
 
-                  {status === 'verification-link-sent' && <div className='mt-2 font-medium text-sm text-green-600'>A new verification link has been sent to your email address.</div>}
+                  {status === 'verification-link-sent' && <div className='mt-2 text-sm font-medium text-green-600'>A new verification link has been sent to your email address.</div>}
                 </div>
               )}
             </CardContent>

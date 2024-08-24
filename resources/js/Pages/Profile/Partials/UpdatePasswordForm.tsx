@@ -69,7 +69,7 @@ export default function UpdatePasswordForm() {
       </CardHeader>
 
       <form onSubmit={updatePassword}>
-        <CardContent className='pb-2 lg:pr-0 max-w-xl'>
+        <CardContent className='max-w-xl pb-2 lg:pr-0'>
           <div>
             <Label htmlFor='current_password' className={errors.current_password?.length ? 'text-destructive' : ''}>
               Current Password

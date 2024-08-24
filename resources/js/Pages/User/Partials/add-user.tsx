@@ -129,7 +129,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
         </Button>
       </SheetTrigger>
       <SheetContent className='px-0' fullscreen={true}>
-        <SheetHeader className='px-6 space-y-0'>
+        <SheetHeader className='space-y-0 px-6'>
           <SheetTitle>Add User</SheetTitle>
           <SheetDescription>Fill in the form to add a new user to your store.</SheetDescription>
         </SheetHeader>
@@ -137,7 +137,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
         <Separator className='my-2' />
 
         <ScrollArea className='h-[calc(100vh-80px)]'>
-          <form onSubmit={handleAddUser} className='mt-3 mb-8 grid gap-3 mx-6'>
+          <form onSubmit={handleAddUser} className='mx-6 mb-8 mt-3 grid gap-3'>
             <div className='grid gap-2'>
               <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
                 Name
@@ -203,11 +203,11 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
               <div className='space-y-px'>
                 <div className='relative w-full max-w-sm'>
                   <Input id='password' type={showPassword ? 'text' : 'password'} name='password' value={data.password !== null ? data.password : ''} onChange={handleInputChange} placeholder={showPassword ? 'Password' : '••••••••'} className='w-full pr-9' />
-                  <div className='flex items-center absolute right-1 top-1/2'>
+                  <div className='absolute right-1 top-1/2 flex items-center'>
                     <TooltipProvider>
                       <Tooltip delayDuration={0}>
                         <TooltipTrigger asChild>
-                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 mr-1' onClick={() => setShowPassword(!showPassword)}>
+                          <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? (
                               <>
                                 <EyeOffIcon className='h-4 w-4' />
@@ -235,7 +235,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                           }}
                           onMouseLeave={() => setTimeout(() => setPasswordCopied(false), 200)}
                         >
-                          <Button type='button' variant='ghost' size='icon' className='-translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={generateRandomPassword}>
+                          <Button type='button' variant='ghost' size='icon' className='h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={generateRandomPassword}>
                             <RefreshCcwDotIcon className='h-4 w-4' />
                             <span className='sr-only'>Generate Password</span>
                           </Button>
@@ -247,7 +247,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                         >
                           {passwordCopied ? (
                             <div className='flex items-center justify-center space-x-1'>
-                              <CheckCircledIcon className='w-4 h-4' />
+                              <CheckCircledIcon className='h-4 w-4' />
                               <p>Copied to clipboard</p>
                             </div>
                           ) : (
@@ -268,8 +268,8 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
               </Label>
               <div className='space-y-px'>
                 {previewImage && (
-                  <div className='flex justify-center items-center pb-2'>
-                    <Avatar className='w-24 h-24'>
+                  <div className='flex items-center justify-center pb-2'>
+                    <Avatar className='h-24 w-24'>
                       <AvatarImage className='object-cover' src={previewImage} />
                     </Avatar>
                   </div>
@@ -281,7 +281,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                     type='file'
                     accept='image/*'
                     name='image'
-                    className='dark:file:text-foreground pr-8'
+                    className='pr-8 dark:file:text-foreground'
                     onChange={e => {
                       if (e.target.files) {
                         const { file, displayUrl } = getImageData(e)
@@ -291,11 +291,11 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                     }}
                   />
                   {previewImage && (
-                    <div className='flex items-center absolute right-1 top-1/2'>
+                    <div className='absolute right-1 top-1/2 flex items-center'>
                       <TooltipProvider>
                         <Tooltip delayDuration={0}>
                           <TooltipTrigger asChild>
-                            <Button type='button' variant='ghost' size='icon' className='group -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleImageClear}>
                               <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
                               <span className='sr-only'>Remove picture</span>
                             </Button>
@@ -350,7 +350,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
               </div>
             </div>
 
-            <div className='space-x-2 grid grid-cols-2'>
+            <div className='grid grid-cols-2 space-x-2'>
               <div className='grid gap-2'>
                 <Label htmlFor='address.state' className={errors['address.state']?.length ? 'text-destructive' : ''}>
                   State

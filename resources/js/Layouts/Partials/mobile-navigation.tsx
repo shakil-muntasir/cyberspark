@@ -22,7 +22,7 @@ export default function MobileNavigation() {
       <SheetContent className='sm:max-w-xs' side='left'>
         <nav className='grid gap-2 text-lg font-medium'>
           <SheetClose asChild>
-            <Link className='group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-100 text-lg font-semibold text-primary-foreground md:text-base mb-2' href='/'>
+            <Link className='group mb-2 flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-100 text-lg font-semibold text-primary-foreground md:text-base' href='/'>
               <img src={SprintDevsLogo} alt='Sprint Devs' className='rounded-full transition-all group-hover:scale-110' />
               <span className='sr-only'>Sprint Devs</span>
             </Link>
@@ -30,7 +30,7 @@ export default function MobileNavigation() {
 
           {routes.map(route => (
             <SheetClose key={route.href} asChild>
-              <Link key={route.href} className={`flex items-center gap-4 px-2.5 py-2 rounded-md transition-colors ${pathname === route.href || pathname.startsWith(`${route.href}/`) ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`} href={route.href}>
+              <Link key={route.href} className={`flex items-center gap-4 rounded-md px-2.5 py-2 transition-colors ${pathname === route.href || pathname.startsWith(`${route.href}/`) ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`} href={route.href}>
                 <route.icon className='h-5 w-5' />
                 {route.tooltip}
               </Link>
