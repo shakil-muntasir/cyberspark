@@ -44,6 +44,12 @@
       "options": {
         "tabWidth": 2
       }
+    },
+    {
+      "files": "*.eslint*",
+      "options": {
+        "tabWidth": 2
+      }
     }
   ]
 }
