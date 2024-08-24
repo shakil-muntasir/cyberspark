@@ -16,6 +16,7 @@ import { Head } from '@inertiajs/react'
 import { FacebookIcon } from '@/Icons/FacebookIcon'
 import { InstagramIcon } from '@/Icons/InstagramIcon'
 import { LinkedInIcon } from '@/Icons/LinkedInIcon'
+import { ScrollArea } from '@/Components/ui/scroll-area'
 
 export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -23,7 +24,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
   return (
     <>
       <Head title={title} />
-      <div className='flex min-h-screen w-full flex-col bg-muted/40'>
+      <ScrollArea className='flex h-screen w-full flex-col bg-muted/40'>
         <PcNavigation />
         <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4 sm:pl-14'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
@@ -65,7 +66,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
             </div>
           </footer>
         </div>
-      </div>
+      </ScrollArea>
       <Toaster />
     </>
   )
