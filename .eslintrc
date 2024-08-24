@@ -7,9 +7,29 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "newline-before-return": "error",
+    "padding-line-between-statements": [
+      "error",
+      // No empty lines after the opening brace of a function
+      { "blankLine": "never", "prev": "function", "next": "*" },
+      // Allow a blank line before return if there's other code above
+      { "blankLine": "always", "prev": "*", "next": "return" },
+      // No empty lines after the return statement
+      { "blankLine": "never", "prev": "return", "next": "*" },
+      // Ensure there is an empty line before export default
+      { "blankLine": "always", "prev": "*", "next": "export" }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1, // Allow at most one empty line
+        "maxEOF": 0, // No empty lines at the end of a file
+        "maxBOF": 0 // No empty lines at the beginning of a file
+      }
+    ],
     "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       {
         "args": "all",
         "argsIgnorePattern": "^_",
@@ -19,6 +39,11 @@
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true
       }
-    ]
+    ],
+    "prefer-template": "warn",
+    "prefer-const": "warn",
+    "prefer-arrow-callback": "warn",
+    "linebreak-style": ["error", "unix"],
+    "no-console": "warn"
   }
 }

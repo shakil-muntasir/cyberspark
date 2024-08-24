@@ -1,3 +1,7 @@
+// This hook is a wrapper around the Inertia useForm hook that adds support for nested data and correctly typed errors. Ignore the eslint disable comments, they are necessary to make the code work.
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { FormErrors, FormKeyOf } from '@/Types'
 import { useForm as useInertiaForm } from '@inertiajs/react'
 
