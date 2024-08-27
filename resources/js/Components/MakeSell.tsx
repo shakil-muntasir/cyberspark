@@ -24,16 +24,21 @@ import { Separator } from '@/Components/ui/separator'
 import { MinusCircle } from '@/Icons/MinusCircle'
 import { PartiallyPaidIcon } from '@/Icons/PartiallyPaidIcon'
 import { Textarea } from '@/Components/ui/textarea'
+import { BkashIcon } from '@/Icons/BkashIcon'
+import { RocketIcon } from '@/Icons/RocketIcon'
+import { NagadIcon } from '@/Icons/NagadIcon'
 
 type PaymentStatusType = 'due' | 'partial' | 'paid'
 type DeliveryOptionType = 'in-house' | 'external'
+type PaymentMethodType = 'cash_on_delivery' | 'cheque' | 'mobile_banking'
 
 const MakeSell = () => {
   const [openProductPopover, setOpenProductPopover] = useState(false)
   const [openDeliveryManPopover, setOpenDeliveryManPopover] = useState(false)
   const [value, setValue] = useState('')
   const [activePaymentStatus, setActivePaymentStatus] = useState<PaymentStatusType>('due')
-  const [activeDeliveryOption, setActiveDeliveryOption] = useState<DeliveryOptionType>('in-house')
+  const [activePaymentMethod, setActivePaymentMethod] = useState<PaymentMethodType>('cash_on_delivery')
+  const [activeDeliveryMethod, setActiveDeliveryMethod] = useState<DeliveryOptionType>('in-house')
   const commandSourceRef = useRef<HTMLDivElement>(null)
 
   const frameworks = [
@@ -56,6 +61,24 @@ const MakeSell = () => {
     {
       value: 'astro',
       label: 'Astro'
+    }
+  ]
+
+  const serviceProviders = [
+    {
+      value: 'bkash',
+      label: 'Bkash',
+      icon: BkashIcon
+    },
+    {
+      value: 'rocket',
+      label: 'Rocket',
+      icon: RocketIcon
+    },
+    {
+      value: 'nagad',
+      label: 'Nagad',
+      icon: NagadIcon
     }
   ]
 
@@ -198,29 +221,29 @@ const MakeSell = () => {
                 </RadioGroup>
               </div>
               <div className='grid gap-2'>
-                <Label className=''>Payment options</Label>
-                <RadioGroup defaultValue='standard' value={activePaymentStatus}>
+                <Label className=''>Payment method</Label>
+                <RadioGroup defaultValue='cash_on_delivery' value={activePaymentMethod}>
                   <Card>
                     <CardContent className='flex h-[5rem] p-0'>
-                      <Button variant='ghost' className='flex h-full w-1/3 items-end justify-start rounded-r-none border-r pb-4'>
-                        <RadioGroupItem className='hidden' value='standard' id='standard' />
-                        <div className='space-y-0.5'>
-                          <ChequeIcon className='h-5 w-5' />
-                          <p className='text-sm font-medium tracking-tighter'>Cheque</p>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-r-none pb-4', activePaymentMethod === 'cash_on_delivery' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cash_on_delivery')}>
+                        <RadioGroupItem asChild className='hidden' value='cash_on_delivery' id='cash_on_delivery' />
+                        <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'cash_on_delivery' ? 'text-[#70a288]' : '')}>
+                          <CashIcon className='h-5 w-5' />
+                          <p className='text-sm font-medium tracking-tighter'>On delivery</p>
                         </div>
                       </Button>
-                      <Button variant='ghost' className='flex h-full w-1/3 items-end justify-start rounded-none border-r pb-4'>
-                        <RadioGroupItem className='hidden' value='standard' id='standard' />
-                        <div className='space-y-0.5'>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-none border-x pb-4', activePaymentMethod === 'mobile_banking' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('mobile_banking')}>
+                        <RadioGroupItem asChild className='hidden' value='mobile_banking' id='mobile_banking' />
+                        <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'mobile_banking' ? 'text-[#dab785]' : '')}>
                           <MobileBankingIcon className='h-5 w-5' />
                           <p className='text-sm font-medium tracking-tighter'>Mobile banking</p>
                         </div>
                       </Button>
-                      <Button variant='ghost' className='flex h-full w-1/3 items-end justify-start rounded-l-none pb-4'>
-                        <RadioGroupItem className='hidden' value='standard' id='standard' />
-                        <div className='space-y-0.5'>
-                          <CashIcon className='h-5 w-5' />
-                          <p className='text-sm font-medium tracking-tighter'>On delivery</p>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-l-none pb-4', activePaymentMethod === 'cheque' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cheque')}>
+                        <RadioGroupItem asChild className='hidden' value='cheque' id='cheque' />
+                        <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'cheque' ? 'text-[#d5896f]' : '')}>
+                          <ChequeIcon className='h-5 w-5' />
+                          <p className='text-sm font-medium tracking-tighter'>Cheque</p>
                         </div>
                       </Button>
                     </CardContent>
@@ -228,8 +251,24 @@ const MakeSell = () => {
                 </RadioGroup>
               </div>
               <div className='grid gap-2'>
-                <Label>Card number</Label>
-                <Input id='card_number' placeholder='Card number' />
+                <Label>Service provider</Label>
+                <Select name='service_provider'>
+                  <SelectTrigger id='service_provider'>
+                    <SelectValue placeholder='Select service provider' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {serviceProviders.map(provider => (
+                        <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
+                          <div className='flex items-center gap-1.5'>
+                            <provider.icon className='h-5 w-5' />
+                            {provider.label}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
               <div className='flex gap-2'>
                 <div className='grid w-11/12 gap-2'>
@@ -245,9 +284,9 @@ const MakeSell = () => {
             <Separator className='my-4' />
             <div className='space-y-4'>
               <div className='grid gap-2'>
-                <Label>Delivery methods</Label>
-                <RadioGroup defaultValue='standard' value={activeDeliveryOption} className='grid grid-cols-2'>
-                  <Card className={cn('relative cursor-pointer', activeDeliveryOption === 'in-house' ? 'border-[#6096ba] outline-2' : '')} onClick={() => setActiveDeliveryOption('in-house')}>
+                <Label>Delivery method</Label>
+                <RadioGroup defaultValue='standard' value={activeDeliveryMethod} className='grid grid-cols-2'>
+                  <Card className={cn('relative cursor-pointer', activeDeliveryMethod === 'in-house' ? 'border-[#6096ba] outline-2' : '')} onClick={() => setActiveDeliveryMethod('in-house')}>
                     <CardHeader className='space-y-0 px-5 py-4'>
                       <p className='text-sm font-medium'>In house</p>
                       <p className='text-sm tracking-tight text-muted-foreground'>4–10 business days</p>
@@ -256,9 +295,9 @@ const MakeSell = () => {
                       <p className='text-sm font-medium'>$5.00</p>
                     </CardContent>
                     <RadioGroupItem className='hidden' value='standard' />
-                    <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#6096ba] transition-all duration-100', activeDeliveryOption === 'in-house' ? '' : 'opacity-0')} aria-hidden='true' />
+                    <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#6096ba] transition-all duration-100', activeDeliveryMethod === 'in-house' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
-                  <Card className={cn('relative cursor-pointer', activeDeliveryOption === 'external' ? 'border-[#81c3d7] outline-2' : '')} onClick={() => setActiveDeliveryOption('external')}>
+                  <Card className={cn('relative cursor-pointer', activeDeliveryMethod === 'external' ? 'border-[#81c3d7] outline-2' : '')} onClick={() => setActiveDeliveryMethod('external')}>
                     <CardHeader className='space-y-0 px-5 py-4'>
                       <p className='text-sm font-medium'>External</p>
                       <p className='text-sm tracking-tight text-muted-foreground'>2–5 business days</p>
@@ -267,7 +306,7 @@ const MakeSell = () => {
                       <p className='text-sm font-medium'>$16.00</p>
                     </CardContent>
                     <RadioGroupItem className='hidden' value='express' id='express' />
-                    <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#81c3d7] transition-all duration-100', activeDeliveryOption === 'external' ? '' : 'opacity-0')} aria-hidden='true' />
+                    <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#81c3d7] transition-all duration-100', activeDeliveryMethod === 'external' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
                 </RadioGroup>
               </div>
