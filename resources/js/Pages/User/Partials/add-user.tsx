@@ -120,6 +120,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
       imageRef.current.value = ''
     }
   }
+
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>

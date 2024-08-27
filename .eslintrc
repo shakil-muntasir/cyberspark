@@ -10,8 +10,6 @@
     "newline-before-return": "error",
     "padding-line-between-statements": [
       "error",
-      // No empty lines after the opening brace of a function
-      { "blankLine": "never", "prev": "function", "next": "*" },
       // Allow a blank line before return if there's other code above
       { "blankLine": "always", "prev": "*", "next": "return" },
       // No empty lines after the return statement

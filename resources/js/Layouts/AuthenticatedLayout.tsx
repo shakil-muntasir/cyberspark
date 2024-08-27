@@ -21,6 +21,7 @@ import { ScrollArea } from '@/Components/ui/scroll-area'
 export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
   const currentDate = new Date()
   const { theme } = useTheme()
+
   return (
     <>
       <Head title={title} />
