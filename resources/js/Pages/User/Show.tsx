@@ -38,7 +38,7 @@ interface UserProps {
   statuses: SelectProps[]
 }
 
-const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses }) => {
+const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
   const { initializeDeleteModal } = useDeleteModal()
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
   const [previewImage, setPreviewImage] = useState<string>('')
@@ -60,7 +60,7 @@ const ShowUser: React.FC<UserProps> = ({ user, genders, roles, states, statuses 
       zip: user.data.relationships?.address?.attributes.zip ?? ''
     }
   }
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>(initialData)
+  const { data, setData, processing, errors, clearErrors, reset } = useForm<UserForm>(initialData)
 
   useEffect(() => {
     const hasChanges = Object.keys(initialData).some(key => data[key as keyof UserForm] !== initialData[key as keyof UserForm])

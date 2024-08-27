@@ -36,7 +36,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     selling_price: ''
   }
 
-  const { data, setData, post, patch, delete: destroy, processing, errors, clearErrors, reset } = useForm<ProductVariantForm>(initialFormData)
+  const { data, setData, post, patch, delete: destroy, clearErrors, reset } = useForm<ProductVariantForm>(initialFormData)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target

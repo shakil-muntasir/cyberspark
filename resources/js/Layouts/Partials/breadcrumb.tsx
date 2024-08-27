@@ -16,7 +16,8 @@ const generateBreadcrumbs = (pathname: string): BreadcrumbItemType[] => {
       text = 'Details'
     }
 
-    const href = '/' + paths.slice(0, index + 1).join('/')
+    const href = `/${paths.slice(0, index + 1).join('/')}`
+
     return { href, text }
   })
 

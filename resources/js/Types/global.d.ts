@@ -10,5 +10,5 @@ declare global {
         }
     }
 
-    var route: typeof ziggyRoute
+    let route: typeof ziggyRoute
 }

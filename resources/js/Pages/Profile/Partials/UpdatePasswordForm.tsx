@@ -17,7 +17,7 @@ export default function UpdatePasswordForm() {
   const passwordInput = useRef<HTMLInputElement>(null)
   const currentPasswordInput = useRef<HTMLInputElement>(null)
 
-  const { data, setData, errors, clearErrors, put, reset, processing, recentlySuccessful } = useForm<UpdateUserPasswordData>({
+  const { data, setData, errors, clearErrors, put, reset, processing } = useForm<UpdateUserPasswordData>({
     current_password: '',
     password: '',
     password_confirmation: ''

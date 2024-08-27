@@ -45,5 +45,6 @@ export const useDeleteModal = () => {
   if (context === undefined) {
     throw new Error('useDeleteModal must be used within a DeleteModalProvider')
   }
+
   return context
 }

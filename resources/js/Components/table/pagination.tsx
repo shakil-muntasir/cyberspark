@@ -6,7 +6,7 @@ import { Button } from '@/Components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { PaginationData } from '@/Types'
 
-export default function DataTablePagination<T>({ meta, links }: PaginationData) {
+export default function DataTablePagination({ meta, links }: PaginationData) {
   const page = usePage()
   const [pageSize, setPageSize] = useState(meta.per_page)
 

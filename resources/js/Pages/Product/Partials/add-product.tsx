@@ -12,13 +12,12 @@ import { ScrollArea } from '@/Components/ui/scroll-area'
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { ProductForm } from '@/Pages/Product/type'
-import { InputNumber } from '@/Components/ui/input-number'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 
 export default function AddProduct() {
   const { toast } = useToast()
 
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>({
+  const { data, setData, post, errors, clearErrors, reset } = useForm<ProductForm>({
     name: '',
     description: '',
     category: '',

@@ -28,6 +28,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
   const [search, setSearch] = useState<string | undefined>(() => {
     const urlParams = new URLSearchParams(page.url.split('?')[1] || '')
     const search = urlParams.get('search')
+
     return search ?? ''
   })
 
@@ -35,6 +36,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
     const urlParams = new URLSearchParams(page.url.split('?')[1] || '')
     const validKeys = columns.find(column => column.id === filterColumnBy)!.options!.map(option => option.value)
     const filters = Array.from(urlParams.keys()).filter(key => validKeys.includes(key))
+
     return filters.length > 0 ? filters : []
   })
 
@@ -71,7 +73,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
 
     // Construct the new URL with sorted parameters
     const sortedParams = new URLSearchParams(Array.from(params.entries()).sort())
-    const newUrl = page.url.split('?')[0] + '?' + sortedParams.toString()
+    const newUrl = `${page.url.split('?')[0]}?${sortedParams.toString()}`
 
     // Perform the router.get with the new URL
     router.get(newUrl, {}, { preserveState: true, replace: true })
@@ -80,11 +82,13 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
+
       return
     }
 
     if (skipEffect.current) {
       skipEffect.current = false
+
       return
     }
 
@@ -108,7 +112,9 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
     setFilterValue([])
     updateURL(search, []) // Call updateURL directly without triggering useEffect
   }
+
   // TODO: add clear filter feature
+
   return (
     <div className='flex items-center py-4'>
       <div className='flex flex-1 items-center space-x-2'>
@@ -153,6 +159,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
                   <CommandGroup>
                     {column.options!.map(option => {
                       const isSelected = filterValue.includes(option.value)
+
                       return (
                         <CommandItem
                           key={option.value}

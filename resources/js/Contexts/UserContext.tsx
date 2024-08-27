@@ -21,5 +21,6 @@ export const useUser = (): User | null => {
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider')
   }
+
   return context.user
 }

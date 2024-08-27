@@ -16,7 +16,7 @@ interface RegisterForm {
 }
 
 export default function Login() {
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
+  const { data, setData, post, errors, clearErrors } = useForm({
     name: '',
     email: '',
     password: '',

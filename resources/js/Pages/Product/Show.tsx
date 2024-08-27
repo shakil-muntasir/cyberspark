@@ -26,7 +26,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
     category: '',
     status: product.data.attributes.status
   }
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
+  const { data, setData, clearErrors, reset } = useForm<ProductForm>(initialProductData)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target

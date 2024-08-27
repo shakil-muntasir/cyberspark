@@ -15,7 +15,7 @@ interface LoginForm {
 }
 
 export default function Login() {
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
+  const { data, setData, post, errors, clearErrors } = useForm({
     email: '',
     password: '',
     remember: false

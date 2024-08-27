@@ -21,8 +21,10 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
                     column =>
                       !column.hidden && (
                         <TableCell key={String(column.id)}>
-                          {/** @ts-ignore TODO: fix this later */}
+                          {/* eslint-disable */}
+                          {/** @ts-expect-error FIXME: later */}
                           {column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof Attributes<T>] : column.cell(row as any)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof Attributes<T>]}
+                          {/* eslint-enable */}
                         </TableCell>
                       )
                   )}

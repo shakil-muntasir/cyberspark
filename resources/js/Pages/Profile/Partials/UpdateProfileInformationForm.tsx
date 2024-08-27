@@ -19,12 +19,12 @@ type UpdateUserProfileData = {
   image?: File
 }
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
+export default function UpdateProfileInformation({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
   const { data: user } = usePage<PageProps>().props.auth.user
 
   const [previewImage, setPreviewImage] = useState<string>('')
   const imageRef = useRef<HTMLInputElement>(null)
-  const { data, setData, post, errors, clearErrors, processing, recentlySuccessful, reset } = useForm<UpdateUserProfileData>({
+  const { data, setData, post, errors, clearErrors, processing, reset } = useForm<UpdateUserProfileData>({
     name: user.attributes.name,
     email: user.attributes.email,
     image: undefined

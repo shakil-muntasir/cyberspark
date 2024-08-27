@@ -1,5 +1,5 @@
-import { ChangeEvent, useRef, useState } from 'react'
-import { Loader2, PlusCircle, AlertCircle, XIcon, RefreshCcwDotIcon, EyeIcon, EyeOffIcon, Trash2Icon } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Loader2, PlusCircle, AlertCircle, RefreshCcwDotIcon, EyeIcon, EyeOffIcon, Trash2Icon } from 'lucide-react'
 
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
@@ -27,7 +27,7 @@ interface AddUserProps {
 const AddUser: React.FC<AddUserProps> = ({ roles }) => {
   const { toast } = useToast()
 
-  const { data, setData, post, processing, errors, clearErrors, reset } = useForm<UserForm>({
+  const { data, setData, post, errors, clearErrors, reset } = useForm<UserForm>({
     name: '',
     email: '',
     gender: '',
@@ -77,7 +77,7 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
     }, 200)
   }
 
-  const handleError = (errors: FormErrors<UserForm>) => {
+  const handleError = (_: FormErrors<UserForm>) => {
     setSubmitButtonText('Error')
     setTimeout(() => {
       setLoading(false)
