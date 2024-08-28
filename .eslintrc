@@ -1,11 +1,11 @@
 {
-  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
+  "extends": ["plugin:@typescript-eslint/recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "react", "@typescript-eslint"],
   "rules": {
     "newline-before-return": "error",
     "padding-line-between-statements": [
@@ -25,6 +25,9 @@
         "maxBOF": 0 // No empty lines at the beginning of a file
       }
     ],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/self-closing-comp": "warn",
     "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": [
       "warn",
