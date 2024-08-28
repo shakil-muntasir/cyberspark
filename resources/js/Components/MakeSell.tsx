@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 
-import { cn } from '@/Lib/utils'
+import { cn, formatCurrency } from '@/Lib/utils'
 import { CheckCircleIcon } from '@/Icons/CheckCircleIcon'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import { ChequeIcon } from '@/Icons/ChequeIcon'
@@ -27,6 +27,7 @@ import { Textarea } from '@/Components/ui/textarea'
 import { BkashIcon } from '@/Icons/BkashIcon'
 import { RocketIcon } from '@/Icons/RocketIcon'
 import { NagadIcon } from '@/Icons/NagadIcon'
+import { UpayIcon } from '@/Icons/UpayIcon'
 
 type PaymentStatusType = 'due' | 'partial' | 'paid'
 type DeliveryOptionType = 'in-house' | 'external'
@@ -35,10 +36,12 @@ type PaymentMethodType = 'cash_on_delivery' | 'cheque' | 'mobile_banking'
 const MakeSell = () => {
   const [openProductPopover, setOpenProductPopover] = useState(false)
   const [openDeliveryManPopover, setOpenDeliveryManPopover] = useState(false)
+  const [openPartialPaymentPopover, setOpenPartialPaymentPopover] = useState(false)
   const [value, setValue] = useState('')
   const [activePaymentStatus, setActivePaymentStatus] = useState<PaymentStatusType>('due')
   const [activePaymentMethod, setActivePaymentMethod] = useState<PaymentMethodType>('cash_on_delivery')
   const [activeDeliveryMethod, setActiveDeliveryMethod] = useState<DeliveryOptionType>('in-house')
+  const [partialPaymentAmount, setPartialPaymentAmount] = useState('')
   const commandSourceRef = useRef<HTMLDivElement>(null)
 
   const frameworks = [
@@ -67,7 +70,7 @@ const MakeSell = () => {
   const serviceProviders = [
     {
       value: 'bkash',
-      label: 'Bkash',
+      label: 'bKash',
       icon: BkashIcon
     },
     {
@@ -79,12 +82,13 @@ const MakeSell = () => {
       value: 'nagad',
       label: 'Nagad',
       icon: NagadIcon
+    },
+    {
+      value: 'upay',
+      label: 'Upay',
+      icon: UpayIcon
     }
   ]
-
-  {
-    /* TODO: add payment methods*/
-  }
 
   return (
     <Dialog>
@@ -108,14 +112,16 @@ const MakeSell = () => {
               <Label htmlFor='product'>Product</Label>
               <Popover open={openProductPopover} onOpenChange={setOpenProductPopover}>
                 <PopoverTrigger asChild>
-                  <Button id='product' variant='outline' role='combobox' className='relative block w-full justify-between text-start'>
-                    {value ? frameworks.find(framework => framework.value === value)?.label : 'Select product...'}
-                    <ChevronsUpDown className='absolute right-2 top-2.5 ml-2 h-4 w-4 shrink-0 opacity-50' />
+                  <Button id='product' variant='outline' role='combobox' className='w-full items-center justify-between px-3'>
+                    <div className='flex flex-wrap justify-start gap-2 font-normal'>{value ? frameworks.find(framework => framework.value === value)?.label : 'Select Product...'}</div>
+                    <div className='flex items-center self-center'>
+                      <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                    </div>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className={`p-0`} style={{ width: commandSourceRef.current?.offsetWidth ?? 'auto' }} align='end'>
                   <Command>
-                    <CommandInput placeholder='Search product...' />
+                    <CommandInput placeholder='Search Product...' />
                     <CommandList>
                       <CommandEmpty>No product found.</CommandEmpty>
                       <CommandGroup>
@@ -127,9 +133,10 @@ const MakeSell = () => {
                               setValue(currentValue === value ? '' : currentValue)
                               setOpenProductPopover(false)
                             }}
+                            className='flex justify-between'
                           >
-                            <Check className={cn('mr-2 h-4 w-4', value === framework.value ? 'opacity-100' : 'opacity-0')} />
                             {framework.label}
+                            <Check className={cn('h-4 w-4', value === framework.value ? 'opacity-100' : 'opacity-0')} />
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -139,14 +146,14 @@ const MakeSell = () => {
               </Popover>
             </div>
             <Separator className='my-4' />
-            <div className='space-y-4'>
+            <div className='space-y-5'>
               <div className='grid gap-2'>
-                <Label htmlFor='name'>Customer name</Label>
+                <Label htmlFor='name'>Customer Name</Label>
                 <Input id='name' type='text' name='name' placeholder='Name' />
               </div>
               <div className='grid gap-2'>
                 <Label htmlFor='name'>Phone</Label>
-                <Input id='name' type='text' name='name' placeholder='01XXXXXXXXX' />
+                <Input id='name' type='text' name='name' placeholder='+880 1XXX-XXXXXX' />
               </div>
               <div className='grid gap-2'>
                 <Label htmlFor='name'>Email</Label>
@@ -191,55 +198,92 @@ const MakeSell = () => {
           <Separator orientation='vertical' className='mx-6 hidden lg:block' />
           <Separator className='mb-4 lg:hidden' />
           <div className='w-full'>
-            <div className='space-y-4'>
+            <div className='space-y-5'>
               <div className='grid gap-2'>
                 <Label htmlFor='payment_status' className='h-3.5'>
-                  Payment status
+                  Payment Status
                 </Label>
                 <RadioGroup defaultValue='due' className='grid grid-cols-3' id='payment_status'>
-                  <Card className={cn('relative cursor-pointer', activePaymentStatus === 'due' ? 'border-[#cad2c5] outline-2' : '')} onClick={() => setActivePaymentStatus('due')}>
+                  <Card
+                    className={cn('relative cursor-pointer', activePaymentStatus === 'due' ? 'border-[#cad2c5] outline-2' : '')}
+                    onClick={() => {
+                      setActivePaymentStatus('due')
+                      setPartialPaymentAmount('')
+                      setOpenPartialPaymentPopover(false)
+                    }}
+                  >
                     <CardContent className='h-full px-0 py-3'>
                       <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', activePaymentStatus === 'due' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Due</p>
                     </CardContent>
-                    <RadioGroupItem className='hidden' value='due' />
+                    <RadioGroupItem asChild className='hidden' value='due' />
                     <MinusCircle className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#cad2c5] transition-all duration-100', activePaymentStatus === 'due' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
-                  <Card className={cn('relative cursor-pointer', activePaymentStatus === 'partial' ? 'border-[#83c5be] outline-2' : '')} onClick={() => setActivePaymentStatus('partial')}>
-                    <CardContent className='h-full px-0 py-3'>
-                      <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', activePaymentStatus === 'partial' ? '-translate-x-[22%] translate-y-[28%]' : '')}>Partial</p>
-                    </CardContent>
-                    <RadioGroupItem className='hidden' value='partial' />
-                    <PartiallyPaidIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#83c5be] transition-all duration-100', activePaymentStatus === 'partial' ? '' : 'opacity-0')} aria-hidden='true' />
-                  </Card>
-                  <Card className={cn('relative cursor-pointer', activePaymentStatus === 'paid' ? 'border-[#006d77] outline-2' : '')} onClick={() => setActivePaymentStatus('paid')}>
+                  <Popover open={openPartialPaymentPopover}>
+                    <PopoverTrigger asChild>
+                      <Card
+                        className={cn('relative cursor-pointer', activePaymentStatus === 'partial' ? 'border-[#83c5be] outline-2' : '')}
+                        onClick={() => {
+                          setActivePaymentStatus('partial')
+                          setOpenPartialPaymentPopover(true)
+                        }}
+                      >
+                        <CardContent className='h-full px-0 py-3'>
+                          <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', activePaymentStatus === 'partial' ? '-translate-x-[22%] translate-y-[28%]' : '')}>Partial</p>
+                        </CardContent>
+                        <RadioGroupItem asChild className='hidden' value='partial' />
+                        <PartiallyPaidIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#83c5be] transition-all duration-100', activePaymentStatus === 'partial' ? '' : 'opacity-0')} aria-hidden='true' />
+                      </Card>
+                    </PopoverTrigger>
+                    <PopoverContent className='grid gap-2' onCloseAutoFocus={e => e.preventDefault()}>
+                      <Label>Partial amount</Label>
+                      <InputNumber
+                        id=''
+                        name=''
+                        className='h-8 w-36'
+                        placeholder=''
+                        onEnterPress={e => {
+                          setPartialPaymentAmount(e.target.value)
+                          setOpenPartialPaymentPopover(false)
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <Card
+                    className={cn('relative cursor-pointer', activePaymentStatus === 'paid' ? 'border-[#006d77] outline-2' : '')}
+                    onClick={() => {
+                      setActivePaymentStatus('paid')
+                      setPartialPaymentAmount('')
+                      setOpenPartialPaymentPopover(false)
+                    }}
+                  >
                     <CardContent className='h-full px-0 py-3'>
                       <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', activePaymentStatus === 'paid' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Paid</p>
                     </CardContent>
-                    <RadioGroupItem className='hidden' value='paid' />
+                    <RadioGroupItem asChild className='hidden' value='paid' />
                     <CheckCircleIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#006d77] transition-all duration-100', activePaymentStatus === 'paid' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
                 </RadioGroup>
               </div>
               <div className='grid gap-2'>
-                <Label className=''>Payment method</Label>
+                <Label className=''>Payment Method</Label>
                 <RadioGroup defaultValue='cash_on_delivery' value={activePaymentMethod}>
                   <Card>
-                    <CardContent className='flex h-[5rem] p-0'>
-                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-r-none pb-4', activePaymentMethod === 'cash_on_delivery' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cash_on_delivery')}>
+                    <CardContent className='flex h-18 p-0'>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-r-none pb-2.5', activePaymentMethod === 'cash_on_delivery' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cash_on_delivery')}>
                         <RadioGroupItem asChild className='hidden' value='cash_on_delivery' id='cash_on_delivery' />
                         <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'cash_on_delivery' ? 'text-[#70a288]' : '')}>
                           <CashIcon className='h-5 w-5' />
-                          <p className='text-sm font-medium tracking-tighter'>On delivery</p>
+                          <p className='text-sm font-medium tracking-tighter'>On Delivery</p>
                         </div>
                       </Button>
-                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-none border-x pb-4', activePaymentMethod === 'mobile_banking' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('mobile_banking')}>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-none border-x pb-2.5', activePaymentMethod === 'mobile_banking' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('mobile_banking')}>
                         <RadioGroupItem asChild className='hidden' value='mobile_banking' id='mobile_banking' />
                         <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'mobile_banking' ? 'text-[#dab785]' : '')}>
                           <MobileBankingIcon className='h-5 w-5' />
-                          <p className='text-sm font-medium tracking-tighter'>Mobile banking</p>
+                          <p className='text-sm font-medium tracking-tighter'>Mobile Banking</p>
                         </div>
                       </Button>
-                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-l-none pb-4', activePaymentMethod === 'cheque' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cheque')}>
+                      <Button variant='ghost' className={cn('flex h-full w-1/3 items-end justify-start rounded-l-none pb-2.5', activePaymentMethod === 'cheque' ? 'bg-accent' : '')} onClick={() => setActivePaymentMethod('cheque')}>
                         <RadioGroupItem asChild className='hidden' value='cheque' id='cheque' />
                         <div className={cn('space-y-0.5 transition-all duration-200', activePaymentMethod === 'cheque' ? 'text-[#d5896f]' : '')}>
                           <ChequeIcon className='h-5 w-5' />
@@ -250,79 +294,97 @@ const MakeSell = () => {
                   </Card>
                 </RadioGroup>
               </div>
-              <div className='grid gap-2'>
-                <Label>Service provider</Label>
-                <Select name='service_provider'>
-                  <SelectTrigger id='service_provider'>
-                    <SelectValue placeholder='Select service provider' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {serviceProviders.map(provider => (
-                        <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
-                          <div className='flex items-center gap-1.5'>
-                            <provider.icon className='h-5 w-5' />
-                            {provider.label}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className='flex gap-2'>
-                <div className='grid w-11/12 gap-2'>
-                  <Label>Expiration date</Label>
-                  <Input id='name' placeholder='(MM/YY)' />
-                </div>
-                <div className='grid gap-2'>
-                  <Label>CVC</Label>
-                  <Input id='cvc' placeholder='CVC' />
-                </div>
-              </div>
+              {activePaymentMethod === 'mobile_banking' && (
+                <>
+                  <div className='grid gap-2'>
+                    <Label>Service Provider</Label>
+                    <Select name='service_provider'>
+                      <SelectTrigger id='service_provider'>
+                        <SelectValue placeholder='Select Service Provider' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {serviceProviders.map(provider => (
+                            <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
+                              <div className='flex items-center gap-1.5'>
+                                <provider.icon className='h-5 w-5' />
+                                <span>{provider.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className='flex gap-2'>
+                    <div className='grid gap-2'>
+                      <Label>Account Number</Label>
+                      <Input id='account_number' placeholder='+880 1XXX-XXXXXX' />
+                    </div>
+                    <div className='grid gap-2'>
+                      <Label>Transaction ID</Label>
+                      <Input id='transaction_id' placeholder='Transaction ID' />
+                    </div>
+                  </div>
+                </>
+              )}
+              {activePaymentMethod === 'cheque' && (
+                <>
+                  <div className='grid gap-2'>
+                    <Label>Bank name</Label>
+                    <Input placeholder='Bank name' />
+                  </div>
+                  <div className='grid gap-2'>
+                    <Label>Cheque number</Label>
+                    <Input id='cheque_number' placeholder='Cheque number' />
+                  </div>
+                </>
+              )}
             </div>
             <Separator className='my-4' />
-            <div className='space-y-4'>
+            <div className='space-y-5'>
               <div className='grid gap-2'>
-                <Label>Delivery method</Label>
+                <Label>Delivery Method</Label>
                 <RadioGroup defaultValue='standard' value={activeDeliveryMethod} className='grid grid-cols-2'>
                   <Card className={cn('relative cursor-pointer', activeDeliveryMethod === 'in-house' ? 'border-[#6096ba] outline-2' : '')} onClick={() => setActiveDeliveryMethod('in-house')}>
-                    <CardHeader className='space-y-0 px-5 py-4'>
-                      <p className='text-sm font-medium'>In house</p>
+                    <CardHeader className='space-y-0 px-4 py-3.5'>
+                      <p className='text-sm font-medium'>In House</p>
                       <p className='text-sm tracking-tight text-muted-foreground'>4–10 business days</p>
                     </CardHeader>
-                    <CardContent className='px-5 pb-4'>
+                    <CardContent className='px-4 pb-3.5'>
                       <p className='text-sm font-medium'>$5.00</p>
                     </CardContent>
-                    <RadioGroupItem className='hidden' value='standard' />
+                    <RadioGroupItem asChild className='hidden' value='standard' />
                     <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#6096ba] transition-all duration-100', activeDeliveryMethod === 'in-house' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
                   <Card className={cn('relative cursor-pointer', activeDeliveryMethod === 'external' ? 'border-[#81c3d7] outline-2' : '')} onClick={() => setActiveDeliveryMethod('external')}>
-                    <CardHeader className='space-y-0 px-5 py-4'>
+                    <CardHeader className='space-y-0 px-4 py-3.5'>
                       <p className='text-sm font-medium'>External</p>
                       <p className='text-sm tracking-tight text-muted-foreground'>2–5 business days</p>
                     </CardHeader>
-                    <CardContent className='px-5 pb-4'>
+                    <CardContent className='px-4 pb-3.5'>
                       <p className='text-sm font-medium'>$16.00</p>
                     </CardContent>
-                    <RadioGroupItem className='hidden' value='express' id='express' />
+                    <RadioGroupItem asChild className='hidden' value='express' id='express' />
                     <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#81c3d7] transition-all duration-100', activeDeliveryMethod === 'external' ? '' : 'opacity-0')} aria-hidden='true' />
                   </Card>
                 </RadioGroup>
               </div>
-              <div>
+              {activeDeliveryMethod === 'in-house' ? (
                 <div className='grid gap-2'>
                   <Label htmlFor='delivery_man'>Delivery Man</Label>
                   <Popover open={openDeliveryManPopover} onOpenChange={setOpenDeliveryManPopover}>
                     <PopoverTrigger asChild>
-                      <Button id='delivery_man' variant='outline' role='combobox' className='relative block w-full justify-between text-start'>
-                        {value ? frameworks.find(framework => framework.value === value)?.label : 'Search delivery man...'}
-                        <ChevronsUpDown className='absolute right-2 top-2.5 ml-2 h-4 w-4 shrink-0 opacity-50' />
+                      <Button id='delivery_man' variant='outline' role='combobox' className='w-full items-center justify-between px-3'>
+                        <div className='font-normal'>{value ? frameworks.find(framework => framework.value === value)?.label : 'Select Delivery Man...'}</div>
+                        <div className='flex items-center self-center'>
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                        </div>
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className='p-0' style={{ width: commandSourceRef.current?.offsetWidth ?? 'auto' }} align='end'>
                       <Command>
-                        <CommandInput placeholder='Search delivery man...' />
+                        <CommandInput placeholder='Search Delivery Man...' />
                         <CommandList>
                           <CommandEmpty>No delivery man found.</CommandEmpty>
                           <CommandGroup>
@@ -334,9 +396,10 @@ const MakeSell = () => {
                                   setValue(currentValue === value ? '' : currentValue)
                                   setOpenDeliveryManPopover(false)
                                 }}
+                                className='flex justify-between'
                               >
-                                <Check className={cn('mr-2 h-4 w-4', value === framework.value ? 'opacity-100' : 'opacity-0')} />
                                 {framework.label}
+                                <Check className={cn('h-4 w-4', value === framework.value ? 'opacity-100' : 'opacity-0')} />
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -345,24 +408,47 @@ const MakeSell = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-              </div>
+              ) : (
+                <div className='grid gap-2'>
+                  <Label htmlFor='delivery_man'>Courier Service</Label>
+                  <Select name='service_provider'>
+                    <SelectTrigger id='service_provider'>
+                      <SelectValue placeholder='Select Courier Service' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {serviceProviders.map(provider => (
+                          <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
+                            <div className='flex items-center gap-1.5'>
+                              <provider.icon className='h-5 w-5' />
+                              <span>{provider.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           </div>
           <Separator orientation='vertical' className='mx-6 hidden lg:block' />
           <Separator className='mb-4 mt-2 lg:mb-6 lg:mt-0 lg:hidden' />
           <div className='flex w-full flex-col justify-between space-y-2.5'>
             <div className='grid gap-2'>
-              <Label>Order summary</Label>
+              <Label>Order Summary</Label>
               <Card>
-                <ScrollArea className='lg:h-[39vh]'>
-                  <CardContent className='flex justify-between py-6'>
+                <ScrollArea className='lg:h-[320px]'>
+                  <CardContent className='flex justify-between p-4'>
                     <div className='flex gap-4'>
-                      <img className='h-28 w-20 rounded-md' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
+                      <img className='h-20 w-14 rounded-md object-cover' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Basic Tee</Label>
-                          <p className='text-sm tracking-tight text-muted-foreground'>White</p>
-                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
+                          <div className='flex'>
+                            <p className='border-r pr-2 text-sm tracking-tight text-muted-foreground'>White</p>
+                            <p className='pl-2 text-sm tracking-tight text-muted-foreground'>Large</p>
+                          </div>
                         </div>
                         <p className='text-sm font-medium'>$32.00</p>
                       </div>
@@ -381,18 +467,20 @@ const MakeSell = () => {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                      <InputNumber className='h-8 w-18' id='quantity' name='quantity' value='1' onChange={() => null} />
                     </div>
                   </CardContent>
                   <Separator />
-                  <CardContent className='flex justify-between py-6'>
+                  <CardContent className='flex justify-between p-4'>
                     <div className='flex gap-4'>
-                      <img className='h-28 w-20 rounded-md' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
+                      <img className='h-20 w-14 rounded-md' src='https://files.cdn.printful.com/o/upload/bfl-image/0f/10334_l_tech%20t-shirt.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Printed Tee</Label>
-                          <p className='text-sm tracking-tight text-muted-foreground'>Black</p>
-                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
+                          <div className='flex'>
+                            <p className='border-r pr-2 text-sm tracking-tight text-muted-foreground'>Black</p>
+                            <p className='pl-2 text-sm tracking-tight text-muted-foreground'>Large</p>
+                          </div>
                         </div>
                         <p className='text-sm font-medium'>$45.00</p>
                       </div>
@@ -411,18 +499,20 @@ const MakeSell = () => {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                      <InputNumber className='h-8 w-18' id='quantity' name='quantity' value='1' onChange={() => null} />
                     </div>
                   </CardContent>
                   <Separator />
-                  <CardContent className='flex justify-between py-6'>
+                  <CardContent className='flex justify-between p-4'>
                     <div className='flex gap-4'>
-                      <img className='h-28 w-20 rounded-md' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
+                      <img className='h-20 w-14 rounded-md' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
                       <div className='flex flex-col justify-between'>
                         <div>
                           <Label>Basic Tee</Label>
-                          <p className='text-sm tracking-tight text-muted-foreground'>Beige</p>
-                          <p className='text-sm tracking-tight text-muted-foreground'>Large</p>
+                          <div className='flex'>
+                            <p className='border-r pr-2 text-sm tracking-tight text-muted-foreground'>Beige</p>
+                            <p className='pl-2 text-sm tracking-tight text-muted-foreground'>Large</p>
+                          </div>
                         </div>
                         <p className='text-sm font-medium'>$32.00</p>
                       </div>
@@ -441,30 +531,76 @@ const MakeSell = () => {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      <InputNumber className='w-16' id='quantity' name='quantity' value='1' onChange={() => null}></InputNumber>
+                      <InputNumber className='h-8 w-18' id='quantity' name='quantity' value='1' onChange={() => null} />
+                    </div>
+                  </CardContent>
+                  <Separator />
+                  <CardContent className='flex justify-between p-4'>
+                    <div className='flex gap-4'>
+                      <img className='h-20 w-14 rounded-md' src='https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-02.jpg' />
+                      <div className='flex flex-col justify-between'>
+                        <div>
+                          <Label>Basic Tee</Label>
+                          <div className='flex'>
+                            <p className='border-r pr-2 text-sm tracking-tight text-muted-foreground'>Beige</p>
+                            <p className='pl-2 text-sm tracking-tight text-muted-foreground'>Large</p>
+                          </div>
+                        </div>
+                        <p className='text-sm font-medium'>$32.00</p>
+                      </div>
+                    </div>
+                    <div className='flex flex-col items-end justify-between'>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'>
+                              <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                              <span className='sr-only'>Remove</span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <InputNumber className='h-8 w-18' id='quantity' name='quantity' value='1' onChange={() => null} />
                     </div>
                   </CardContent>
                 </ScrollArea>
                 <Separator />
-                <CardContent className='space-y-3 py-3'>
+                <CardContent className='space-y-2 py-2 text-xs'>
                   <div className='flex items-center justify-between'>
-                    <Label className='font-medium'>Subtotal</Label>
-                    <p className='text-sm'>$64.00</p>
+                    <Label className='text-xs'>Subtotal</Label>
+                    <p className='font-semibold'>$64.00</p>
                   </div>
                   <div className='flex items-center justify-between'>
-                    <Label className='font-medium'>Shipping</Label>
-                    <p className='text-sm'>$5.00</p>
+                    <Label className='text-xs'>Shipping</Label>
+                    <p className='font-semibold'>$5.00</p>
                   </div>
                   <div className='flex items-center justify-between'>
-                    <Label className='font-medium'>Taxes</Label>
-                    <p className='text-sm'>$5.42</p>
+                    <Label className='text-xs'>Taxes</Label>
+                    <p className='font-semibold'>$5.42</p>
                   </div>
                 </CardContent>
                 <Separator />
-                <CardContent className='py-3'>
+                <CardContent className='py-1.5'>
                   <div className='flex items-center justify-between'>
-                    <Label className='text-md font-medium'>Total</Label>
-                    <p className='text-md'>$5.42</p>
+                    <Label className='text-sm'>Total Payable</Label>
+                    <p className='text-sm font-semibold'>$5.42</p>
+                  </div>
+                </CardContent>
+                <Separator />
+                <CardContent className='py-1.5'>
+                  <div className='flex items-center justify-between'>
+                    <Label className='text-sm'>Total Paid</Label>
+                    <p className='text-sm font-semibold'>{partialPaymentAmount !== '' ? formatCurrency(partialPaymentAmount) : '$0.00'}</p>
+                  </div>
+                </CardContent>
+                <Separator />
+                <CardContent className='py-1.5'>
+                  <div className='flex items-center justify-between'>
+                    <Label className='text-sm'>Total Remaining</Label>
+                    <p className='text-sm font-semibold'>$5.42</p>
                   </div>
                 </CardContent>
               </Card>
