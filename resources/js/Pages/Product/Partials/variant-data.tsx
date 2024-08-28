@@ -318,28 +318,28 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
                     <div>
-                      <Input className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                      <Input name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                     <div>
-                      <InputNumber className='px-2' id='quantity' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
+                      <InputNumber id='quantity' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                     <div>
-                      <InputNumber className='px-2' id='buying_price' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
+                      <InputNumber id='buying_price' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                     </div>
                   </TableCell>
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
-                    <InputNumber className='px-2' id='retail_price' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
+                    <InputNumber id='retail_price' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                   </TableCell>
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                    <InputNumber className='px-2' id='selling_price' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
+                    <InputNumber id='selling_price' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                   </TableCell>
 
                   <TableCell className='px-1'>
@@ -436,31 +436,31 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
                         <div>
-                          <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU'></Input>
+                          <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
                         </div>
                       </div>
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
                         <div>
-                          <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity'></InputNumber>
+                          <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                         </div>
                       </div>
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_buying_price_2_${variant.id}`}>Buying Price</Label>
                         <div>
-                          <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price'></InputNumber>
+                          <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                         </div>
                       </div>
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_retail_price_2_${variant.id}`}>Retail Price</Label>
                         <div>
-                          <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price'></InputNumber>
+                          <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                         </div>
                       </div>
                       <div className='flex items-center justify-between'>
                         <Label htmlFor={`edit_selling_price_2_${variant.id}`}>Selling Price</Label>
                         <div>
-                          <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price'></InputNumber>
+                          <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                         </div>
                       </div>
                       <div className='flex items-center justify-center space-x-2'>
@@ -498,31 +498,31 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='sku_2'>SKU</Label>
                     <div>
-                      <Input id='sku_2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU'></Input>
+                      <Input id='sku_2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
                     </div>
                   </div>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='quantity_2'>Quantity</Label>
                     <div>
-                      <InputNumber id='quantity_2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity'></InputNumber>
+                      <InputNumber id='quantity_2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                     </div>
                   </div>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='buying_price_2'>Buying Price</Label>
                     <div>
-                      <InputNumber id='buying_price_2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price'></InputNumber>
+                      <InputNumber id='buying_price_2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                     </div>
                   </div>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='retail_price_2'>Retail Price</Label>
                     <div>
-                      <InputNumber id='retail_price_2' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price'></InputNumber>
+                      <InputNumber id='retail_price_2' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                     </div>
                   </div>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='selling_price_2'>Selling Price</Label>
                     <div>
-                      <InputNumber id='selling_price_2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price'></InputNumber>
+                      <InputNumber id='selling_price_2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                     </div>
                   </div>
                   <div className='flex items-center justify-center space-x-2'>
