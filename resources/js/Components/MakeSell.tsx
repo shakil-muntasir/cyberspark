@@ -98,7 +98,7 @@ const MakeSell = () => {
           <PlusIcon className='delay-50 fixed right-5 h-12 w-12 transform rounded-full bg-foreground p-3 text-primary-foreground transition-transform duration-500 group-hover:rotate-180' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='h-screen max-w-7xl gap-2.5 overflow-y-auto bg-primary-foreground px-5 pb-6 pt-4 lg:h-auto'>
+      <DialogContent className='h-screen max-w-7xl gap-2.5 overflow-y-auto px-5 pb-6 pt-4 lg:h-auto'>
         <DialogHeader className='space-y-0'>
           <DialogTitle className='text-xl'>Sell Product</DialogTitle>
           <DialogDescription>Please fill out this form to sell a product.</DialogDescription>
@@ -437,7 +437,7 @@ const MakeSell = () => {
           <div className='flex w-full flex-col justify-between space-y-2.5'>
             <div className='grid gap-2'>
               <Label>Order Summary</Label>
-              <Card>
+              <Card className='bg-primary-foreground'>
                 <ScrollArea className='lg:h-[320px]'>
                   <CardContent className='flex justify-between p-4'>
                     <div className='flex gap-4'>
