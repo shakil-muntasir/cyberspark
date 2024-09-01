@@ -1,4 +1,4 @@
-import { CheckIcon, PlusCircle, SquareCheckBig, SquareIcon, Trash2Icon, X } from 'lucide-react'
+import { CheckIcon, PlusCircle, SquareCheckBig, SquareIcon, Trash2Icon, XIcon } from 'lucide-react'
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
 import { Button } from '@/Components/ui/button'
@@ -298,7 +298,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                             <Tooltip delayDuration={0}>
                               <TooltipTrigger asChild>
                                 <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setData(initialFormData)}>
-                                  <X className='h-4 w-4 text-white/80 group-hover:text-white' />
+                                  <XIcon className='h-4 w-4 text-white/80 group-hover:text-white' />
                                   <span className='sr-only'>Discard</span>
                                 </Button>
                               </TooltipTrigger>
@@ -362,7 +362,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         <Tooltip delayDuration={0}>
                           <TooltipTrigger asChild>
                             <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setIsAddFormOpen(false)}>
-                              <X className='h-4 w-4 text-white/80 group-hover:text-white' />
+                              <XIcon className='h-4 w-4 text-white/80 group-hover:text-white' />
                               <span className='sr-only'>Discard</span>
                             </Button>
                           </TooltipTrigger>
@@ -475,7 +475,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           }}
                         >
                           <div className='flex items-center gap-2'>
-                            <X className='h-4 w-4 text-red-400' />
+                            <XIcon className='h-4 w-4 text-red-400' />
                             <span className='tracking-wider'>Discard</span>
                           </div>
                         </Button>
@@ -537,7 +537,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       }}
                     >
                       <div className='flex items-center gap-2'>
-                        <X className='h-4 w-4 text-red-400' />
+                        <XIcon className='h-4 w-4 text-red-400' />
                         <span className='tracking-wider'>Discard</span>
                       </div>
                     </Button>
