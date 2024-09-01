@@ -73,6 +73,38 @@
     body {
         @apply bg-background text-foreground;
     }
+    /* Custom scrollbar styles for non-macOS users */
+    body:not(.mac-os)::-webkit-scrollbar {
+        @apply h-2 w-2 bg-inherit;
+    }
+
+    body:not(.mac-os)::-webkit-scrollbar {
+        @apply bg-muted/40; /* Apply the background for the scrollbar */
+    }
+
+    /* Custom scrollbar thumb styles for non-macOS users */
+    body:not(.mac-os)::-webkit-scrollbar-thumb {
+        @apply border-4 bg-border;
+        border-radius: 8px;
+    }
+
+    body:not(.mac-os)::-webkit-scrollbar-thumb:hover {
+        @apply border-[8px] border-solid border-muted-foreground/20;
+    }
+
+    /* Disable scrollbar button customization */
+    body:not(.mac-os)::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    body:not(.mac-os) .overflow-y-auto::-webkit-scrollbar {
+        @apply h-2 w-2 bg-inherit;
+    }
+
+    body:not(.mac-os) .overflow-y-auto::-webkit-scrollbar-thumb {
+        @apply border-4 bg-border;
+        border-radius: 8px;
+    }
 }
 
 /* for calendar component */
