@@ -79,3 +79,17 @@ export function formatCurrency(amount: string, currency = 'USD'): string {
         currency: currency
     }).format(parseInt(amount))
 }
+
+export function abbreviateWords(phrase: string) {
+    const words = phrase.split(' ')
+
+    if (words.length === 1) {
+        return words[0].slice(0, 3).toUpperCase()
+    }
+
+    return words
+        .slice(0, 3)
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+}
