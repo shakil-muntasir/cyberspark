@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -11,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/invoices', function () {
-        return inertia('Invoice/Index');
+    Route::prefix('/acquisitions')->name('acquisitions.')->group(function () {
+        Route::get('/', [AcquisitionController::class, 'index'])->name('index');
     });
 
     Route::prefix('/products')->name('products.')->group(function () {

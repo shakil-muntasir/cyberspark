@@ -1,4 +1,11 @@
-import InputError from '@/Components/InputError'
+import { FormEvent, useEffect, useState } from 'react'
+import { CalendarIcon, CheckIcon, PlusCircle, Trash2Icon, XIcon } from 'lucide-react'
+import { LockClosedIcon, LockOpen1Icon, Pencil2Icon } from '@radix-ui/react-icons'
+import { format } from 'date-fns'
+import { z } from 'zod'
+
+import { useTheme } from '@/Providers/theme-provider'
+
 import { Button } from '@/Components/ui/button'
 import { Calendar } from '@/Components/ui/calendar'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog'
@@ -11,13 +18,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/Components/ui/separator'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+
+import InputError from '@/Components/InputError'
+
 import { formatCurrency } from '@/Lib/utils'
-import { useTheme } from '@/Providers/theme-provider'
-import { LockClosedIcon, LockOpen1Icon, Pencil2Icon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
-import { CalendarIcon, CheckIcon, PlusCircle, Trash2Icon, XIcon } from 'lucide-react'
-import { FormEvent, useEffect, useState } from 'react'
-import { z } from 'zod'
 
 const categories = [
   { label: 'Clothing', value: 'clothing' },
@@ -76,7 +80,7 @@ const productSchema = z.object({
   description: z.string().optional()
 })
 
-const AddInvoice = () => {
+const AddAcquisition = () => {
   const initialFormData: ProductForm = {
     name: '',
     sku_prefix: '',
@@ -89,12 +93,12 @@ const AddInvoice = () => {
   }
 
   const [productForm, setProductForm] = useState<ProductForm>(initialFormData)
-  const [invoiceProducts, setInvoiceProducts] = useState<ProductForm[]>([])
+  const [acquiredProducts, setAcquiredProducts] = useState<ProductForm[]>([])
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [errors, setErrors] = useState<Record<string, string | undefined>>({})
   const [openCalendarPopover, setOpenCalendarPopover] = useState(false)
   const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
-  const [openAddInvoiceDialog, setOpenAddInvoiceDialog] = useState(false)
+  const [openAddAcquisitionDialog, setOpenAddAcquisitionDialog] = useState(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null)
   const [openMobilePopoverIndex, setOpenMobilePopoverIndex] = useState<number | null>(null)
@@ -149,7 +153,7 @@ const AddInvoice = () => {
 
   const handleAddProduct = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setInvoiceProducts(currentProducts => [...currentProducts, productForm])
+    setAcquiredProducts(currentProducts => [...currentProducts, productForm])
     setProductForm(initialFormData)
     setProductAddButtonTitle('Added')
     setTimeout(() => {
@@ -169,7 +173,7 @@ const AddInvoice = () => {
     if (JSON.stringify(productForm) === JSON.stringify(initialFormData)) {
       setOpenEditPopover(false)
       setProductForm(product)
-      setInvoiceProducts(invoiceProducts.filter(invoiceProduct => invoiceProduct !== product))
+      setAcquiredProducts(acquiredProducts.filter(acquiredProduct => acquiredProduct !== product))
     } else {
       setOpenEditPopover(true)
     }
@@ -190,20 +194,20 @@ const AddInvoice = () => {
   }
 
   return (
-    <Dialog open={openAddInvoiceDialog} onOpenChange={setOpenAddInvoiceDialog}>
+    <Dialog open={openAddAcquisitionDialog} onOpenChange={setOpenAddAcquisitionDialog}>
       <DialogTrigger asChild>
         <Button className='gap-1'>
           <PlusCircle className='h-4 w-4' />
-          <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Invoice</span>
+          <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Acquisition</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='flex h-screen flex-col justify-between gap-0 overflow-y-auto p-0 lg:h-auto lg:max-w-[60rem]'>
         <div className='flex flex-col-reverse justify-end lg:flex-row'>
           {/* for mobile view only */}
-          {invoiceProducts.length > 0 ? (
+          {acquiredProducts.length > 0 ? (
             <div className='lg:hidden'>
               <ul className='flex flex-col space-y-2 pb-4'>
-                {invoiceProducts.map((product, index) => (
+                {acquiredProducts.map((product, index) => (
                   <li key={index} className='mx-4 flex h-auto items-center justify-between rounded-md bg-muted-foreground/5 p-4 text-start dark:bg-accent/50'>
                     <div className='w-full space-y-0.5'>
                       <div className='flex items-center justify-between border-b pb-2'>
@@ -244,7 +248,7 @@ const AddInvoice = () => {
                                 onClick={() => {
                                   setOpenEditPopover(false)
                                   setProductForm(product)
-                                  setInvoiceProducts(invoiceProducts.filter(invoiceProduct => invoiceProduct !== product))
+                                  setAcquiredProducts(acquiredProducts.filter(acquiredProduct => acquiredProduct !== product))
                                 }}
                               >
                                 <CheckIcon />
@@ -284,8 +288,8 @@ const AddInvoice = () => {
 
           <form className='w-full pb-4 pt-6 lg:h-auto' onSubmit={handleSubmit}>
             <DialogHeader className='px-4'>
-              <DialogTitle>Add products to an invoice.</DialogTitle>
-              <DialogDescription>Make changes to your profile here.</DialogDescription>
+              <DialogTitle>Add Products</DialogTitle>
+              <DialogDescription>Add the acquired products to the store.</DialogDescription>
             </DialogHeader>
             <Separator className='my-3' />
 
@@ -408,8 +412,8 @@ const AddInvoice = () => {
           <div className='space-y-4 bg-primary-foreground pl-4 pt-6 lg:w-1/2'>
             <div className='mb-6'>
               <DialogHeader>
-                <DialogTitle>Invoice Information.</DialogTitle>
-                <DialogDescription>Make changes to your profile here.</DialogDescription>
+                <DialogTitle>Acquisition Information</DialogTitle>
+                <DialogDescription>Add new acquisition to the store.</DialogDescription>
               </DialogHeader>
             </div>
             <div className='mr-4 flex flex-1 gap-2 border-b pb-4 pt-px'>
@@ -418,7 +422,7 @@ const AddInvoice = () => {
                 <Input id='invoice_number' type='text' name='invoice_number' placeholder='Invoice Number' />
               </div>
               <div className='grid w-1/2 gap-2'>
-                <Label htmlFor='calendar'>Delivery Date</Label>
+                <Label htmlFor='calendar'>Acquired Date</Label>
                 <Popover open={openCalendarPopover} onOpenChange={setOpenCalendarPopover}>
                   <PopoverTrigger asChild>
                     <Button type='button' variant='outline' id='calendar' className='flex justify-between px-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setOpenCalendarPopover(true)}>
@@ -444,7 +448,7 @@ const AddInvoice = () => {
             </div>
             <ScrollArea className='mr-1 hidden h-[326px] pr-3 lg:block'>
               <ul className='flex flex-col space-y-2'>
-                {invoiceProducts.map((product, index) => (
+                {acquiredProducts.map((product, index) => (
                   <li key={index} className='flex h-auto items-center justify-between rounded-md bg-muted-foreground/5 px-3 py-2 text-start dark:bg-accent/50'>
                     <div className='w-full space-y-0.5'>
                       <div className='flex items-center justify-between border-b pb-2'>
@@ -480,7 +484,7 @@ const AddInvoice = () => {
                                 <span className='sr-only'>Edit</span>
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent align='end' className='w-52 space-y-1.5'>
+                            <PopoverContent align='end' className='w-52 space-y-1.5 p-2.5'>
                               <div className='space-y-1.5 text-xs'>
                                 <p>This will overwrite the current form data.</p>
                                 <p className='font-semibold'>Do you want to proceed?</p>
@@ -498,7 +502,7 @@ const AddInvoice = () => {
                                   onClick={() => {
                                     setOpenEditPopover(false)
                                     setProductForm(product)
-                                    setInvoiceProducts(invoiceProducts.filter(invoiceProduct => invoiceProduct !== product))
+                                    setAcquiredProducts(acquiredProducts.filter(acquiredProduct => acquiredProduct !== product))
                                   }}
                                 >
                                   <CheckIcon className='h-4 w-4 dark:file:text-primary-foreground/80 dark:file:group-hover:text-green-600' />
@@ -507,7 +511,7 @@ const AddInvoice = () => {
                               </div>
                             </PopoverContent>
                           </Popover>
-                          <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setInvoiceProducts(invoiceProducts.filter(invoiceProduct => invoiceProduct !== product))}>
+                          <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setAcquiredProducts(acquiredProducts.filter(acquiredProduct => acquiredProduct !== product))}>
                             <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
                             <span className='sr-only'>Remove</span>
                           </Button>
@@ -536,14 +540,14 @@ const AddInvoice = () => {
             <Button
               variant='secondary'
               onClick={() => {
-                setOpenAddInvoiceDialog(false)
-                setInvoiceProducts([])
+                setOpenAddAcquisitionDialog(false)
+                setAcquiredProducts([])
                 setProductForm(initialFormData)
               }}
             >
               Cancel
             </Button>
-            <Button type='submit'>Save Invoice</Button>
+            <Button type='submit'>Save Acquisition</Button>
           </div>
         </DialogFooter>
       </DialogContent>
@@ -551,4 +555,4 @@ const AddInvoice = () => {
   )
 }
 
-export default AddInvoice
+export default AddAcquisition

@@ -1,4 +1,4 @@
-import { HomeIcon, PackageIcon, ShoppingCartIcon, UsersIcon, UserCircle2Icon, ScrollTextIcon } from 'lucide-react'
+import { HomeIcon, PackageIcon, ShoppingCartIcon, UsersIcon, UserCircle2Icon, SquareLibraryIcon } from 'lucide-react'
 
 type Route = {
     href: string
@@ -13,9 +13,9 @@ export const routes: Route[] = [
         tooltip: 'Dashboard'
     },
     {
-        href: '/invoices',
-        icon: ScrollTextIcon,
-        tooltip: 'Invoices'
+        href: '/acquisitions',
+        icon: SquareLibraryIcon,
+        tooltip: 'Acquisitions'
     },
     {
         href: '/products',
