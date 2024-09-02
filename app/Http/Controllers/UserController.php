@@ -24,8 +24,10 @@ class UserController extends Controller
         $users = User::filterAndSort($request->validatedParams());
 
         return inertia('User/Index', [
-            'users' => UserResource::collection($users),
-            'roles' => Role::getAllOptions()
+            'genders' => Gender::getAllOptions(),
+            'roles' => Role::getAllOptions(),
+            'states' => State::getAllOptions(),
+            'users' => UserResource::collection($users)
         ]);
     }
 

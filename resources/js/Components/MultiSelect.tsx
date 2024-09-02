@@ -6,13 +6,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover
 import { Badge } from '@/Components/ui/badge'
 
 interface MultiSelectProps {
+  id?: string
   values: { label: string; value: string }[]
   onValueChange: (value: string[]) => void
   placeholder?: string
   defaultSelectedValues?: { label: string; value: string }[]
 }
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({ values = [], onValueChange, placeholder, defaultSelectedValues = [] }) => {
+export const MultiSelect: React.FC<MultiSelectProps> = ({ id, values = [], onValueChange, placeholder, defaultSelectedValues = [] }) => {
   const [open, setOpen] = React.useState(false)
   const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultSelectedValues.map(item => item.value))
   const widthRef = React.useRef<HTMLDivElement>(null)
@@ -45,7 +46,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ values = [], onValueCh
         </PopoverTrigger>
         <PopoverContent className='p-0' style={{ width: widthRef.current?.offsetWidth ?? 'auto' }}>
           <Command>
-            <CommandInput placeholder='Search items...' />
+            <CommandInput id={id} placeholder='Search items...' />
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandList>
               <CommandGroup>

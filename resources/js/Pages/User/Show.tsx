@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronLeft, Trash2Icon } from 'lucide-react'
 import { router } from '@inertiajs/react'
+import { ChevronLeft, Trash2Icon } from 'lucide-react'
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
@@ -18,27 +18,23 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import DeleteModal from '@/Components/DeleteModal'
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import InputError from '@/Components/InputError'
+import { MultiSelect } from '@/Components/MultiSelect'
 import UserAvatar from '@/Components/UserAvatar'
 
 import { cn, getImageData } from '@/Lib/utils'
 import { Role, User, UserForm } from '@/Pages/User/type'
+import { SelectOption } from '@/Types'
 import useForm from '@/Hooks/form'
-import { MultiSelect } from '@/Components/MultiSelect'
-
-type SelectProps = {
-  label: string
-  value: string
-}
 
 interface UserProps {
   user: User
-  genders: SelectProps[]
-  roles: SelectProps[]
-  states: SelectProps[]
-  statuses: SelectProps[]
+  genders: SelectOption[]
+  roles: SelectOption[]
+  states: SelectOption[]
+  statuses: SelectOption[]
 }
 
-const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
+const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user }) => {
   const { initializeDeleteModal } = useDeleteModal()
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
   const [previewImage, setPreviewImage] = useState<string>('')
@@ -47,7 +43,7 @@ const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
   const initialData: UserForm = {
     name: user.data.attributes.name,
     email: user.data.attributes.email,
-    gender: '',
+    gender: user.data.attributes.gender,
     phone: user.data.attributes.phone,
     image: undefined,
     password: '',
@@ -157,6 +153,21 @@ const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
                         <Input id='phone' type='text' name='phone' value={data.phone} onChange={handleInputChange} className='w-full' placeholder='Phone' autoComplete='phone' />
                       </div>
                       <div className='grid gap-2'>
+                        <Label htmlFor='gender'>Gender</Label>
+                        <Select name='gender' value={data.gender} onValueChange={value => setData('gender', value)}>
+                          <SelectTrigger id='gender' aria-label='Select Gender'>
+                            <SelectValue placeholder='Select Gender' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {genders.map(gender => (
+                              <SelectItem key={gender.value} value={gender.value}>
+                                {gender.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className='grid gap-2'>
                         <Label htmlFor='image' className={errors.image?.length ? 'text-destructive' : ''}>
                           Profile image
                         </Label>
@@ -204,7 +215,7 @@ const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
                 </Card>
               </div>
               <div className='flex flex-col-reverse gap-4 lg:flex-row lg:gap-8'>
-                <div className='grid auto-rows-max items-start gap-4 lg:-mt-40 lg:w-72 lg:min-w-72 lg:gap-8'>
+                <div className='lg:-mt-58 grid auto-rows-max items-start gap-4 lg:w-72 lg:min-w-72 lg:gap-8'>
                   <Card>
                     <CardHeader>
                       <CardTitle>Address Details</CardTitle>
@@ -412,7 +423,7 @@ const ShowUser: React.FC<UserProps> = ({ user, roles, states, statuses }) => {
               <Card>
                 <CardHeader>
                   <CardTitle>Delete User</CardTitle>
-                  <CardDescription>Once you delete a user, your actions can't be undone</CardDescription>
+                  <CardDescription>Once you delete a user, your actions can&apos;t be undone</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button size='sm' variant='destructive' onClick={() => initializeDeleteModal(deleteModalData)}>

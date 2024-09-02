@@ -8,15 +8,17 @@ import DataTable from '@/Components/Table'
 import { Separator } from '@/Components/ui/separator'
 
 import { columns as initialColumns } from '@/Pages/User/_data/columns'
-import { TableData } from '@/Types'
+import { SelectOption, TableData } from '@/Types'
 import { User } from '@/Pages/User/type'
 
 interface UsersListProps {
+  genders: SelectOption[]
+  roles: SelectOption[]
+  states: SelectOption[]
   users: TableData<User>
-  roles: { label: string; value: string }[]
 }
 
-const UsersList: React.FC<UsersListProps> = ({ users, roles }) => {
+const UsersList: React.FC<UsersListProps> = ({ genders, roles, states, users }) => {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 
@@ -46,7 +48,7 @@ const UsersList: React.FC<UsersListProps> = ({ users, roles }) => {
     <AuthenticatedLayout title='Users'>
       <div className='flex items-center justify-between'>
         <PageHeader title='Users' description='This is the users page. You can view, edit, and delete users here.' />
-        <AddUser roles={roles} />
+        <AddUser genders={genders} roles={roles} states={states} />
       </div>
 
       <Separator className='mt-4' />

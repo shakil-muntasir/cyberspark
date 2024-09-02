@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,11 +29,8 @@ class AdminSeeder extends Seeder
             'updated_by_id' => $user->id,
         ]);
 
-        $user->address()->create([
-            'street' => '123 Admin Street',
-            'city' => 'Admin City',
-            'state' => 'Admin State',
-            'zip' => '12345',
+        Address::factory()->create([
+            'user_id' => $user->id
         ]);
 
         $user->assignRole('admin');

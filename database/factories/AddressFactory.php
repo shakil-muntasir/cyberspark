@@ -21,7 +21,7 @@ class AddressFactory extends Factory
             'user_id' => User::factory(),
             'street' => fake()->streetName,
             'city' => fake()->city,
-            'state' => fake()->state,
+            'state' => fake()->randomElement(['dhaka', 'chattogram', 'khulna', 'rajshahi', 'barishal', 'sylhet', 'rangpur', 'mymensingh']),
             'zip' => fake()->numerify('####'),
         ];
     }

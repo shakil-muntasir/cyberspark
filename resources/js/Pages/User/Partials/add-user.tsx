@@ -16,15 +16,17 @@ import { Avatar, AvatarImage } from '@/Components/ui/avatar'
 import { cn, generatePassword, getImageData } from '@/Lib/utils'
 
 import useForm from '@/Hooks/form'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
-import { FormErrors } from '@/Types'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
+import { FormErrors, SelectOption } from '@/Types'
 import { MultiSelect } from '@/Components/MultiSelect'
 
 interface AddUserProps {
-  roles: { label: string; value: string }[]
+  genders: SelectOption[]
+  roles: SelectOption[]
+  states: SelectOption[]
 }
 
-const AddUser: React.FC<AddUserProps> = ({ roles }) => {
+const AddUser: React.FC<AddUserProps> = ({ genders, roles, states }) => {
   const { toast } = useToast()
 
   const { data, setData, post, errors, clearErrors, reset } = useForm<UserForm>({
@@ -176,11 +178,11 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                     <SelectValue placeholder='Select Gender' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value='male'>Male</SelectItem>
-                      <SelectItem value='female'>Female</SelectItem>
-                      <SelectItem value='other'>Other</SelectItem>
-                    </SelectGroup>
+                    {genders.map(gender => (
+                      <SelectItem key={gender.value} value={gender.value}>
+                        {gender.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <InputError message={errors.gender} />
@@ -315,17 +317,18 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='role' className={errors.roles?.length ? 'text-destructive' : ''}>
-                Role
+              <Label htmlFor='roles' className={errors.roles?.length ? 'text-destructive' : ''}>
+                Roles
               </Label>
               <div className='space-y-px'>
                 <MultiSelect
+                  id='roles'
                   values={roles}
                   onValueChange={value => {
                     setData('roles', value)
                     clearErrors('roles')
                   }}
-                  placeholder='Select roles'
+                  placeholder='Select Roles'
                 />
                 <InputError message={errors.roles} />
               </div>
@@ -369,16 +372,11 @@ const AddUser: React.FC<AddUserProps> = ({ roles }) => {
                       <SelectValue placeholder='Select State' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value='dhaka'>Dhaka</SelectItem>
-                        <SelectItem value='chattogram'>Chattogram</SelectItem>
-                        <SelectItem value='khulna'>Khulna</SelectItem>
-                        <SelectItem value='rajshahi'>Rajshahi</SelectItem>
-                        <SelectItem value='barishal'>Barishal</SelectItem>
-                        <SelectItem value='sylhet'>Sylhet</SelectItem>
-                        <SelectItem value='rangpur'>Rangpur</SelectItem>
-                        <SelectItem value='mymensingh'>Mymensingh</SelectItem>
-                      </SelectGroup>
+                      {states.map(state => (
+                        <SelectItem key={state.value} value={state.value}>
+                          {state.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <InputError message={errors['address.state']} />

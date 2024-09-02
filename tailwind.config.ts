@@ -81,6 +81,9 @@ const config = {
       height: {
         '18': '4.5rem',
         '8.5': '2.125rem'
+      },
+      margin: {
+        '58': '14.5rem'
       }
     }
   },
