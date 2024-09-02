@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ProductStatus;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -20,6 +21,7 @@ class ProductController extends Controller
 
         return inertia('Product/Index', [
             'products' => ProductResource::collection($products),
+            'categories' => Category::getAllOptions(),
         ]);
     }
 
@@ -51,6 +53,7 @@ class ProductController extends Controller
         return inertia('Product/Show', [
             'product' => new ProductResource($product),
             'statuses' => ProductStatus::getAllOptions(),
+            'categories' => Category::getAllOptions(),
         ]);
     }
 }
