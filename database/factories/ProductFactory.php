@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,7 @@ class ProductFactory extends Factory
             'name' => fake()->words(2, true),
             'description' => fake()->sentence,
             'status' => fake()->randomElement(['active', 'inactive']),
+            'category_id' => Category::factory(),
             'created_by_id' => User::factory(),
             'updated_by_id' => User::factory(),
             'created_at' => fake()->dateTimeBetween('-15 days', '-7 days'),

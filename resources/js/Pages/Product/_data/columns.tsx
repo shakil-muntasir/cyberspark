@@ -42,10 +42,16 @@ const columns: TableColumn<Product>[] = createColumns([
     header: column => <DataTableColumnHeader column={column} title='Name' />
   },
   {
-    id: 'total_stock',
+    id: 'category',
+    label: 'Category',
+    header: 'Category',
+    cell: ({ category }) => <div className='font-medium'>{category}</div>
+  },
+  {
+    id: 'variants_sum_quantity',
     label: 'Total Stock',
     header: column => <DataTableColumnHeader column={column} title='Total Stock' align='end' />,
-    cell: ({ total_stock }) => <div className='mr-4 text-right font-medium'>{total_stock}</div>
+    cell: ({ variants_sum_quantity }) => <div className='mr-4 text-right font-medium'>{variants_sum_quantity}</div>
   },
   {
     id: 'variants_count',
@@ -54,12 +60,12 @@ const columns: TableColumn<Product>[] = createColumns([
     cell: ({ variants_count }) => <div className='mr-4 text-right font-medium'>{variants_count}</div>
   },
   {
-    id: 'stock_status',
-    label: 'Stock Status',
-    header: column => <DataTableColumnHeader column={column} title='Stock Status' align='center' />,
-    cell: ({ stock_status }) => (
+    id: 'availability',
+    label: 'Availability',
+    header: () => <div className='text-center'>Availability</div>,
+    cell: ({ availability }) => (
       <span className='flex justify-center'>
-        <Badge variant={stock_status === 'available' ? 'default' : 'secondary'}>{toTitleCase(stock_status)}</Badge>
+        <Badge variant={availability === 'available' ? 'default' : 'secondary'}>{toTitleCase(availability)}</Badge>
       </span>
     )
   },
@@ -88,7 +94,7 @@ const columns: TableColumn<Product>[] = createColumns([
   {
     id: 'created_by',
     label: 'Created by',
-    header: column => <DataTableColumnHeader column={column} title='Created by' />
+    header: 'Created By'
   },
   {
     id: 'actions',

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('status')->default(ProductStatus::ACTIVE);
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('created_by_id')->constrained('users');
             $table->foreignId('updated_by_id')->constrained('users');
             $table->softDeletes();

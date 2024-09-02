@@ -40,6 +40,7 @@ class ProductController extends Controller
         Gate::authorize('view', $product);
 
         $product->load([
+            'category:id,name',
             'variants',
             'createdBy:id,name',
             'updatedBy:id,name',

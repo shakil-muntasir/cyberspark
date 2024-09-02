@@ -22,23 +22,20 @@ class Product extends Model
         'status' => ProductStatus::class
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
     }
 
     /**
-     * Accessor to get total stock of variants.
-     */
-    public function getTotalStockAttribute(): int
-    {
-        return $this->attributes['variants_sum_quantity'] ?? 0;
-    }
-
-    /**
      * Accessor to get stock status based on total stock.
      */
-    public function getStockStatusAttribute(): string
+    public function getAvailabilityAttribute(): string
     {
         $totalStock = $this->total_stock;
 
@@ -97,7 +94,7 @@ class Product extends Model
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['createdBy:id,name', 'updatedBy:id,name'])
+            ->with(['category:id,name', 'createdBy:id,name', 'updatedBy:id,name'])
             ->withCount('variants') // This will add 'variants_counts' to the result
             ->withSum('variants', 'quantity') // This will add 'variants_sum_quantity' to the result
             ->search($params['search'] ?? '')

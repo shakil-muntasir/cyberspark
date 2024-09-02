@@ -8,8 +8,10 @@ export type Product = {
             description?: string
             status: 'active' | 'inactive'
             variants_count: string
-            total_stock: string
-            stock_status: string
+            variants_sum_quantity: string
+            availability: string
+            category: string
+            category_id: string
             created_by_id: string
             updated_by_id: string
             created_by: string
