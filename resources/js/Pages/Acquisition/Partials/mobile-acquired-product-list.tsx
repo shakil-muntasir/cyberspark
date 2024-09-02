@@ -41,7 +41,7 @@ const MobileAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ produ
                         Quantity: <span className='font-semibold'>{product.quantity}</span>
                       </p>
                       <p className='text-xs font-light'>
-                        Category: <span className='font-semibold'>{product.category}</span>
+                        Category: <span className='font-semibold'>{product.category_id}</span>
                       </p>
                     </div>
                     <div className='flex gap-0.5'>
