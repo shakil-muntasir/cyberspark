@@ -1,4 +1,7 @@
-import InputError from '@/Components/InputError'
+import { FormEvent, useEffect, useState } from 'react'
+import { z } from 'zod'
+import { CheckIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
+
 import { Button } from '@/Components/ui/button'
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
@@ -8,22 +11,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/Components/ui/separator'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+
+import InputError from '@/Components/InputError'
+
 import { abbreviateWords } from '@/Lib/utils'
 import { AcquiredProductForm as AcquiredProductFormType } from '@/Pages/Acquisition/type'
-import { CheckIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
-import { FormEvent, useEffect, useState } from 'react'
-import { z } from 'zod'
-
-const categories = [
-  { label: 'Clothing', value: 'clothing' },
-  { label: 'Electronics', value: 'electronics' },
-  { label: 'Accessories', value: 'accessories' }
-]
+import { SelectOption } from '@/Types'
 
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   sku_prefix: z.string().min(1, 'SKU prefix is required'),
-  category: z.string().min(1, 'Category is required'),
+  category_id: z.string().min(1, 'Category is required'),
   quantity: z
     .string()
     .transform(val => Number(val))
@@ -61,17 +59,18 @@ const productSchema = z.object({
 })
 
 interface AcquiredProductFormProps {
-  onProductAdd: (product: AcquiredProductFormType) => void
-  productToEdit?: AcquiredProductFormType
+  categories: SelectOption[]
   checkDirtyBeforeEdit: (isDirty: boolean) => void
   discardFormData: boolean
+  onProductAdd: (product: AcquiredProductFormType) => void
+  productToEdit?: AcquiredProductFormType
 }
 
-const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ onProductAdd, productToEdit, checkDirtyBeforeEdit, discardFormData = false }) => {
+const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, checkDirtyBeforeEdit, discardFormData = false, onProductAdd, productToEdit }) => {
   const initialFormData: AcquiredProductFormType = {
     name: '',
     sku_prefix: '',
-    category: '',
+    category_id: '',
     quantity: '',
     buying_price: '',
     retail_price: '',
@@ -219,13 +218,13 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ onProductAdd,
         <div className='flex w-full gap-2'>
           <div className='w-9/12'>
             <div className='grid gap-2'>
-              <Label htmlFor='category' className={errors.category?.length ? 'text-destructive' : ''}>
+              <Label htmlFor='category_id' className={errors.category_id?.length ? 'text-destructive' : ''}>
                 Category
               </Label>
               <div className='space-y-px'>
-                <Select name='category' value={productForm.category} onValueChange={value => setProductFormData('category', value)}>
-                  <SelectTrigger id='category' aria-label='Select category'>
-                    <SelectValue placeholder='Select category' />
+                <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)}>
+                  <SelectTrigger id='category_id' aria-label='Select Category'>
+                    <SelectValue placeholder='Select Category' />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map(category => (

@@ -15,8 +15,13 @@ import PCAcquiredProductsList from '@/Pages/Acquisition/Partials/pc-acquired-pro
 import MobileAcquiredProductsList from '@/Pages/Acquisition/Partials/mobile-acquired-product-list'
 import useForm from '@/Hooks/form'
 import { AcquiredProductForm as AcquiredProductFormType, AcquisitionForm } from '@/Pages/Acquisition/type'
+import { SelectOption } from '@/Types'
 
-const AddAcquisition = () => {
+interface AddAcquisitionProps {
+  categories: SelectOption[]
+}
+
+const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
   const [productToEdit, setProductToEdit] = useState<AcquiredProductFormType | undefined>(undefined)
   const [openCalendarPopover, setOpenCalendarPopover] = useState(false)
   const [openAddAcquisitionDialog, setOpenAddAcquisitionDialog] = useState(false)
@@ -95,7 +100,7 @@ const AddAcquisition = () => {
           {/* for mobile view only */}
           <MobileAcquiredProductsList products={data.products} onEditProduct={handleEditProduct} onRemoveProduct={handleRemoveProduct} showEditConfirmation={showEditConfirmation} onConfirmEditProduct={handleConfirmEditProduct} onCancelEditProduct={handleCancelEditProduct} />
 
-          <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} discardFormData={discardFormData} />
+          <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} discardFormData={discardFormData} categories={categories} />
 
           <div className='space-y-4 bg-primary-foreground pl-4 pt-6 lg:w-1/2'>
             <div className='mb-6'>

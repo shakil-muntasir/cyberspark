@@ -3,13 +3,18 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Separator } from '@/Components/ui/separator'
 import PageHeader from '@/Layouts/Partials/page-header'
 import AddAcquisition from '@/Pages/Acquisition/Partials/add-acquisition'
+import { SelectOption } from '@/Types'
 
-const AcquisitionsList = () => {
+interface AcquisitionsListProps {
+  categories: SelectOption[]
+}
+
+const AcquisitionsList: React.FC<AcquisitionsListProps> = ({ categories }) => {
   return (
     <AuthenticatedLayout title='Acquisitions'>
       <div className='flex items-center justify-between'>
         <PageHeader title='Acquisitions' description='This is the acquisitions page. You can view, edit, and delete acquisitions here.' />
-        <AddAcquisition />
+        <AddAcquisition categories={categories} />
       </div>
 
       <Separator className='mt-4' />
