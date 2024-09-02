@@ -84,6 +84,9 @@ const config = {
       },
       margin: {
         '58': '14.5rem'
+      },
+      fontSize: {
+        xxs: '0.625rem'
       }
     }
   },

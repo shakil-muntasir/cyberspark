@@ -29,12 +29,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ id, values = [], onVal
       <div ref={widthRef} />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant='outline' role='combobox' aria-expanded={open} className='flex w-full items-center justify-between px-3 py-2'>
+          <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
             <div className='flex flex-wrap justify-start gap-2'>
               {selectedValues.length
                 ? selectedValues.map((val, i) => (
                     <span className='flex justify-center' key={i}>
-                      <Badge variant='outline'>{values.find(item => item.value === val)?.label}</Badge>
+                      <Badge variant='outline' className='text-xxs font-normal'>
+                        {values.find(item => item.value === val)?.label}
+                      </Badge>
                     </span>
                   ))
                 : (placeholder ?? 'Select options')}
