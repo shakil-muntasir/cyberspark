@@ -1,4 +1,9 @@
-import DeleteModal from '@/Components/DeleteModal'
+import { useEffect, useState } from 'react'
+import { Link, router, useForm } from '@inertiajs/react'
+import { ChevronLeft } from 'lucide-react'
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
@@ -7,23 +12,29 @@ import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+
+import DeleteModal from '@/Components/DeleteModal'
+
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
-import { Product, ProductForm, ProductStatus } from '@/Pages/Product/type'
-import { Link, router, useForm } from '@inertiajs/react'
-import { ChevronLeft } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Product, ProductForm } from '@/Pages/Product/type'
+import { SelectOption } from '@/Types'
 
 // TODO: fix width
 
-export default function ShowProduct({ product, statuses }: { product: Product; statuses: ProductStatus[] }) {
+interface ShowProductTypes {
+  categories: SelectOption[]
+  product: Product
+  statuses: SelectOption[]
+}
+
+const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses }) => {
   const { initializeDeleteModal } = useDeleteModal()
 
   const initialProductData = {
     name: product.data.attributes.name,
     description: product.data.attributes.description ?? '',
-    category: '',
+    category_id: product.data.attributes.category_id,
     status: product.data.attributes.status
   }
   const { data, setData, clearErrors, reset } = useForm<ProductForm>(initialProductData)
@@ -48,12 +59,6 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
     title: 'product',
     onConfirm: () => router.visit('/products')
   }
-
-  const categories = [
-    { label: 'Clothing', value: 'clothing' },
-    { label: 'Electronics', value: 'electronics' },
-    { label: 'Accessories', value: 'accessories' }
-  ]
 
   return (
     <AuthenticatedLayout title='Product Details'>
@@ -134,7 +139,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
               </Card>
 
               {/* The Product Variants table and add form will be rendered here */}
-              {product.data.relationships?.variants?.length && <ProductVariantData product={product} variants={product.data.relationships?.variants} />}
+              <ProductVariantData product={product} variants={product.data.relationships?.variants} />
             </div>
             <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-8'>
               <Card>
@@ -145,7 +150,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
                   <div className='grid gap-6'>
                     <div className='grid gap-2'>
                       <Label htmlFor='category'>Category</Label>
-                      <Select name='category' value={data.category} onValueChange={value => setData('category', value)}>
+                      <Select name='category' value={data.category_id} onValueChange={value => setData('category_id', value)}>
                         <SelectTrigger id='category' aria-label='Select category'>
                           <SelectValue placeholder='Select category' />
                         </SelectTrigger>
@@ -188,7 +193,7 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
               <Card>
                 <CardHeader>
                   <CardTitle>Delete Product</CardTitle>
-                  <CardDescription>Once you delete a product, your actions can't be undone</CardDescription>
+                  <CardDescription>Once you delete a product, your actions can&apos;t be undone</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button size='sm' variant='destructive' onClick={() => initializeDeleteModal(deleteModalData)}>
@@ -214,3 +219,5 @@ export default function ShowProduct({ product, statuses }: { product: Product; s
     </AuthenticatedLayout>
   )
 }
+
+export default ShowProduct

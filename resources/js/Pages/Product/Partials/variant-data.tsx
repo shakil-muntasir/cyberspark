@@ -19,10 +19,10 @@ import { useState } from 'react'
 
 interface ProductVariantDataProps {
   product: Product
-  variants: ProductVariant[]
+  variants?: ProductVariant[]
 }
 
-const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, variants }) => {
+const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, variants = [] }) => {
   const { theme } = useTheme()
   const [accordionValue, setAccordionValue] = useState('')
   const [isAddFormOpen, setIsAddFormOpen] = useState(false)
@@ -129,7 +129,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
           <CardTitle>Variants</CardTitle>
           <CardDescription>Add/update the buying, selling and retail prices of product variants.</CardDescription>
         </CardHeader>
-        <CardContent className='pb-3 lg:p-6'>
+        <CardContent className='pb-3 lg:p-6 lg:pt-0'>
           {/* Desktop view */}
           <Table className='hidden lg:block'>
             <TableHeader>
@@ -143,176 +143,176 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
               </TableRow>
             </TableHeader>
             <TableBody>
-              {variants.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className='text-center'>
-                    No variants found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                variants.map(variant => (
-                  <TableRow key={variant.id}>
-                    <TableCell>
-                      {variant.id !== data.id ? (
-                        <>
-                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
-                          <div>{variant.attributes.sku}</div>
-                        </>
-                      ) : (
-                        <>
-                          <Label htmlFor={`edit_sku_${variant.id}`} className='sr-only'>
-                            SKU
-                          </Label>
-                          <Input id={`edit_sku_${variant.id}`} className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                        </>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {variant.id !== data.id ? (
-                        <>
-                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
-                          <div>{variant.attributes.quantity}</div>
-                        </>
-                      ) : (
-                        <>
-                          <Label htmlFor={`edit_quantity_${variant.id}`} className='sr-only'>
-                            Quantity
-                          </Label>
-                          <InputNumber id={`edit_quantity_${variant.id}`} className='px-2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
-                        </>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {variant.id !== data.id ? (
-                        <>
-                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
-                          <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
-                        </>
-                      ) : (
-                        <>
-                          <Label htmlFor={`edit_buying_price_${variant.id}`} className='sr-only'>
-                            Buying Price
-                          </Label>
-                          <InputNumber id={`edit_buying_price_${variant.id}`} className='px-2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying Price' />
-                        </>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {variant.id !== data.id ? (
-                        <>
-                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
-                          <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
-                        </>
-                      ) : (
-                        <>
-                          <Label htmlFor={`edit_retail_price_${variant.id}`} className='sr-only'>
-                            Retail Price
-                          </Label>
-                          <InputNumber id={`edit_retail_price_${variant.id}`} className='px-2' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail Price' />
-                        </>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {variant.id !== data.id ? (
-                        <>
-                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                          <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
-                        </>
-                      ) : (
-                        <>
-                          <Label htmlFor={`edit_selling_price_${variant.id}`} className='sr-only'>
-                            Selling Price
-                          </Label>
-                          <InputNumber id={`edit_selling_price_${variant.id}`} className='px-2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling Price' />
-                        </>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <span className='sr-only'>Actions</span>
-                      {variant.id !== data.id ? (
-                        <div className='flex h-full items-center justify-center'>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
-                                  <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                  <span className='sr-only'>Edit</span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Edit</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                {variant.attributes.status === 'active' ? (
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
-                                    <SquareCheckBig className='h-4 w-4 text-foreground group-hover:text-foreground' />
-                                    <span className='sr-only'>Status</span>
+              {variants.length > 0
+                ? variants.map(variant => (
+                    <TableRow key={variant.id}>
+                      <TableCell>
+                        {variant.id !== data.id ? (
+                          <>
+                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
+                            <div>{variant.attributes.sku}</div>
+                          </>
+                        ) : (
+                          <>
+                            <Label htmlFor={`edit_sku_${variant.id}`} className='sr-only'>
+                              SKU
+                            </Label>
+                            <Input id={`edit_sku_${variant.id}`} className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {variant.id !== data.id ? (
+                          <>
+                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                            <div>{variant.attributes.quantity}</div>
+                          </>
+                        ) : (
+                          <>
+                            <Label htmlFor={`edit_quantity_${variant.id}`} className='sr-only'>
+                              Quantity
+                            </Label>
+                            <InputNumber id={`edit_quantity_${variant.id}`} className='px-2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {variant.id !== data.id ? (
+                          <>
+                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                          </>
+                        ) : (
+                          <>
+                            <Label htmlFor={`edit_buying_price_${variant.id}`} className='sr-only'>
+                              Buying Price
+                            </Label>
+                            <InputNumber id={`edit_buying_price_${variant.id}`} className='px-2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying Price' />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {variant.id !== data.id ? (
+                          <>
+                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
+                          </>
+                        ) : (
+                          <>
+                            <Label htmlFor={`edit_retail_price_${variant.id}`} className='sr-only'>
+                              Retail Price
+                            </Label>
+                            <InputNumber id={`edit_retail_price_${variant.id}`} className='px-2' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail Price' />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {variant.id !== data.id ? (
+                          <>
+                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                          </>
+                        ) : (
+                          <>
+                            <Label htmlFor={`edit_selling_price_${variant.id}`} className='sr-only'>
+                              Selling Price
+                            </Label>
+                            <InputNumber id={`edit_selling_price_${variant.id}`} className='px-2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling Price' />
+                          </>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <span className='sr-only'>Actions</span>
+                        {variant.id !== data.id ? (
+                          <div className='flex h-full items-center justify-center'>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                                    <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                    <span className='sr-only'>Edit</span>
                                   </Button>
-                                ) : (
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
-                                    <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                                    <span className='sr-only'>Status</span>
-                                  </Button>
-                                )}
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{toTitleCase(variant.attributes.status)}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Edit</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  {variant.attributes.status === 'active' ? (
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
+                                      <SquareCheckBig className='h-4 w-4 text-foreground group-hover:text-foreground' />
+                                      <span className='sr-only'>Status</span>
+                                    </Button>
+                                  ) : (
+                                    <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
+                                      <SquareIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                      <span className='sr-only'>Status</span>
+                                    </Button>
+                                  )}
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{toTitleCase(variant.attributes.status)}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
 
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant(variant)}>
-                                  <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
-                                  <span className='sr-only'>Remove</span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Remove</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      ) : (
-                        <div className='flex h-full items-center justify-center gap-3'>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900' onClick={handleEditVariant}>
-                                  <CheckIcon className='h-4 w-4 dark:file:text-primary-foreground/80 dark:file:group-hover:text-green-600' />
-                                  <span className='sr-only'>Update</span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Update</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setData(initialFormData)}>
-                                  <XIcon className='h-4 w-4 text-white/80 group-hover:text-white' />
-                                  <span className='sr-only'>Discard</span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Discard</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant(variant)}>
+                                    <Trash2Icon className='h-4 w-4 text-destructive group-hover:text-red-700' />
+                                    <span className='sr-only'>Remove</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Remove</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        ) : (
+                          <div className='flex h-full items-center justify-center gap-3'>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant={theme === 'dark' ? 'default' : 'outline'} size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900' onClick={handleEditVariant}>
+                                    <CheckIcon className='h-4 w-4 dark:file:text-primary-foreground/80 dark:file:group-hover:text-green-600' />
+                                    <span className='sr-only'>Update</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Update</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setData(initialFormData)}>
+                                    <XIcon className='h-4 w-4 text-white/80 group-hover:text-white' />
+                                    <span className='sr-only'>Discard</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Discard</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : !isAddFormOpen && (
+                    <TableRow className='hover:bg-background'>
+                      <TableCell colSpan={6} className='pb-0 text-center'>
+                        No variants added yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
               {isAddFormOpen && (
                 <TableRow>
                   <TableCell className='px-1'>
@@ -379,118 +379,120 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
           </Table>
           {/* Mobile view */}
           <Accordion type='single' value={accordionValue} onValueChange={setAccordionValue} collapsible className='w-full lg:hidden'>
-            {variants.map((variant, index) => (
-              <AccordionItem key={variant.id} value={variant.id}>
-                {variant.id !== data.id ? (
-                  <>
-                    <AccordionTrigger className={cn('py-2.5', index !== variants.length - 1 ? 'border-b' : '')}>
-                      <div>
-                        <span className='font-semibold text-muted-foreground'>SKU:</span> {variant.attributes.sku}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className='space-y-3 pb-0 pt-4'>
-                      <div className='flex items-center justify-between'>
-                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
-                        <div className='text-right font-medium'>{variant.attributes.quantity}</div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
-                        <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
+            {variants.length > 0
+              ? variants.map((variant, index) => (
+                  <AccordionItem key={variant.id} value={variant.id}>
+                    {variant.id !== data.id ? (
+                      <>
+                        <AccordionTrigger className={cn('py-2.5', index !== variants.length - 1 ? 'border-b' : '')}>
+                          <div>
+                            <span className='font-semibold text-muted-foreground'>SKU:</span> {variant.attributes.sku}
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className='space-y-3 pb-0 pt-4'>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
+                            <div className='text-right font-medium'>{variant.attributes.quantity}</div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
 
-                        <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                        <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
-                      </div>
-                      <div className='grid grid-cols-3 space-x-2'>
-                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
-                          <div className='flex items-center gap-2'>
-                            <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                            <span className='tracking-wider'>Edit</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                           </div>
-                        </Button>
-                        <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
-                          <div className='flex items-center gap-2'>
-                            {variant.attributes.status === 'active' ? <SquareCheckBig className='bg- h-4 w-4 text-foreground' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
-                            <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
+                          <div className='flex items-center justify-between'>
+                            <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
+                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
                           </div>
-                        </Button>
+                          <div className='grid grid-cols-3 space-x-2'>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                              <div className='flex items-center gap-2'>
+                                <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                <span className='tracking-wider'>Edit</span>
+                              </div>
+                            </Button>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
+                              <div className='flex items-center gap-2'>
+                                {variant.attributes.status === 'active' ? <SquareCheckBig className='bg- h-4 w-4 text-foreground' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
+                                <span className={cn('tracking-wider', variant.attributes.status === 'active' ? 'text-foreground' : 'text-muted-foreground')}>{toTitleCase(variant.attributes.status)}</span>
+                              </div>
+                            </Button>
 
-                        <Button type='button' variant='ghost' size='sm' className='group inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant(variant)}>
-                          <div className='flex items-center gap-2'>
-                            <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
-                            <span className='tracking-wider'>Remove</span>
+                            <Button type='button' variant='ghost' size='sm' className='group inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleDeleteVariant(variant)}>
+                              <div className='flex items-center gap-2'>
+                                <Trash2Icon className='h-4 w-4 text-red-400 group-hover:text-red-600' />
+                                <span className='tracking-wider'>Remove</span>
+                              </div>
+                            </Button>
                           </div>
-                        </Button>
-                      </div>
-                    </AccordionContent>
-                  </>
-                ) : (
-                  <AccordionContent className='pb-0'>
-                    <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
-                      <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Edit Variant</h1>
-                      <div className='flex items-center justify-between'>
-                        <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
-                        <div>
-                          <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                        </div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
-                        <div>
-                          <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
-                        </div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <Label htmlFor={`edit_buying_price_2_${variant.id}`}>Buying Price</Label>
-                        <div>
-                          <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
-                        </div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <Label htmlFor={`edit_retail_price_2_${variant.id}`}>Retail Price</Label>
-                        <div>
-                          <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
-                        </div>
-                      </div>
-                      <div className='flex items-center justify-between'>
-                        <Label htmlFor={`edit_selling_price_2_${variant.id}`}>Selling Price</Label>
-                        <div>
-                          <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
-                        </div>
-                      </div>
-                      <div className='flex items-center justify-center space-x-2'>
-                        <Button
-                          type='button'
-                          variant='outline'
-                          size='sm'
-                          className='group inline-flex min-w-24 items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
-                          onClick={() => {
-                            setData(initialFormData)
-                            setAccordionValue('')
-                          }}
-                        >
-                          <div className='flex items-center gap-2'>
-                            <XIcon className='h-4 w-4 text-red-400' />
-                            <span className='tracking-wider'>Discard</span>
+                        </AccordionContent>
+                      </>
+                    ) : (
+                      <AccordionContent className='pb-0'>
+                        <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
+                          <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Edit Variant</h1>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
+                            <div>
+                              <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
+                            </div>
                           </div>
-                        </Button>
-                        <Button type='button' variant='outline' size='sm' className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleEditVariant}>
-                          <div className='flex items-center gap-2'>
-                            <CheckIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
-                            <span className='tracking-wider'>Add</span>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
+                            <div>
+                              <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
+                            </div>
                           </div>
-                        </Button>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                )}
-              </AccordionItem>
-            ))}
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor={`edit_buying_price_2_${variant.id}`}>Buying Price</Label>
+                            <div>
+                              <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor={`edit_retail_price_2_${variant.id}`}>Retail Price</Label>
+                            <div>
+                              <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-between'>
+                            <Label htmlFor={`edit_selling_price_2_${variant.id}`}>Selling Price</Label>
+                            <div>
+                              <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
+                            </div>
+                          </div>
+                          <div className='flex items-center justify-center space-x-2'>
+                            <Button
+                              type='button'
+                              variant='outline'
+                              size='sm'
+                              className='group inline-flex min-w-24 items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                              onClick={() => {
+                                setData(initialFormData)
+                                setAccordionValue('')
+                              }}
+                            >
+                              <div className='flex items-center gap-2'>
+                                <XIcon className='h-4 w-4 text-red-400' />
+                                <span className='tracking-wider'>Discard</span>
+                              </div>
+                            </Button>
+                            <Button type='button' variant='outline' size='sm' className='group min-w-24 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={handleEditVariant}>
+                              <div className='flex items-center gap-2'>
+                                <CheckIcon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
+                                <span className='tracking-wider'>Add</span>
+                              </div>
+                            </Button>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    )}
+                  </AccordionItem>
+                ))
+              : !isAddFormOpen && <p className='pb-3 text-center'>No variants added yet.</p>}
             <AccordionItem value='add_variant'>
               <AccordionContent className='pb-0'>
                 <div className={`space-y-3 border-t pt-2.5`}>

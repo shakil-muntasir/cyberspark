@@ -20,15 +20,10 @@ class ProductRequest extends FormRequest
         }
 
         return [
-            'sku' => 'required|string|unique:products,sku',
-            'sku' => ['required', 'string', Rule::unique('products', 'sku')->ignore($this->route('product'))],
             'name' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'buying_price' => 'required|numeric',
-            'retail_price' => 'nullable|numeric',
-            'selling_price' => 'required|numeric',
-            'status' => ['string', Rule::in(['active', 'inactive'])],
+            'status' => ['nullable', 'string', Rule::in(['active', 'inactive'])],
         ];
     }
 

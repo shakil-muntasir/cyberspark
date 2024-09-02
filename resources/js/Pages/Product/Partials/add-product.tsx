@@ -1,26 +1,32 @@
 import { useState } from 'react'
-import { Loader2, PlusCircle, AlertCircle } from 'lucide-react'
+import { useForm } from '@inertiajs/react'
+import { AlertCircle, Loader2, PlusCircle } from 'lucide-react'
 
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
+import { ScrollArea } from '@/Components/ui/scroll-area'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Separator } from '@/Components/ui/separator'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/Components/ui/sheet'
-import { useToast } from '@/Components/ui/use-toast'
 import { Textarea } from '@/Components/ui/textarea'
-import { ScrollArea } from '@/Components/ui/scroll-area'
-import InputError from '@/Components/InputError'
-import { useForm } from '@inertiajs/react'
-import { ProductForm } from '@/Pages/Product/type'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
+import { useToast } from '@/Components/ui/use-toast'
 
-export default function AddProduct() {
+import InputError from '@/Components/InputError'
+import { ProductForm } from '@/Pages/Product/type'
+import { SelectOption } from '@/Types'
+
+interface AddProductProps {
+  categories: SelectOption[]
+}
+
+const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
   const { toast } = useToast()
 
   const { data, setData, post, errors, clearErrors, reset } = useForm<ProductForm>({
     name: '',
     description: '',
-    category: '',
+    category_id: '',
     status: ''
   })
   const [open, setOpen] = useState(false)
@@ -79,12 +85,6 @@ export default function AddProduct() {
     }
   }
 
-  const categories = [
-    { label: 'Clothing', value: 'clothing' },
-    { label: 'Electronics', value: 'electronics' },
-    { label: 'Accessories', value: 'accessories' }
-  ]
-
   return (
     <Sheet open={open} onOpenChange={handleFormOpen}>
       <SheetTrigger asChild>
@@ -105,12 +105,38 @@ export default function AddProduct() {
           <form onSubmit={handleAddProduct} className='mx-6 mb-8 mt-3 grid gap-3'>
             <div className='grid gap-2'>
               <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
-                Name
+                Product Name
               </Label>
               <div className='space-y-px'>
-                <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Product Name' />
+                <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' />
                 <InputError message={errors.name} />
               </div>
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='category_id' className={errors.category_id?.length ? 'text-destructive' : ''}>
+                Category
+              </Label>
+              <Select
+                name='category_id'
+                value={data.category_id}
+                onValueChange={value => {
+                  setData('category_id', value)
+                  clearErrors('category_id')
+                }}
+              >
+                <SelectTrigger id='category_id' aria-label='Select Category'>
+                  <SelectValue placeholder='Select Category' />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category.value} value={category.value}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <InputError message={errors.category_id} />
             </div>
 
             <div className='grid gap-2'>
@@ -118,35 +144,23 @@ export default function AddProduct() {
                 Description
               </Label>
               <div className='space-y-px'>
-                <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Product Description' />
+                <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' />
                 <InputError message={errors.description} />
-              </div>
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='category' className={errors.category?.length ? 'text-destructive' : ''}>
-                Category
-              </Label>
-              <div className='space-y-px'>
-                <Select name='category' value={data.category} onValueChange={value => setData('category', value)}>
-                  <SelectTrigger id='category' aria-label='Select category'>
-                    <SelectValue placeholder='Select category' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <InputError message={errors.category} />
               </div>
             </div>
 
             <SheetFooter>
               <div className='flex justify-end gap-2'>
-                <Button variant='secondary' onClick={() => setOpen(false)}>
+                <Button
+                  variant='secondary'
+                  onClick={() => {
+                    setOpen(false)
+                    setTimeout(() => {
+                      reset()
+                      clearErrors()
+                    }, 200)
+                  }}
+                >
                   Cancel
                 </Button>
                 <Button type='submit' className='w-32' disabled={loading}>
@@ -172,3 +186,5 @@ export default function AddProduct() {
     </Sheet>
   )
 }
+
+export default AddProduct

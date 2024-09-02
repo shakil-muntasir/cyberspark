@@ -8,10 +8,15 @@ import PageHeader from '@/Layouts/Partials/page-header'
 import AddProduct from '@/Pages/Product/Partials/add-product'
 import DataTable from '@/Components/Table'
 import { columns as initialColumns } from '@/Pages/Product/_data/columns'
-import { TableData } from '@/Types'
+import { SelectOption, TableData } from '@/Types'
 import { Product } from '@/Pages/Product/type'
 
-export default function ProductsList({ products }: { products: TableData<Product> }) {
+interface ProductsListProps {
+  products: TableData<Product>
+  categories: SelectOption[]
+}
+
+const ProductsList: React.FC<ProductsListProps> = ({ products, categories }) => {
   const page = usePage()
   const [columns, setColumns] = useState(initialColumns)
 
@@ -41,7 +46,7 @@ export default function ProductsList({ products }: { products: TableData<Product
     <AuthenticatedLayout title='Products'>
       <div className='flex items-center justify-between'>
         <PageHeader title='Products' description='This is the products page. You can view, edit, and delete products here.' />
-        <AddProduct />
+        <AddProduct categories={categories} />
       </div>
 
       <Separator className='mt-4' />
@@ -59,3 +64,5 @@ export default function ProductsList({ products }: { products: TableData<Product
     </AuthenticatedLayout>
   )
 }
+
+export default ProductsList

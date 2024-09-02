@@ -29,7 +29,7 @@ class Category extends Model
         return self::all()->map(function ($category) {
             return [
                 'label' => Str::title(str_replace('_', ' ', $category->name)),
-                'value' => $category->id,
+                'value' => (string) $category->id,
             ];
         })->toArray();
     }

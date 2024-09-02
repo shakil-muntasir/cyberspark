@@ -49,8 +49,8 @@ export type ProductVariant = {
 export type ProductForm = {
     name: string
     description: string
-    category?: string
-    status?: string
+    category_id: string
+    status: string
 }
 
 export type ProductVariantForm = {
@@ -60,9 +60,4 @@ export type ProductVariantForm = {
     buying_price: string
     retail_price?: string
     selling_price: string
-}
-
-export type ProductStatus = {
-    label: string
-    value: string
 }

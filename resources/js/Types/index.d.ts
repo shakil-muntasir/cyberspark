@@ -69,3 +69,8 @@ export type FormKeyOf<ObjectType> = {
 export type FormErrors<ObjectType> = Partial<{
     [Key in FormKeyOf<ObjectType>]: string
 }>
+
+export type SelectOption = {
+    label: string
+    value: string
+}
