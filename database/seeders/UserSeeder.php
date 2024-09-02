@@ -10,20 +10,19 @@ use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // Disable the observer in the trait
-        User::withoutEvents(function () {
-            foreach (range(1, 25) as $i) {
-                $user = User::factory()->create([
-                    'created_by_id' => User::inRandomOrder()->first()->id,
-                    'updated_by_id' => User::inRandomOrder()->first()->id,
-                ]);
-                Address::factory()->create(['user_id' => $user->id]);
-            }
-        });
+        foreach (range(1, 25) as $i) {
+            $user = User::factory()->create([
+                'created_by_id' => User::inRandomOrder()->first()->id,
+                'updated_by_id' => User::inRandomOrder()->first()->id,
+            ]);
+            Address::factory()->create(['user_id' => $user->id]);
+        }
     }
 }

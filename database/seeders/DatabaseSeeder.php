@@ -12,10 +12,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // NOTE: order of seeder classes is important!
+
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
             AdminSeeder::class, // Role and Permission Seeder must be called before AdminSeeder
+            UserSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
