@@ -8,6 +8,7 @@ export type Acquisition = {
             id: string
             invoice_number: string
             acquired_date: string
+            products_count: string
             created_by_id: string
             updated_by_id: string
             created_by: string

@@ -18,7 +18,7 @@ const DeleteModal = () => {
               <p className='text-xs text-muted-foreground'>ID: {data?.id}</p>
             </span>
           )}
-          <AlertDialogDescription>This action cannot be undone. This will permanently delete this {data.title} and remove it from the server.</AlertDialogDescription>
+          <AlertDialogDescription>This action cannot be undone. This will permanently delete this {data.title.toLowerCase()} and remove it from the server.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>

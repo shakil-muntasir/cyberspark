@@ -35,8 +35,8 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
 
   const [filterValue, setFilterValue] = useState<string[]>(() => {
     const urlParams = new URLSearchParams(page.url.split('?')[1] || '')
-    const validKeys = columns.find(column => column.id === filterColumnBy)!.options!.map(option => option.value)
-    const filters = Array.from(urlParams.keys()).filter(key => validKeys.includes(key))
+    const validKeys = columns.find(column => column.id === filterColumnBy)?.options?.map(option => option.value)
+    const filters = Array.from(urlParams.keys()).filter(key => validKeys?.includes(key))
 
     return filters.length > 0 ? filters : []
   })
@@ -54,7 +54,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
     }
 
     // Handle filter parameters
-    column.options!.forEach(option => {
+    column?.options?.forEach(option => {
       if (filters.includes(option.value)) {
         params.set(option.value, 'true')
       } else {
@@ -112,10 +112,11 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
     skipEffect.current = true // Set the flag to skip the next useEffect trigger
     setFilterValue([])
     setSearch('') // Clear the search input
-    updateURL(undefined, []) // Call updateURL directly without triggering useEffect
+    // Clear all query parameters
+    const baseUrl = page.url.split('?')[0]
+    router.get(baseUrl, {}, { preserveState: true, replace: true })
   }
 
-  // Determine if there are any query parameters to show the "Clear Filters" button
   const hasQueryParams = !!new URLSearchParams(page.url.split('?')[1] || '').toString()
 
   return (
@@ -123,12 +124,12 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
       <div className='flex flex-1 items-center space-x-2'>
         <Input id='table-search' placeholder={`Search ${searchPlaceholder}...`} value={search || ''} onChange={e => setSearch(e.target.value)} className='h-8 w-[150px] lg:w-[250px]' />
 
-        {!disableFilter && (
+        {!disableFilter && column?.options && (
           <Popover>
             <PopoverTrigger asChild>
               <Button variant='outline' size='sm' className='h-8 border-dashed'>
                 <PlusCircledIcon className='mr-2 h-4 w-4' />
-                {column.label}
+                {column?.label}
                 {filterValue.length > 0 && (
                   <>
                     <Separator orientation='vertical' className='mx-2 h-4' />
@@ -156,11 +157,11 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
             </PopoverTrigger>
             <PopoverContent className='w-[200px] p-0' align='start'>
               <Command>
-                <CommandInput placeholder={column.label} />
+                <CommandInput placeholder={column?.label} />
                 <CommandList>
                   <CommandEmpty>No results found.</CommandEmpty>
                   <CommandGroup>
-                    {column.options!.map(option => {
+                    {column?.options?.map(option => {
                       const isSelected = filterValue.includes(option.value)
 
                       return (
@@ -197,13 +198,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
         )}
 
         {hasQueryParams && (
-          <Button
-            variant='secondary'
-            className='flex h-8 items-center gap-2 px-3'
-            onClick={() => {
-              clearFilter()
-            }}
-          >
+          <Button variant='secondary' className='flex h-8 items-center gap-2 px-3' onClick={clearFilter}>
             <CircleXIcon className='h-4 w-4' />
             <span>Clear Filters</span>
           </Button>
