@@ -10,7 +10,7 @@ import { columns as initialColumns } from '@/Pages/Acquisition/data/columns'
 import DataTable from '@/Components/Table'
 import { Separator } from '@/Components/ui/separator'
 
-import { Acquisition } from '@/Pages/Acquisition/type'
+import { Acquisition } from '@/Pages/Acquisition/types'
 import { SelectOption, TableData } from '@/Types'
 
 interface AcquisitionsListProps {

@@ -5,7 +5,7 @@ import { Pencil2Icon } from '@radix-ui/react-icons'
 import { Button } from '@/Components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { useTheme } from '@/Providers/theme-provider'
-import { AcquiredProductForm } from '@/Pages/Acquisition/type'
+import { AcquiredProductForm } from '@/Pages/Acquisition/types'
 
 import { formatCurrency } from '@/Lib/utils'
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AcquisitionRequest;
-use App\Http\Resources\AcquisitionResource;
+use App\Http\Resources\AcquisitionCollection;
 use App\Models\Acquisition;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +20,7 @@ class AcquisitionController extends Controller
         $acquisitions = Acquisition::filterAndSort($request->validatedParams());
 
         return inertia('Acquisition/Index', [
-            'acquisitions' => AcquisitionResource::collection($acquisitions),
+            'acquisitions' => new AcquisitionCollection($acquisitions),
             'categories' => Category::getAllOptions(),
         ]);
     }

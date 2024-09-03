@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import InputError from '@/Components/InputError'
 
 import { abbreviateWords } from '@/Lib/utils'
-import { AcquiredProductForm as AcquiredProductFormType } from '@/Pages/Acquisition/type'
+import { AcquiredProductForm as AcquiredProductFormType } from '@/Pages/Acquisition/types'
 import { SelectOption } from '@/Types'
 
 const productSchema = z.object({

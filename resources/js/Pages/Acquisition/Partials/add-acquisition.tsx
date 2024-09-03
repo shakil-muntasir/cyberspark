@@ -14,7 +14,7 @@ import AcquiredProductForm from '@/Pages/Acquisition/Partials/acquired-product-f
 import PCAcquiredProductsList from '@/Pages/Acquisition/Partials/pc-acquired-product-list'
 import MobileAcquiredProductsList from '@/Pages/Acquisition/Partials/mobile-acquired-product-list'
 import useForm from '@/Hooks/form'
-import { AcquiredProductForm as AcquiredProductFormType, AcquisitionForm } from '@/Pages/Acquisition/type'
+import { AcquiredProductForm as AcquiredProductFormType, AcquisitionForm } from '@/Pages/Acquisition/types'
 import { SelectOption } from '@/Types'
 import { toast } from '@/Components/ui/use-toast'
 

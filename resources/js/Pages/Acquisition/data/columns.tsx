@@ -8,7 +8,7 @@ import { toast } from '@/Components/ui/use-toast'
 
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 
-import { Acquisition } from '@/Pages/Acquisition/type'
+import { Acquisition } from '@/Pages/Acquisition/types'
 import { TableColumn } from '@/Types'
 
 const handleCopyId = (id: string): void => {
