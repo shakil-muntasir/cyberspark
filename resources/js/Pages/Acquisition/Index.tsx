@@ -4,8 +4,10 @@ import { Separator } from '@/Components/ui/separator'
 import PageHeader from '@/Layouts/Partials/page-header'
 import AddAcquisition from '@/Pages/Acquisition/Partials/add-acquisition'
 import { SelectOption } from '@/Types'
+import { Acquisition } from '@/Pages/Acquisition/type'
 
 interface AcquisitionsListProps {
+  acquisitions: Acquisition[]
   categories: SelectOption[]
 }
 

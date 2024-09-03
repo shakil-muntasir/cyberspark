@@ -25,7 +25,7 @@ class Product extends Model
         'status' => ProductStatus::class
     ];
 
-    public function acquisitions(): BelongsTo
+    public function acquisition(): BelongsTo
     {
         return $this->belongsTo(Acquisition::class);
     }

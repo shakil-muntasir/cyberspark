@@ -23,6 +23,11 @@ class AcquisitionRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->isMethod('get')) {
+            // No validation for GET requests
+            return [];
+        }
+
         return [
             'invoice_number' => 'required',
             'acquired_date' => 'required|date',
@@ -35,6 +40,21 @@ class AcquisitionRequest extends FormRequest
             'products.*.buying_price' => 'required|numeric|min:0',
             'products.*.retail_price' => 'nullable|numeric|min:0',
             'products.*.selling_price' => 'required|numeric|min:0',
+        ];
+    }
+
+    /**
+     * Sanitize and retrieve query parameters.
+     *
+     * @return array<string, mixed>
+     */
+    public function validatedParams(): array
+    {
+        return [
+            'search' => $this->query('search', ''),
+            'sort_by' => $this->query('sortBy', null),
+            'sort_to' => $this->query('sortTo', null),
+            'per_page' => (int) $this->query('per_page', 10),
         ];
     }
 }
