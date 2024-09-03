@@ -1,3 +1,39 @@
+import { SelectOption } from '@/Types'
+
+type Attributes = {
+    id: string
+    name: string
+    email: string
+    phone: string
+    gender: string
+    image?: string
+    status: 'active' | 'inactive'
+    roles: SelectOption[]
+    created_by?: string
+    email_verified_at?: string
+    url: string
+}
+
+type Relationships = {
+    address?: Address
+    roles?: Role[]
+}
+
+export type User = {
+    type: string
+    id: string
+    attributes: Attributes
+    relationships: Relationships
+}
+
+export type UserResource = {
+    data: User
+}
+
+export type UserCollection = {
+    data: User[]
+}
+
 export type Address = {
     type: string
     id: string
@@ -21,30 +57,6 @@ export type Role = {
         value: string
         created_at: string
         updated_at: string
-    }
-}
-
-export type User = {
-    data: {
-        type: string
-        id: string
-        attributes: {
-            id: string
-            name: string
-            email: string
-            phone: string
-            gender: string
-            image?: string
-            status: 'active' | 'inactive'
-            roles: { label: string; value: string }[]
-            created_by?: string
-            email_verified_at?: string
-            url: string
-        }
-        relationships: {
-            address?: Address
-            roles?: Role[]
-        }
     }
 }
 

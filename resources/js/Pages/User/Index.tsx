@@ -9,7 +9,7 @@ import { Separator } from '@/Components/ui/separator'
 
 import { columns as initialColumns } from '@/Pages/User/_data/columns'
 import { SelectOption, TableData } from '@/Types'
-import { User } from '@/Pages/User/type'
+import { User } from '@/Pages/User/types'
 
 interface UsersListProps {
   genders: SelectOption[]

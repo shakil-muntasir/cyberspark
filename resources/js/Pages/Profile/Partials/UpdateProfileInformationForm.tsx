@@ -20,13 +20,13 @@ type UpdateUserProfileData = {
 }
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
-  const { data: user } = usePage<PageProps>().props.auth.user
+  const user = usePage<PageProps>().props.auth.user
 
   const [previewImage, setPreviewImage] = useState<string>('')
   const imageRef = useRef<HTMLInputElement>(null)
   const { data, setData, post, errors, clearErrors, processing, reset } = useForm<UpdateUserProfileData>({
-    name: user.attributes.name,
-    email: user.attributes.email,
+    name: user.data.attributes.name,
+    email: user.data.attributes.email,
     image: undefined
   })
 
@@ -69,13 +69,13 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status }: { 
 
   return (
     <section className='lg:pt-6'>
-      <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex pb-4 lg:hidden' />
+      <UserAvatar inputRef={imageRef} processing={processing} src={user.data.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='flex pb-4 lg:hidden' />
       <Card className='flex flex-col-reverse items-center lg:flex-row'>
         <div className='max-w-xl flex-1'>
           <CardHeader className='max-w-xl'>
             <h2 className='text-lg font-medium text-foreground'>Profile Information</h2>
 
-            <p className='mt-1 text-sm text-muted-foreground'>Update your account's profile information and email address.</p>
+            <p className='mt-1 text-sm text-muted-foreground'>Update your account&apos;s profile information and email address.</p>
           </CardHeader>
           <form onSubmit={submit}>
             <CardContent className='max-w-xl pb-2 lg:pr-0'>
@@ -143,7 +143,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status }: { 
                 </div>
               </div>
 
-              {mustVerifyEmail && user.attributes.email_verified_at === null && (
+              {mustVerifyEmail && user.data.attributes.email_verified_at === null && (
                 <div>
                   <p className='mt-2 text-sm text-gray-800'>
                     Your email address is unverified.
@@ -167,7 +167,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status }: { 
           </form>
         </div>
 
-        <UserAvatar inputRef={imageRef} processing={processing} src={user.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='hidden lg:flex' />
+        <UserAvatar inputRef={imageRef} processing={processing} src={user.data.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='hidden lg:flex' />
       </Card>
     </section>
   )

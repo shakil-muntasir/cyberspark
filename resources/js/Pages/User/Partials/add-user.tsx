@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { useToast } from '@/Components/ui/use-toast'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import InputError from '@/Components/InputError'
-import { UserForm } from '@/Pages/User/type'
+import { UserForm } from '@/Pages/User/types'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { CheckCircledIcon } from '@radix-ui/react-icons'
 import { Avatar, AvatarImage } from '@/Components/ui/avatar'

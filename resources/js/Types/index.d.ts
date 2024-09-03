@@ -1,8 +1,8 @@
-import { User } from '@/Pages/User/type'
+import { UserResource } from '@/Pages/User/types'
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
-        user: User
+        user: UserResource
     }
 }
 

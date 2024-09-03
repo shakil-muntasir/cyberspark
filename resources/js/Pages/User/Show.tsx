@@ -22,12 +22,12 @@ import { MultiSelect } from '@/Components/MultiSelect'
 import UserAvatar from '@/Components/UserAvatar'
 
 import { cn, getImageData } from '@/Lib/utils'
-import { Role, User, UserForm } from '@/Pages/User/type'
+import { Role, UserForm, UserResource } from '@/Pages/User/types'
 import { SelectOption } from '@/Types'
 import useForm from '@/Hooks/form'
 
 interface UserProps {
-  user: User
+  user: UserResource
   genders: SelectOption[]
   roles: SelectOption[]
   states: SelectOption[]
@@ -215,7 +215,7 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
                 </Card>
               </div>
               <div className='flex flex-col-reverse gap-4 lg:flex-row lg:gap-8'>
-                <div className='lg:-mt-58 grid auto-rows-max items-start gap-4 lg:w-72 lg:min-w-72 lg:gap-8'>
+                <div className='grid auto-rows-max items-start gap-4 lg:-mt-58 lg:w-72 lg:min-w-72 lg:gap-8'>
                   <Card>
                     <CardHeader>
                       <CardTitle>Address Details</CardTitle>

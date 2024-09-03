@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Enums\State;
 use App\Enums\UserStatus;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
@@ -26,7 +27,7 @@ class UserController extends Controller
             'genders' => Gender::getAllOptions(),
             'roles' => Role::getAllOptions(),
             'states' => State::getAllOptions(),
-            'users' => UserResource::collection($users)
+            'users' => new UserCollection($users)
         ]);
     }
 
