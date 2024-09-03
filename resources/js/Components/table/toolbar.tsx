@@ -12,6 +12,7 @@ import { useEffect, useState, useRef } from 'react'
 import { router, usePage } from '@inertiajs/react'
 import { TableProps } from '@/Types'
 import { DataTableViewOptions } from '@/Components/table/view-options'
+import { CircleXIcon } from 'lucide-react'
 
 interface DataTableToolbarProps<T> extends Omit<TableProps<T>, 'data' | 'pagination'> {
   disableFilter?: boolean
@@ -110,10 +111,12 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
   const clearFilter = () => {
     skipEffect.current = true // Set the flag to skip the next useEffect trigger
     setFilterValue([])
-    updateURL(search, []) // Call updateURL directly without triggering useEffect
+    setSearch('') // Clear the search input
+    updateURL(undefined, []) // Call updateURL directly without triggering useEffect
   }
 
-  // TODO: add clear filter feature
+  // Determine if there are any query parameters to show the "Clear Filters" button
+  const hasQueryParams = !!new URLSearchParams(page.url.split('?')[1] || '').toString()
 
   return (
     <div className='flex items-center py-4'>
@@ -191,6 +194,19 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
               </Command>
             </PopoverContent>
           </Popover>
+        )}
+
+        {hasQueryParams && (
+          <Button
+            variant='secondary'
+            className='flex h-8 items-center gap-2 px-3'
+            onClick={() => {
+              clearFilter()
+            }}
+          >
+            <CircleXIcon className='h-4 w-4' />
+            <span>Clear Filters</span>
+          </Button>
         )}
       </div>
 
