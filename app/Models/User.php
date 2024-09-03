@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasOne(Address::class, 'user_id');
     }
 
+    public function acquisitions(): HasMany
+    {
+        return $this->hasMany(Acquisition::class, 'created_by_id');
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'created_by_id');
@@ -190,7 +195,11 @@ class User extends Authenticatable
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
-            ->orderBy($params['sort_by'] ?? 'id', $params['sort_to'] ?? 'asc')
+            ->when(
+                isset($params['sort_by']) && isset($params['sort_to']),
+                fn($q) => $q->orderBy($params['sort_by'], $params['sort_to']),
+                fn($q) => $q->latest('updated_at') // Use 'latest' method for descending order by 'updated_at' if no sort parameters are provided
+            )
             ->paginate($params['per_page'] ?? 10);
     }
 }

@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('/acquisitions')->name('acquisitions.')->group(function () {
         Route::get('/', [AcquisitionController::class, 'index'])->name('index');
+        Route::post('/', [AcquisitionController::class, 'store'])->name('store');
     });
 
     Route::prefix('/products')->name('products.')->group(function () {

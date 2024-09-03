@@ -16,6 +16,7 @@ import MobileAcquiredProductsList from '@/Pages/Acquisition/Partials/mobile-acqu
 import useForm from '@/Hooks/form'
 import { AcquiredProductForm as AcquiredProductFormType, AcquisitionForm } from '@/Pages/Acquisition/type'
 import { SelectOption } from '@/Types'
+import { toast } from '@/Components/ui/use-toast'
 
 interface AddAcquisitionProps {
   categories: SelectOption[]
@@ -29,11 +30,45 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
   const [showEditConfirmation, setShowEditConfirmation] = useState(false) // Manage the popover state for edit confirmation
   const [discardFormData, setDiscardFormData] = useState(false)
 
-  const { data, setData, clearErrors, reset } = useForm<AcquisitionForm>({
+  const { data, post, setData, clearErrors, reset } = useForm<AcquisitionForm>({
     invoice_number: '',
     acquired_date: '',
     products: []
   })
+
+  const handleAcquisitionSubmit = () => {
+    post(route('acquisitions.store'), {
+      onSuccess: handleSuccess,
+      onError: handleError
+    })
+  }
+
+  const handleSuccess = () => {
+    setTimeout(() => {
+      setOpenAddAcquisitionDialog(false)
+      reset()
+      toast({
+        title: 'Success!',
+        description: 'The acquisition has been added successfully.',
+        duration: 2000
+      })
+    }, 200)
+  }
+
+  const handleError = (errors: Partial<Record<keyof AcquiredProductFormType, string>>) => {
+    toast({
+      variant: 'destructive',
+      title: 'Error adding acquisition!',
+      description: (
+        <div className='space-y-1'>
+          {Object.values(errors).map((error, index) => (
+            <p key={index}>• {error}</p>
+          ))}
+        </div>
+      ),
+      duration: 3000
+    })
+  }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
@@ -162,7 +197,9 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
             >
               Cancel
             </Button>
-            <Button type='submit'>Save Acquisition</Button>
+            <Button type='button' onClick={handleAcquisitionSubmit}>
+              Save Acquisition
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>

@@ -279,7 +279,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
         </div>
         <div className='grid gap-2'>
           <Label htmlFor='description'>Description</Label>
-          <Textarea id='description' value={productForm.description} onChange={handleInputChange} name='description' rows={4} placeholder='Description' />
+          <Textarea id='description' name='description' value={productForm.description} onChange={handleInputChange} rows={4} placeholder='Description' />
         </div>
       </div>
       <DialogFooter>

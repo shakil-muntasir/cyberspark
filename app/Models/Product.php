@@ -7,6 +7,8 @@ use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class Product extends Model
@@ -23,12 +25,17 @@ class Product extends Model
         'status' => ProductStatus::class
     ];
 
-    public function category()
+    public function acquisitions(): BelongsTo
+    {
+        return $this->belongsTo(Acquisition::class);
+    }
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function variants()
+    public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
     }
@@ -101,7 +108,11 @@ class Product extends Model
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
-            ->orderBy($params['sort_by'] ?? 'id', $params['sort_to'] ?? 'asc')
+            ->when(
+                isset($params['sort_by']) && isset($params['sort_to']),
+                fn($q) => $q->orderBy($params['sort_by'], $params['sort_to']),
+                fn($q) => $q->latest('updated_at') // Use 'latest' method for descending order by 'updated_at' if no sort parameters are provided
+            )
             ->paginate($params['per_page'] ?? 10);
     }
 }

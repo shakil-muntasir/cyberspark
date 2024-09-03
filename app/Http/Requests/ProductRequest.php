@@ -38,8 +38,8 @@ class ProductRequest extends FormRequest
             'search' => $this->query('search', ''),
             'active' => filter_var($this->query('active'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
             'inactive' => filter_var($this->query('inactive'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-            'sort_by' => $this->query('sortBy', 'id'),
-            'sort_to' => $this->query('sortTo', 'asc'),
+            'sort_by' => $this->query('sortBy', null),
+            'sort_to' => $this->query('sortTo', null),
             'per_page' => (int) $this->query('per_page', 10),
         ];
     }
