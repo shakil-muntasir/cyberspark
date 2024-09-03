@@ -31,7 +31,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
             <MobileNavigation />
             <DynamicBreadcrumb />
             <div className='relative ml-auto flex-1 md:grow-0'>
-              <SearchIcon className='absolute left-2.5 top-3 h-4 w-4 text-muted-foreground' />
+              <SearchIcon className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input id='search' type='search' name='search' className='w-full rounded-md bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' />
             </div>
             <MakeSell />
