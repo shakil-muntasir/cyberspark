@@ -13,7 +13,7 @@ import { Textarea } from '@/Components/ui/textarea'
 import { useToast } from '@/Components/ui/use-toast'
 
 import InputError from '@/Components/InputError'
-import { ProductForm } from '@/Pages/Product/type'
+import { ProductForm } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
 
 interface AddProductProps {

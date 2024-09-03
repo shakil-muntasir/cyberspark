@@ -11,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import { toast } from '@/Components/ui/use-toast'
 import { useDeleteModal } from '@/Contexts/DeleteModalContext'
 import { cn, formatCurrency, toTitleCase } from '@/Lib/utils'
-import { Product, ProductVariant, ProductVariantForm } from '@/Pages/Product/type'
+import { Product, ProductVariant, ProductVariantForm } from '@/Pages/Product/types'
 import { useTheme } from '@/Providers/theme-provider'
 import { useForm } from '@inertiajs/react'
 import { Pencil2Icon } from '@radix-ui/react-icons'
@@ -48,7 +48,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     event.preventDefault()
 
     setTimeout(() => {
-      post(route('products.variants.store', { product: product.data.id }), {
+      post(route('products.variants.store', { product: product.id }), {
         preserveScroll: true,
         onSuccess: () => handleSuccess('New product variant has been added successfully.'),
         onError: handleError
@@ -60,7 +60,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     event.preventDefault()
 
     setTimeout(() => {
-      patch(route('products.variants.update', { product: product.data.id, variant: data.id }), {
+      patch(route('products.variants.update', { product: product.id, variant: data.id }), {
         preserveScroll: true,
         onSuccess: () => handleSuccess('Product variant has been updated successfully.'),
         onError: handleError
@@ -75,7 +75,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
       title: 'product variants',
       onConfirm: () => {
         setTimeout(() => {
-          destroy(route('products.variants.destroy', { product: product.data.id, variant: variant.id }), {
+          destroy(route('products.variants.destroy', { product: product.id, variant: variant.id }), {
             preserveScroll: true,
             onSuccess: () => handleSuccess('Product variant has been deleted successfully.'),
             onError: handleError

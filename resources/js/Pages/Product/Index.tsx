@@ -9,7 +9,7 @@ import AddProduct from '@/Pages/Product/Partials/add-product'
 import DataTable from '@/Components/Table'
 import { columns as initialColumns } from '@/Pages/Product/_data/columns'
 import { SelectOption, TableData } from '@/Types'
-import { Product } from '@/Pages/Product/type'
+import { Product } from '@/Pages/Product/types'
 
 interface ProductsListProps {
   products: TableData<Product>

@@ -17,14 +17,14 @@ import DeleteModal from '@/Components/DeleteModal'
 
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
-import { Product, ProductForm } from '@/Pages/Product/type'
+import { ProductForm, ProductResource } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
 
 // TODO: fix width
 
 interface ShowProductTypes {
   categories: SelectOption[]
-  product: Product
+  product: ProductResource
   statuses: SelectOption[]
 }
 
@@ -139,7 +139,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
               </Card>
 
               {/* The Product Variants table and add form will be rendered here */}
-              <ProductVariantData product={product} variants={product.data.relationships?.variants} />
+              <ProductVariantData product={product.data} variants={product.data.relationships?.variants} />
             </div>
             <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-8'>
               <Card>

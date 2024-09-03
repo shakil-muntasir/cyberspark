@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProductStatus;
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
@@ -20,7 +21,7 @@ class ProductController extends Controller
         $products = Product::filterAndSort($request->validatedParams());
 
         return inertia('Product/Index', [
-            'products' => ProductResource::collection($products),
+            'products' => new ProductCollection($products),
             'categories' => Category::getAllOptions(),
         ]);
     }
