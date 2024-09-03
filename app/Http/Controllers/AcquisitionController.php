@@ -9,10 +9,11 @@ use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Response as InertiaResponse;
 
 class AcquisitionController extends Controller
 {
-    public function index(AcquisitionRequest $request)
+    public function index(AcquisitionRequest $request): InertiaResponse
     {
         Gate::authorize('viewAny', Acquisition::class);
 
@@ -28,13 +29,10 @@ class AcquisitionController extends Controller
     {
         Gate::authorize('create', Acquisition::class);
 
-        /** @var \App\Models\User */
-        $user = $request->user();
-
         $data = $request->validated();
 
-        DB::transaction(function () use ($data, $user) {
-            $acquisition = $user->acquisitions()->create([
+        DB::transaction(function () use ($data) {
+            $acquisition = Acquisition::create([
                 'invoice_number' => $data['invoice_number'],
                 'acquired_date' => $data['acquired_date'],
             ]);

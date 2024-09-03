@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class DashboardController extends Controller
 {
-    public function index(): Response
+    public function index(): InertiaResponse
     {
         return inertia('Dashboard');
     }

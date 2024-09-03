@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Response as InertiaResponse;
 
 class ProductVariantController extends Controller
 {
