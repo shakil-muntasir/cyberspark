@@ -20,9 +20,7 @@ class ProductVariantFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
-            'sku' => fake()->unique()->bothify('??###'),
-            'quantity' => fake()->numberBetween(1, 100),
-            'quantity' => fake()->numberBetween(10, 100),
+            'quantity' => fake()->numberBetween(10, 50),
             'buying_price' => fake()->randomFloat(2, 1000, 2000),
             'retail_price' => fake()->randomFloat(2, 1500, 2500),
             'selling_price' => fake()->randomFloat(2, 2000, 3000),

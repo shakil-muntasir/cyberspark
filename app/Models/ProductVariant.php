@@ -14,7 +14,6 @@ class ProductVariant extends Model
     use HasFactory, HasUserTracking, SoftDeletes;
 
     protected $fillable = [
-        'sku',
         'quantity',
         'buying_price',
         'retail_price',

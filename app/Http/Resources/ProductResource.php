@@ -26,6 +26,7 @@ class ProductResource extends JsonResource
             'id' => (string) $this->id,
             'attributes' => [
                 'id' => (string) $this->id,
+                'sku_prefix' => $this->sku_prefix,
                 'name' => $this->name,
                 'description' => $this->description,
                 'status' => $this->status,

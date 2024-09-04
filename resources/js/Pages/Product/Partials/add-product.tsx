@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from '@inertiajs/react'
 import { AlertCircle, Loader2, PlusCircle } from 'lucide-react'
 
@@ -15,6 +15,9 @@ import { useToast } from '@/Components/ui/use-toast'
 import InputError from '@/Components/InputError'
 import { ProductForm } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import { LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
+import { abbreviateWords } from '@/Lib/utils'
 
 interface AddProductProps {
   categories: SelectOption[]
@@ -25,13 +28,26 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   const { data, setData, post, errors, clearErrors, reset } = useForm<ProductForm>({
     name: '',
+    sku_prefix: '',
     description: '',
-    category_id: '',
-    status: ''
+    category_id: ''
   })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [skuManualInput, setSkuManualInput] = useState(false)
   const [submitButtonText, setSubmitButtonText] = useState<string>('Save changes')
+
+  useEffect(() => {
+    if (!skuManualInput) {
+      if (data.name !== '') {
+        setData('sku_prefix', abbreviateWords(data.name))
+
+        return
+      }
+
+      return setData('sku_prefix', '')
+    }
+  }, [data.name, skuManualInput])
 
   const handleAddProduct = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -110,6 +126,32 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
               <div className='space-y-px'>
                 <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' />
                 <InputError message={errors.name} />
+              </div>
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='sku_prefix' className={errors.sku_prefix?.length ? 'text-destructive' : ''}>
+                SKU Prefix
+              </Label>
+              <div className='space-y-px'>
+                <div className='relative'>
+                  <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
+                  <div className='absolute right-1 top-1/2 flex items-center'>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
+                            {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Manual Input?</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
+                <InputError message={errors.sku_prefix} />
               </div>
             </div>
 

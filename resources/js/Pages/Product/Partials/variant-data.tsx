@@ -3,7 +3,6 @@ import { CheckIcon, PlusCircle, SquareCheckBig, SquareIcon, Trash2Icon, XIcon } 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
-import { Input } from '@/Components/ui/input'
 import { InputNumber } from '@/Components/ui/input-number'
 import { Label } from '@/Components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
@@ -29,7 +28,6 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
   const { initializeDeleteModal } = useDeleteModal()
 
   const initialFormData: ProductVariantForm = {
-    sku: '',
     quantity: '',
     buying_price: '',
     retail_price: '',
@@ -135,7 +133,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
             <TableHeader>
               <TableRow className='hover:bg-inherit'>
                 <TableHead>SKU</TableHead>
-                <TableHead>Quantity</TableHead>
+                <TableHead className='text-end'>Quantity</TableHead>
                 <TableHead>Buying Price</TableHead>
                 <TableHead>Retail Price</TableHead>
                 <TableHead>Selling Price</TableHead>
@@ -147,25 +145,16 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                 ? variants.map(variant => (
                     <TableRow key={variant.id}>
                       <TableCell>
-                        {variant.id !== data.id ? (
-                          <>
-                            <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
-                            <div>{variant.attributes.sku}</div>
-                          </>
-                        ) : (
-                          <>
-                            <Label htmlFor={`edit_sku_${variant.id}`} className='sr-only'>
-                              SKU
-                            </Label>
-                            <Input id={`edit_sku_${variant.id}`} className='px-2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                          </>
-                        )}
+                        <>
+                          <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
+                          <div className='font-medium'>{variant.attributes.sku}</div>
+                        </>
                       </TableCell>
                       <TableCell>
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
-                            <div>{variant.attributes.quantity}</div>
+                            <div className='text-end'>{variant.attributes.quantity}</div>
                           </>
                         ) : (
                           <>
@@ -195,7 +184,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
+                            <div className='text-right'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
                           </>
                         ) : (
                           <>
@@ -315,12 +304,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   )}
               {isAddFormOpen && (
                 <TableRow>
-                  <TableCell className='px-1'>
-                    <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
-                    <div>
-                      <Input name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                    </div>
-                  </TableCell>
+                  <TableCell className='text-nowrap px-1'>Auto Generates</TableCell>
                   <TableCell className='px-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                     <div>
@@ -434,11 +418,9 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       <AccordionContent className='pb-0'>
                         <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
                           <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Edit Variant</h1>
-                          <div className='flex items-center justify-between'>
-                            <Label htmlFor={`edit_sku_2_${variant.id}`}>SKU</Label>
-                            <div>
-                              <Input id={`edit_sku_2_${variant.id}`} name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                            </div>
+                          <div className='flex items-center space-x-2 font-semibold'>
+                            <span className='text-muted-foreground'>SKU:</span>
+                            <span className='text-foreground'>{variant.attributes.sku}</span>
                           </div>
                           <div className='flex items-center justify-between'>
                             <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
@@ -497,11 +479,9 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
               <AccordionContent className='pb-0'>
                 <div className={`space-y-3 border-t pt-2.5`}>
                   <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Add new Variant</h1>
-                  <div className='flex items-center justify-between'>
-                    <Label htmlFor='sku_2'>SKU</Label>
-                    <div>
-                      <Input id='sku_2' name='sku' value={data.sku} onChange={handleInputChange} placeholder='SKU' />
-                    </div>
+                  <div className='flex items-center space-x-2 font-normal'>
+                    <span className='text-muted-foreground'>SKU: </span>
+                    <span className='text-foreground'>Auto Generates</span>
                   </div>
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='quantity_2'>Quantity</Label>

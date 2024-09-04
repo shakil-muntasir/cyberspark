@@ -1,16 +1,18 @@
+import { Link, router } from '@inertiajs/react'
 import { MoreHorizontal } from 'lucide-react'
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 
-import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { toast } from '@/Components/ui/use-toast'
+
+import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
+
+import { toTitleCase } from '@/Lib/utils'
 import { Product } from '@/Pages/Product/types'
 import { TableColumn } from '@/Types'
-import { Link, router } from '@inertiajs/react'
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
-import { toTitleCase } from '@/Lib/utils'
 
 // TODO: add orders to product
 
@@ -39,7 +41,17 @@ const columns: TableColumn<Product>[] = createColumns([
   {
     id: 'name',
     label: 'Name',
-    header: column => <DataTableColumnHeader column={column} title='Name' />
+    header: column => <DataTableColumnHeader column={column} title='Name' />,
+    cell: ({ id, name }) => (
+      <Link href={`/products/${id}`} className='font-medium underline'>
+        {name}
+      </Link>
+    )
+  },
+  {
+    id: 'sku_prefix',
+    label: 'SKU Prefix',
+    header: column => <DataTableColumnHeader column={column} title='SKU Prefix' />
   },
   {
     id: 'category',
@@ -63,11 +75,28 @@ const columns: TableColumn<Product>[] = createColumns([
     id: 'availability',
     label: 'Availability',
     header: () => <div className='text-center'>Availability</div>,
-    cell: ({ availability }) => (
-      <span className='flex justify-center'>
-        <Badge variant={availability === 'available' ? 'default' : 'secondary'}>{toTitleCase(availability)}</Badge>
-      </span>
-    )
+    cell: ({ availability }) => {
+      let variant: 'default' | 'destructive' | 'secondary' | 'outline' = 'default'
+      switch (availability) {
+        case 'available':
+          variant = 'default'
+          break
+        case 'stock low':
+          variant = 'outline'
+          break
+        case 'out of stock':
+          variant = 'destructive'
+          break
+        default:
+          variant = 'default'
+      }
+
+      return (
+        <span className='flex justify-center'>
+          <Badge variant={variant}>{toTitleCase(availability)}</Badge>
+        </span>
+      )
+    }
   },
   {
     id: 'status',

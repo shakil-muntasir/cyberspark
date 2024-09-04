@@ -41,9 +41,10 @@ class ProductController extends Controller
 
         $product->load([
             'category:id,name',
-            'variants',
             'createdBy:id,name',
             'updatedBy:id,name',
+            'variants',
+            'variants.product',
             'variants.createdBy:id,name',
             'variants.updatedBy:id,name',
         ]);

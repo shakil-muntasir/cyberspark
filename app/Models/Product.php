@@ -17,8 +17,10 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'sku_prefix',
         'category_id',
-        'description'
+        'description',
+        'status'
     ];
 
     protected $casts = [
@@ -45,12 +47,12 @@ class Product extends Model
      */
     public function getAvailabilityAttribute(): string
     {
-        $totalStock = $this->total_stock;
+        $totalStock = $this->variants_sum_quantity;
 
-        if ($totalStock > 10) {
+        if ($totalStock > 120) {
             return 'available';
-        } elseif ($totalStock > 0) {
-            return 'low';
+        } elseif ($totalStock > 90) {
+            return 'stock low';
         } else {
             return 'out of stock';
         }

@@ -33,6 +33,7 @@ class AcquisitionRequest extends FormRequest
             'acquired_date' => 'required|date',
             'products' => 'required|array',
             'products.*.name' => 'required|string',
+            'products.*.sku_prefix' => 'required|unique:products,sku_prefix',
             'products.*.category_id' => 'required|exists:categories,id',
             'products.*.product_id' => 'nullable|exists:products,id',
             'products.*.description' => 'nullable|string',

@@ -1,8 +1,9 @@
 type Attributes = {
     id: string
     name: string
+    sku_prefix: string
     description?: string
-    status: 'active' | 'inactive'
+    status: string
     variants_count: string
     variants_sum_quantity: string
     availability: string
@@ -58,14 +59,14 @@ export type ProductVariant = {
 
 export type ProductForm = {
     name: string
-    description: string
+    sku_prefix: string
+    description?: string
     category_id: string
-    status: string
+    status?: string
 }
 
 export type ProductVariantForm = {
     id?: string
-    sku: string
     quantity: string
     buying_price: string
     retail_price?: string

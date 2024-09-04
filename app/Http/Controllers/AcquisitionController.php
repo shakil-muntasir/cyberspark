@@ -41,12 +41,12 @@ class AcquisitionController extends Controller
                 // TODO: implement product select or create
                 $product = $acquisition->products()->create([
                     'name' => $productRequestData['name'],
+                    'sku_prefix' => $productRequestData['sku_prefix'],
                     'category_id' => $productRequestData['category_id'],
                     'description' => $productRequestData['description']
                 ]);
 
                 $product->variants()->create([
-                    'sku' => 'SKU-' . $product->id,
                     'quantity' => $productRequestData['quantity'],
                     'buying_price' => $productRequestData['buying_price'],
                     'retail_price' => $productRequestData['retail_price'],

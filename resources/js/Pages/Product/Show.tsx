@@ -31,9 +31,10 @@ interface ShowProductTypes {
 const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses }) => {
   const { initializeDeleteModal } = useDeleteModal()
 
-  const initialProductData = {
+  const initialProductData: ProductForm = {
     name: product.data.attributes.name,
-    description: product.data.attributes.description ?? '',
+    sku_prefix: product.data.attributes.sku_prefix,
+    description: product.data.attributes.description,
     category_id: product.data.attributes.category_id,
     status: product.data.attributes.status
   }
@@ -104,6 +105,12 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
                       <Label htmlFor='name'>Name</Label>
                       <Input id='name' type='text' name='name' className='w-full' value={data.name} onChange={handleInputChange} autoComplete='name' />
                     </div>
+
+                    <div className='grid gap-2'>
+                      <Label htmlFor='sku_prefix'>SKU Prefix</Label>
+                      <Input id='sku_prefix' type='text' name='sku_prefix' className='w-full' value={data.sku_prefix} onChange={handleInputChange} autoComplete='sku_prefix' />
+                    </div>
+
                     <div className='grid gap-2'>
                       <Label htmlFor='description'>Description</Label>
                       <Textarea id='description' name='description' value={data.description} className='min-h-32' onChange={handleInputChange} placeholder='Description' />
