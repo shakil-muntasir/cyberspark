@@ -47,4 +47,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+// Miscellaneous routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dropdown routes
+    Route::get('/variants/dropdown', [ProductVariantController::class, 'dropdown'])->name('variants.dropdown');
+});
+
 require __DIR__ . '/auth.php';

@@ -5,6 +5,15 @@ namespace App\Http\Resources;
 class ProductVariantResource extends JsonResource
 {
     /**
+     * Define the relationships and their corresponding resource classes.
+     *
+     * @var array<string, string>
+     */
+    protected array $relationships = [
+        'product' => ProductResource::class,
+    ];
+
+    /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>

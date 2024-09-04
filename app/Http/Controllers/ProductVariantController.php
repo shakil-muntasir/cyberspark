@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductVariantRequest;
+use App\Http\Resources\ProductVariantCollection;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
@@ -35,5 +36,24 @@ class ProductVariantController extends Controller
         $variant->delete();
 
         return redirect()->back();
+    }
+
+    public function dropdown(): ProductVariantCollection
+    {
+        $search = request()->input('search');
+
+        // TODO: revisit this query later.
+        $variants = ProductVariant::with(['product', 'createdBy:id,name', 'updatedBy:id,name'])
+            ->when($search, function ($query, $search) {
+                return $query->where('sku', 'like', "%$search%")
+                    ->orWhereHas('product', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+            })
+            ->latest('id')
+            ->take(10)
+            ->get();
+
+        return new ProductVariantCollection($variants);
     }
 }
