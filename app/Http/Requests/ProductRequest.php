@@ -21,6 +21,11 @@ class ProductRequest extends FormRequest
 
         return [
             'name' => 'required|string',
+            'sku_prefix' => [
+                'required',
+                'string',
+                Rule::unique('products', 'sku_prefix')->ignore($this->route('product')),
+            ],
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'status' => ['nullable', 'string', Rule::in(['active', 'inactive'])],

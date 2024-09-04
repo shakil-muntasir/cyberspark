@@ -41,6 +41,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
     if (!skuManualInput) {
       if (data.name !== '') {
         setData('sku_prefix', abbreviateWords(data.name))
+        clearErrors('sku_prefix')
 
         return
       }
