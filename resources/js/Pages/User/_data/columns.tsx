@@ -38,7 +38,11 @@ const columns: TableColumn<User>[] = createColumns([
     id: 'name',
     label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
-    cell: ({ name }) => <div className='font-medium'>{name}</div>
+    cell: ({ id, name }) => (
+      <Link href={`/users/${id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+        {name}
+      </Link>
+    )
   },
   {
     id: 'email',

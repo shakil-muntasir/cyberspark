@@ -43,7 +43,7 @@ const columns: TableColumn<Product>[] = createColumns([
     label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
     cell: ({ id, name }) => (
-      <Link href={`/products/${id}`} className='font-medium underline'>
+      <Link href={`/products/${id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
         {name}
       </Link>
     )
@@ -51,25 +51,26 @@ const columns: TableColumn<Product>[] = createColumns([
   {
     id: 'sku_prefix',
     label: 'SKU Prefix',
-    header: column => <DataTableColumnHeader column={column} title='SKU Prefix' />
+    header: column => <DataTableColumnHeader column={column} title='SKU Prefix' />,
+    cell: ({ sku_prefix }) => <div className='font-medium'>{sku_prefix}</div>
   },
   {
     id: 'category',
     label: 'Category',
     header: 'Category',
-    cell: ({ category }) => <div className='font-medium'>{category}</div>
+    cell: ({ category }) => <div>{category}</div>
   },
   {
     id: 'variants_sum_quantity',
     label: 'Total Stock',
     header: column => <DataTableColumnHeader column={column} title='Total Stock' align='end' />,
-    cell: ({ variants_sum_quantity }) => <div className='mr-4 text-right font-medium'>{variants_sum_quantity}</div>
+    cell: ({ variants_sum_quantity }) => <div className='mr-4 text-right'>{variants_sum_quantity}</div>
   },
   {
     id: 'variants_count',
     label: 'Variants',
     header: column => <DataTableColumnHeader column={column} title='Variants' align='end' />,
-    cell: ({ variants_count }) => <div className='mr-4 text-right font-medium'>{variants_count}</div>
+    cell: ({ variants_count }) => <div className='mr-4 text-right'>{variants_count}</div>
   },
   {
     id: 'availability',

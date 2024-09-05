@@ -11,15 +11,10 @@ export default function PcNavigation() {
     <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>
       <nav className='flex flex-col items-center gap-4 px-2 sm:py-5'>
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link className={`group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-100 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base ${pathname === '/' ? 'bg-accent text-foreground' : ''}`} href='/'>
-                <img src={SprintDevsLogo} alt='Sprint Devs' className='rounded-full transition-all group-hover:scale-110' />
-                <span className='sr-only'>Sprint Devs</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side='right'>Home</TooltipContent>
-          </Tooltip>
+          <Link className={`group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-100 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base ${pathname === '/' ? 'bg-accent text-foreground' : ''}`} href='/'>
+            <img src={SprintDevsLogo} alt='Sprint Devs' className='rounded-full transition-all group-hover:scale-110' />
+            <span className='sr-only'>Sprint Devs</span>
+          </Link>
           {routes.slice(0, -1).map(route => (
             <Tooltip key={route.href}>
               <TooltipTrigger asChild>

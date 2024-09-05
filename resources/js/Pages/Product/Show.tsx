@@ -19,6 +19,7 @@ import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
 import { ProductForm, ProductResource } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
+import { toTitleCase } from '@/Lib/utils'
 
 // TODO: fix width
 
@@ -61,6 +62,21 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
     onConfirm: () => router.visit('/products')
   }
 
+  let availability: 'default' | 'destructive' | 'secondary' | 'outline' = 'default'
+  switch (product.data.attributes.availability) {
+    case 'available':
+      availability = 'default'
+      break
+    case 'stock low':
+      availability = 'outline'
+      break
+    case 'out of stock':
+      availability = 'destructive'
+      break
+    default:
+      availability = 'default'
+  }
+
   return (
     <AuthenticatedLayout title='Product Details'>
       <main className='grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
@@ -69,7 +85,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
             <TooltipProvider>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <Button variant='outline' size='icon' className='h-7 w-7' onClick={() => window.history.back()}>
+                  <Button variant='outline' size='icon' className='h-7 w-7 px-0' onClick={() => window.history.back()}>
                     <ChevronLeft className='h-4 w-4' />
                     <span className='sr-only'>Back</span>
                   </Button>
@@ -80,8 +96,8 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
               </Tooltip>
             </TooltipProvider>
             <h1 className='flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0'>{product.data.attributes.name}</h1>
-            <Badge variant='outline' className='ml-auto sm:ml-0'>
-              In stock
+            <Badge variant={availability} className='ml-auto sm:ml-0'>
+              {toTitleCase(product.data.attributes.availability)}
             </Badge>
             <div className='hidden items-center gap-2 md:ml-auto md:flex'>
               <Button variant='secondary' size='sm' onClick={() => reset()}>
