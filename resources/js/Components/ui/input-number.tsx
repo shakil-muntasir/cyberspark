@@ -52,7 +52,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
       } as React.ChangeEvent<HTMLInputElement>)
     } else if (typeof onEnterPress === 'function') {
       onEnterPress({
-        target: { name, value: inputRef.current?.value || '' }
+        target: { name, value: inputRef.current?.value || 0 }
       } as React.ChangeEvent<HTMLInputElement>)
     }
   }

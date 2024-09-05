@@ -89,13 +89,13 @@ const MobileAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ produ
                   </div>
                   <div className='flex pt-1.5'>
                     <p className='border-r pr-2 text-xs font-light'>
-                      Buying Price <span className='font-semibold'>{formatCurrency(product.buying_price)}</span>
+                      Buying Price <span className='font-semibold'>{formatCurrency(parseFloat(product.buying_price))}</span>
                     </p>
                     <p className='border-r px-2 text-xs font-light'>
-                      Retail Price <span className='font-semibold'>{formatCurrency(product.retail_price)}</span>
+                      Retail Price <span className='font-semibold'>{formatCurrency(parseFloat(product.retail_price))}</span>
                     </p>
                     <p className='pl-2 text-xs font-light'>
-                      Selling Price <span className='font-semibold'>{formatCurrency(product.selling_price)}</span>
+                      Selling Price <span className='font-semibold'>{formatCurrency(parseFloat(product.selling_price))}</span>
                     </p>
                   </div>
                 </div>

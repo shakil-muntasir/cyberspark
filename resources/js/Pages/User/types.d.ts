@@ -23,7 +23,7 @@ export type User = {
     type: string
     id: string
     attributes: Attributes
-    relationships: Relationships
+    relationships?: Relationships
 }
 
 export type UserResource = {

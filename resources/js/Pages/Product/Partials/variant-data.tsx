@@ -169,7 +169,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                            <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.buying_price))}</div>
                           </>
                         ) : (
                           <>
@@ -184,7 +184,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
-                            <div className='text-right'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
+                            <div className='text-right'>{formatCurrency(parseFloat(variant.attributes?.retail_price ?? '0'))}</div>
                           </>
                         ) : (
                           <>
@@ -199,7 +199,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                            <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.selling_price))}</div>
                           </>
                         ) : (
                           <>
@@ -380,16 +380,16 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </div>
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.buying_price)}</div>
+                            <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.buying_price))}</div>
                           </div>
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
 
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes?.retail_price ?? '')}</div>
+                            <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes?.retail_price ?? '0'))}</div>
                           </div>
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
-                            <div className='text-right font-medium'>{formatCurrency(variant.attributes.selling_price)}</div>
+                            <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.selling_price))}</div>
                           </div>
                           <div className='grid grid-cols-3 space-x-2'>
                             <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>

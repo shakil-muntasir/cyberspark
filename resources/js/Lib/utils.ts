@@ -69,15 +69,19 @@ export function toTitleCase(str: string) {
         .join(' ')
 }
 
-export function formatCurrency(amount: string, currency = 'USD'): string {
-    if (amount === '') {
+export function formatCurrency(amount: number, currency = 'BDT'): string {
+    if (amount === 0) {
         return 'N/A'
     }
 
-    return new Intl.NumberFormat('en-US', {
+    // Format the amount using Intl.NumberFormat
+    const formattedAmount = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: currency
-    }).format(parseInt(amount))
+        currency: currency,
+        currencyDisplay: 'symbol'
+    }).format(typeof amount === 'number' ? amount : parseInt(amount))
+
+    return formattedAmount
 }
 
 export function abbreviateWords(phrase: string) {
