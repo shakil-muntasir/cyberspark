@@ -47,7 +47,7 @@ class ProductController extends Controller
             'variants.product',
             'variants.createdBy:id,name',
             'variants.updatedBy:id,name',
-        ]);
+        ])->loadSum('variants', 'quantity');
 
         return inertia('Product/Show', [
             'categories' => Category::getAllOptions(),
