@@ -14,7 +14,7 @@ export default function MobileNavigation() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className='sm:hidden' size='icon' variant='outline'>
+        <Button className='px-2 sm:hidden' size='icon' variant='outline'>
           <PanelLeftIcon className='h-5 w-5' />
           <span className='sr-only'>Toggle Menu</span>
         </Button>

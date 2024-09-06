@@ -85,7 +85,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
             <TooltipProvider>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <Button variant='outline' size='icon' className='h-7 w-7 px-0' onClick={() => window.history.back()}>
+                  <Button variant='outline' size='icon' className='h-7 w-7' onClick={() => window.history.back()}>
                     <ChevronLeft className='h-4 w-4' />
                     <span className='sr-only'>Back</span>
                   </Button>
