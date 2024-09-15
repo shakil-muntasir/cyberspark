@@ -12,11 +12,12 @@ import { CartItem as CartItemType, ProductVariant } from '@/Pages/Product/types'
 interface CartItemProps {
   data: CartItemType
   removeFromCart: (variant: ProductVariant) => void
+  handleCartItemChange: (variant: ProductVariant, event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const CartItem: React.FC<CartItemProps> = ({ data, removeFromCart }) => {
+const CartItem: React.FC<CartItemProps> = ({ data, removeFromCart, handleCartItemChange }) => {
   return (
-    <CardContent className='flex justify-between bg-primary-foreground/70 p-4'>
+    <CardContent className='flex justify-between rounded-md p-4 hover:bg-muted/50 lg:rounded-none'>
       <div className='flex gap-4'>
         <img className='h-20 w-14 rounded-md object-cover' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
         <div className='flex flex-col justify-between'>
@@ -46,7 +47,7 @@ const CartItem: React.FC<CartItemProps> = ({ data, removeFromCart }) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <InputNumber className='h-8 w-18' id='quantity' name='quantity' value={data.quantity} onChange={() => null} />
+        <InputNumber className='w-18' id='quantity' name='quantity' value={data.quantity} onChange={e => handleCartItemChange(data.variant, e)} />
       </div>
     </CardContent>
   )

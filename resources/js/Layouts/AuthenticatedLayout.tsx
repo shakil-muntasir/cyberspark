@@ -1,6 +1,7 @@
-import { SearchIcon } from 'lucide-react'
+import { PlusIcon, SearchIcon } from 'lucide-react'
+import { Head, Link, usePage } from '@inertiajs/react'
 
-import MakeSell from '@/Components/MakeSell'
+import { useTheme } from '@/Providers/theme-provider'
 import { DarkModeToggle } from '@/Components/ui/dark-mode-toggle'
 import { Input } from '@/Components/ui/input'
 import { Separator } from '@/Components/ui/separator'
@@ -9,17 +10,17 @@ import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
 import MobileNavigation from '@/Layouts/Partials/mobile-navigation'
 import PcNavigation from '@/Layouts/Partials/pc-navigation'
 import UserDropdown from '@/Layouts/Partials/user-dropdown'
-import { useTheme } from '@/Providers/theme-provider'
 import SprintDevsFullDark from '@/public/assets/sprint_devs_full_dark.svg'
 import SprintDevsFullLight from '@/public/assets/sprint_devs_full_light.svg'
-import { Head } from '@inertiajs/react'
 import { FacebookIcon } from '@/Icons/FacebookIcon'
 import { InstagramIcon } from '@/Icons/InstagramIcon'
 import { LinkedInIcon } from '@/Icons/LinkedInIcon'
+import { Button } from '@/Components/ui/button'
 
-export default function AuthenticatedLayout({ title = '', children }: { title?: string; children: React.ReactNode }) {
+export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
   const { theme } = useTheme()
+  const { url } = usePage()
 
   return (
     <>
@@ -34,7 +35,7 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
               <SearchIcon className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input id='search' type='search' name='search' className='w-full rounded-md bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' />
             </div>
-            <MakeSell />
+
             <DarkModeToggle />
             <UserDropdown />
           </header>
@@ -66,6 +67,14 @@ export default function AuthenticatedLayout({ title = '', children }: { title?: 
           </footer>
         </div>
       </div>
+      {url !== '/orders/create' && (
+        <Link href='/orders/create'>
+          <Button className='group fixed bottom-5 right-5 flex h-12 w-12 items-center justify-center rounded-full font-medium transition-all duration-500 hover:w-36 hover:bg-foreground'>
+            <span className='z-20 inline-block max-w-0 -translate-x-3.5 overflow-hidden opacity-0 transition-all duration-700 group-hover:max-w-xs group-hover:opacity-100'>Create Order</span>
+            <PlusIcon className='delay-50 fixed right-5 h-12 w-12 transform rounded-full bg-foreground p-3 text-primary-foreground transition-transform duration-500 group-hover:rotate-180' />
+          </Button>
+        </Link>
+      )}
       <Toaster />
     </>
   )
