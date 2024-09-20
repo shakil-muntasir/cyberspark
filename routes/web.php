@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\State;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
@@ -8,15 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
-
-// Miscellaneous routes
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Dropdown routes
-    Route::get('/variants/dropdown', [ProductVariantController::class, 'dropdown'])->name('variants.dropdown');
-    Route::get('/users/dropdown', [UserController::class, 'dropdown'])->name('users.dropdown');
-});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -41,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/create', [OrderController::class, 'create'])->name('create');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     });
 
     Route::prefix('/users')->name('users.')->group(function () {
@@ -57,6 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-
+// Miscellaneous routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dropdown routes
+    Route::get('/customers/dropdown', [UserController::class, 'customersDropdown'])->name('customers.dropdown');
+    Route::get('/variants/dropdown', [ProductVariantController::class, 'dropdown'])->name('variants.dropdown');
+});
 
 require __DIR__ . '/auth.php';

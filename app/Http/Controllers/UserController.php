@@ -63,12 +63,12 @@ class UserController extends Controller
         ]);
     }
 
-    public function dropdown(): UserCollection
+    public function customersDropdown(): UserCollection
     {
         $search = request()->input('search');
 
         // TODO: revisit this query later.
-        $users = User::with(['address'])
+        $users = User::with(['address'])->role('customer')
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%$search%")
                 ->orWhere('email', 'like', "%$search%")
