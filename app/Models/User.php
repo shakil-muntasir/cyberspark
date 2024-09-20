@@ -74,6 +74,16 @@ class User extends Authenticatable
         return $this->hasMany(Acquisition::class, 'created_by_id');
     }
 
+    public function customerOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+    public function deliveryManOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'delivery_man_id');
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'created_by_id');
