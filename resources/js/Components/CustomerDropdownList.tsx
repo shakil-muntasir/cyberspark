@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Label } from '@/Components/ui/label'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import axios from 'axios'
@@ -13,9 +12,11 @@ interface UserDropdownListProps {
   handleSelectedCustomer: (user: User) => void
   id?: string
   label?: string
+  className?: string
+  disabled?: boolean
 }
 
-const CustomerDropdownList: React.FC<UserDropdownListProps> = ({ handleSelectedCustomer, id, label }) => {
+const CustomerDropdownList: React.FC<UserDropdownListProps> = ({ handleSelectedCustomer, id, label, className, disabled }) => {
   const [selectedCustomer, setSelectedCustomer] = useState<User | undefined>()
   const [open, setOpen] = useState(false)
   const widthRef = useRef<HTMLDivElement>(null)
@@ -25,7 +26,7 @@ const CustomerDropdownList: React.FC<UserDropdownListProps> = ({ handleSelectedC
 
   const fetchUsers = async (search?: string) => {
     try {
-      const url = !search ? '/users/dropdown' : `/users/dropdown?search=${search}`
+      const url = !search ? '/customers/dropdown' : `/customers/dropdown?search=${search}`
       const { data } = await axios.get<UserCollection>(url)
       setUsers(data.data)
     } catch (_) {}
@@ -56,12 +57,11 @@ const CustomerDropdownList: React.FC<UserDropdownListProps> = ({ handleSelectedC
       {/* WARNING: this div below is used to calculate the width for command dropdown */}
       <div ref={widthRef} className='h-px' />
       <div className='grid gap-2'>
-        {label && <Label htmlFor={id}>{label}</Label>}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
+            <Button variant='outline' role='combobox' aria-expanded={open} className={`flex h-auto w-full items-center justify-between px-3 py-1.5 ${className}`} disabled={disabled}>
               <div className='flex flex-wrap justify-start gap-2'>
-                <span className='flex justify-center'>{selectedCustomer ? selectedCustomer.attributes.name : 'Select Customer'}</span>
+                <span className='flex justify-center'>{selectedCustomer ? selectedCustomer.attributes.name : `Select ${label}`}</span>
               </div>
               <div className='flex items-center self-center'>
                 <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
@@ -85,12 +85,12 @@ const CustomerDropdownList: React.FC<UserDropdownListProps> = ({ handleSelectedC
                       className='group flex justify-between rounded-md p-2 hover:bg-muted'
                     >
                       <div className='flex items-center gap-2'>
-                        <div>
+                        <div className='flex-shrink-0'>
                           <img className='h-10 w-10 rounded-full object-cover' src={user.attributes.image || UserPlaceholder} />
                         </div>
                         <div className=''>
                           <div className='flex items-center gap-2'>
-                            <span className='border-r pr-2 text-sm font-semibold group-hover:border-muted-foreground/20'>{user.attributes.name}</span>
+                            <span className='pr-2 text-sm font-semibold group-hover:border-muted-foreground/20 lg:border-r'>{user.attributes.name}</span>
                             <span className='text-sm font-semibold tracking-wide text-muted-foreground'>{user.attributes.email}</span>
                           </div>
                           <span className='text-xs font-semibold tracking-wide text-primary/70'>{user.attributes.phone}</span>

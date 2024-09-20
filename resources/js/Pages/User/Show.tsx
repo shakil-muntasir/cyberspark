@@ -95,8 +95,8 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
 
   return (
     <AuthenticatedLayout title='User Details'>
-      <main className='mx-auto grid max-w-[80rem] flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
-        <div className='grid auto-rows-max gap-4'>
+      <main className='mx-auto grid max-w-[80rem] flex-1 items-start gap-4 md:gap-8'>
+        <div className='flex auto-rows-max flex-col gap-4'>
           <div className='flex items-center gap-4'>
             <TooltipProvider>
               <Tooltip delayDuration={0}>
@@ -129,7 +129,7 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
             </div>
           </div>
 
-          <div className='flex flex-col gap-4 lg:flex-row lg:gap-8'>
+          <div className='flex flex-col gap-4 lg:gap-8 2xl:flex-row'>
             <div className='flex flex-col gap-4 lg:gap-8'>
               <div className='flex flex-1 auto-rows-max flex-col items-start gap-4 lg:flex-row lg:gap-8'>
                 <UserAvatar inputRef={imageRef} processing={processing} src={user.data.attributes.image ?? ''} handleImageClear={handleImageClear} previewImage={previewImage} className='mx-auto' />
@@ -374,7 +374,7 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
                 </div>
               </div>
             </div>
-            <div className='space-y-4 lg:w-72 lg:min-w-72 lg:space-y-8'>
+            <div className='-mt-0 space-y-4 lg:-mt-[29.5rem] lg:w-72 lg:min-w-72 lg:space-y-8 2xl:-mt-0'>
               <Card>
                 <CardHeader>
                   <CardTitle>User Role</CardTitle>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Label } from '@/Components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { formatCurrency } from '@/Lib/utils'
@@ -13,10 +12,9 @@ import { CheckCircleIcon } from '@/Icons/CheckCircleIcon'
 interface ProductDropdownListProps {
   handleAddToCart: (variant: ProductVariant) => void
   id?: string
-  label?: string
 }
 
-const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id, label }) => {
+const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id }) => {
   const [open, setOpen] = useState(false)
   const widthRef = useRef<HTMLDivElement>(null)
   const [variants, setVariants] = useState<ProductVariant[]>([])
@@ -65,7 +63,6 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
       {/* WARNING: this div below is used to calculate the width for command dropdown */}
       <div ref={widthRef} className='h-px' />
       <div className='grid gap-2'>
-        {label && <Label htmlFor={id}>{label}</Label>}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>

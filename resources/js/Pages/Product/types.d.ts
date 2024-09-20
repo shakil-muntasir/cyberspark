@@ -88,8 +88,7 @@ export type ProductVariantForm = {
     selling_price: string
 }
 
-export type CartItem = {
+export type CartItemType = {
     variant: ProductVariant
     quantity: number
-    subtotal: number
 }

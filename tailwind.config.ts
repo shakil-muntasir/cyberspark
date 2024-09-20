@@ -75,8 +75,13 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out'
       },
       width: {
+        '4.5': '1.125rem',
+        '15': '3.75rem',
         '18': '4.5rem',
         '21.5': '5.375rem'
+      },
+      minWidth: {
+        '15': '3.75rem'
       },
       height: {
         '18': '4.5rem',
@@ -87,6 +92,10 @@ const config = {
       },
       fontSize: {
         xxs: '0.625rem'
+      },
+      transitionProperty: {
+        height: 'height',
+        'height-padding-opacity': 'height, padding, opacity'
       }
     }
   },
