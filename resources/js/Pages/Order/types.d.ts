@@ -3,7 +3,6 @@ import { User } from '@/Pages/User/types'
 import { CreatedOrUpdatedBy, SelectOption } from '@/Types'
 
 type Attributes = {
-    id: string
     code: string
     customer: string
     delivery_method: string
@@ -47,11 +46,11 @@ export type OrderCollection = {
 
 export type OrderForm = {
     customer_id?: string
-    delivery_method?: 'in-house' | 'external' // Method of delivery
-    delivery_cost?: number // Cost of delivery
-    delivery_man_id?: string // (Optional) Foreign key to the users table (delivery man)
-    courier_service_id?: string // (Optional) Foreign key to the courier services table
-    total_payable?: number // The total amount to be paid for the order
+    delivery_method?: 'in-house' | 'external'
+    delivery_cost?: number
+    delivery_man_id?: string
+    courier_service_id?: string
+    total_payable?: number
 
     order_variants: OrderVariant[]
 

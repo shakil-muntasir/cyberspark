@@ -10,7 +10,6 @@ class AddressResource extends JsonResource
             'type' => 'addresses',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'street' => $this->street,
                 'city' => $this->city,
                 'state' => $this->state,

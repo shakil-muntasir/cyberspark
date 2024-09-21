@@ -25,7 +25,6 @@ class CourierServiceResource extends JsonResource
             'type' => 'courier_service',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'name' => $this->name,
                 'delivery_price' => $this->delivery_price,
                 'created_by' => $this->created_by,

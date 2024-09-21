@@ -2,7 +2,6 @@ import { Product } from '@/Pages/Product/types'
 import { CreatedOrUpdatedBy } from '@/Types'
 
 type Attributes = {
-    id: string
     invoice_number: string
     acquired_date: string
     products_count: string

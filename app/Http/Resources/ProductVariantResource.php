@@ -24,7 +24,6 @@ class ProductVariantResource extends JsonResource
             'type' => 'product_variants',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'product_id' => (string) $this->product_id,
                 'sku' => $this->whenLoaded('product', fn() => $this->product->sku_prefix . sprintf('%05d', $this->id)),
                 'quantity' => $this->quantity,

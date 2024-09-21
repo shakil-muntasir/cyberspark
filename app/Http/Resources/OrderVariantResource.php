@@ -25,7 +25,6 @@ class OrderVariantResource extends JsonResource
             'type' => 'order_variants',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'price' => $this->price,
                 'quantity' => $this->quantity,
                 'created_by' => $this->created_by,

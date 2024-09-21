@@ -24,7 +24,6 @@ class AcquisitionResource extends JsonResource
             'type' => 'acquisitions',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'invoice_number' => $this->invoice_number,
                 'acquired_date' => $this->acquired_date->format('m-d-Y'),
                 'products_count' => $this->products_count,

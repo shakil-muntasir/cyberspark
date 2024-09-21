@@ -1,7 +1,6 @@
 import { CreatedOrUpdatedBy } from '@/Types'
 
 type Attributes = {
-    id: string
     name: string
     sku_prefix: string
     description?: string

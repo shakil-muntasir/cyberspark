@@ -27,7 +27,6 @@ class OrderResource extends JsonResource
             'type' => 'orders',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'code' => sprintf('%05d', $this->id),
                 'customer' => $this->whenLoaded('customer', fn() => $this->customer->name),
                 'delivered_by' =>$this->delivered_by,

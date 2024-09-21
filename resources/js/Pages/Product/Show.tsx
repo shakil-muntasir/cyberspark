@@ -56,7 +56,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
   }, [data])
 
   const deleteModalData: DeleteModalData = {
-    id: product.data.attributes.id,
+    id: product.data.id,
     name: product.data.attributes.name,
     title: 'product',
     onConfirm: () => router.visit('/products')

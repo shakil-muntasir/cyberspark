@@ -1,7 +1,6 @@
 import { CreatedOrUpdatedBy, SelectOption } from '@/Types'
 
 type Attributes = {
-    id: string
     name: string
     email: string
     phone: string
@@ -40,7 +39,6 @@ export type Address = {
     type: string
     id: string
     attributes: {
-        id: string
         street: string
         city: string
         state: string
@@ -54,7 +52,6 @@ export type Role = {
     type: string
     id: string
     attributes: {
-        id: string
         label: string
         value: string
         created_at: string

@@ -87,7 +87,7 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
   }
 
   const deleteModalData: DeleteModalData = {
-    id: user.data.attributes.id,
+    id: user.data.id,
     name: user.data.attributes.name,
     title: 'user',
     onConfirm: () => router.visit('/users')

@@ -19,7 +19,6 @@ class RoleResource extends JsonResource
             'type' => 'roles',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'label' => Str::title(str_replace('_', ' ', $this->name)),
                 'value' => $this->name,
                 'guard_name' => $this->guard_name,

@@ -25,7 +25,6 @@ class UserResource extends JsonResource
             'type' => 'users',
             'id' => (string) $this->id,
             'attributes' => [
-                'id' => (string) $this->id,
                 'name' => $this->name,
                 'gender' => $this->gender,
                 'email' => $this->email,
@@ -35,8 +34,8 @@ class UserResource extends JsonResource
                 'email_verified_at' => $this->email_verified_at,
                 'created_by' => $this->created_by,
                 'updated_by' => $this->updated_by,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
+                'created_at' => $this->created_at->format('jS F, Y h:i A'),
+                'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],
         ];
     }
