@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ShippingAddress extends Model
+class ShippingAddress extends Model implements Auditable
 {
-    use HasFactory;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'order_id',

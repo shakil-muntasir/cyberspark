@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 use Str;
 
-class CourierService extends Model
+class CourierService extends Model implements Auditable
 {
-    use HasFactory;
+    use AuditableTrait, HasFactory;
 
     public function orders(): HasMany
     {

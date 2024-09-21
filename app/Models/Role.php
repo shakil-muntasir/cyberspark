@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Str;
 
 // TODO: check if everything is correct
 
-class Role extends SpatieRole
+class Role extends SpatieRole implements Auditable
 {
-    use HasFactory;
+    use AuditableTrait, HasFactory;
 
     /**
      * The attributes that are mass assignable.

@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use App\Enums\ProductStatus;
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Pagination\LengthAwarePaginator;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Product extends Model
+class Product extends Model implements Auditable
 {
-    use HasFactory;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'name',
@@ -39,6 +42,11 @@ class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    public function orderVariants(): HasManyThrough
+    {
+        return $this->hasManyThrough(OrderVariant::class, ProductVariant::class);
     }
 
     /**
@@ -112,6 +120,7 @@ class Product extends Model
             ->with(['category:id,name'])
             ->withCount('variants') // This will add 'variants_counts' to the result
             ->withSum('variants', 'quantity') // This will add 'variants_sum_quantity' to the result
+            ->withSum('orderVariants', 'quantity') // This will add 'order_variants_sum_quantity' to the result
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())

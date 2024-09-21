@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\LengthAwarePaginator;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Acquisition extends Model
+class Acquisition extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use AuditableTrait, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'invoice_number',
@@ -25,6 +28,14 @@ class Acquisition extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    // Mutator to convert 'm-d-Y' format to 'Y-m-d' before saving to the database
+    public function setAcquiredDateAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['acquired_date'] = Carbon::createFromFormat('m-d-Y', $value)->format('Y-m-d');
+        }
     }
 
     /**
