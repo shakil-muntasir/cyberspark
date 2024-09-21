@@ -30,7 +30,7 @@ class AcquisitionRequest extends FormRequest
 
         return [
             'invoice_number' => 'required',
-            'acquired_date' => 'required|date',
+            'acquired_date' => 'required|date_format:m-d-Y',
             'products' => 'required|array',
             'products.*.name' => 'required|string',
             'products.*.sku_prefix' => 'required|unique:products,sku_prefix',

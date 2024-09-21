@@ -33,6 +33,10 @@ class UserResource extends JsonResource
                 'image' => $this->image ? asset("storage/{$this->image}") : null,
                 'status' => $this->status,
                 'email_verified_at' => $this->email_verified_at,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
             ],
         ];
     }

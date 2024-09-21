@@ -10,7 +10,7 @@ class ProductVariantResource extends JsonResource
      * @var array<string, string>
      */
     protected array $relationships = [
-        'product' => ProductResource::class,
+        //
     ];
 
     /**
@@ -32,6 +32,8 @@ class ProductVariantResource extends JsonResource
                 'retail_price' => $this->retail_price,
                 'selling_price' => $this->selling_price,
                 'status' => $this->status,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ]

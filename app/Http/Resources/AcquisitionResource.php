@@ -28,6 +28,8 @@ class AcquisitionResource extends JsonResource
                 'invoice_number' => $this->invoice_number,
                 'acquired_date' => $this->acquired_date->format('m-d-Y'),
                 'products_count' => $this->products_count,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],

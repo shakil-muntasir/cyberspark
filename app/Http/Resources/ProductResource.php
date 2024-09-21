@@ -21,6 +21,7 @@ class ProductResource extends JsonResource
     protected function getAttributes(): array
     {
         // TODO: match the types with frontend for all resources
+
         return [
             'type' => 'products',
             'id' => (string) $this->id,
@@ -32,9 +33,12 @@ class ProductResource extends JsonResource
                 'status' => $this->status,
                 'variants_count' => $this->variants_count,
                 'variants_sum_quantity' => $this->variants_sum_quantity ?? 0,
+                'order_variants_sum_quantity' => $this->order_variants_sum_quantity ?? 0,
                 'availability' => $this->availability,
                 'category' => $this->whenLoaded('category', fn() => $this->category->name),
                 'category_id' => (string) $this->category_id,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],

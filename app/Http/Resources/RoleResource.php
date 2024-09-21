@@ -23,6 +23,8 @@ class RoleResource extends JsonResource
                 'label' => Str::title(str_replace('_', ' ', $this->name)),
                 'value' => $this->name,
                 'guard_name' => $this->guard_name,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],

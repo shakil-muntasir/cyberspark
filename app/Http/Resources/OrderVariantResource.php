@@ -27,7 +27,9 @@ class OrderVariantResource extends JsonResource
             'attributes' => [
                 'id' => (string) $this->id,
                 'price' => $this->price,
-                'quantity' => $this->quantity
+                'quantity' => $this->quantity,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
             ]
         ];
     }

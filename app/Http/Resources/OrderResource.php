@@ -28,13 +28,15 @@ class OrderResource extends JsonResource
             'id' => (string) $this->id,
             'attributes' => [
                 'id' => (string) $this->id,
-                'code' => 'ORD' . sprintf('%05d', $this->id),
+                'code' => sprintf('%05d', $this->id),
                 'customer' => $this->whenLoaded('customer', fn() => $this->customer->name),
                 'delivered_by' =>$this->delivered_by,
                 'delivery_method' => $this->delivery_method,
                 'delivery_cost' => $this->delivery_cost,
                 'payment_status' => $this->payment_status,
                 'total_payable' => $this->total_payable,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ]

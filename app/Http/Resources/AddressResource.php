@@ -16,6 +16,8 @@ class AddressResource extends JsonResource
                 'state' => $this->state,
                 'zip' => $this->zip,
                 'country' => $this->country,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ],
