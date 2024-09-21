@@ -36,39 +36,34 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 const columns: TableColumn<User>[] = createColumns([
   {
     id: 'name',
-    label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
-    cell: ({ id, name }) => (
-      <Link href={`/users/${id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
-        {name}
+    cell: user => (
+      <Link href={`/users/${user.id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+        {user.attributes.name}
       </Link>
     )
   },
   {
     id: 'email',
-    label: 'Email',
     header: column => <DataTableColumnHeader column={column} title='Email' />,
-    cell: ({ email }) => <div className='font-medium'>{email}</div>
+    cell: user => <div className='font-medium'>{user.attributes.email}</div>
   },
   {
     id: 'phone',
-    label: 'Phone',
     header: column => <DataTableColumnHeader column={column} title='Phone' />,
-    cell: ({ phone }) => <div className='font-medium'>{phone}</div>
+    cell: user => <div className='font-medium'>{user.attributes.email}</div>
   },
   {
     id: 'gender',
-    label: 'Gender',
     header: column => <DataTableColumnHeader column={column} title='Gender' />,
-    cell: ({ gender }) => <>{toTitleCase(gender)}</>
+    cell: user => <>{toTitleCase(user.attributes.gender)}</>
   },
   {
     id: 'status',
-    label: 'Status',
     header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
-    cell: ({ status }) => (
+    cell: user => (
       <span className='flex justify-center'>
-        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{toTitleCase(status)}</Badge>
+        <Badge variant={user.attributes.status === 'active' ? 'default' : 'secondary'}>{toTitleCase(user.attributes.status)}</Badge>
       </span>
     ),
     options: [
@@ -84,26 +79,24 @@ const columns: TableColumn<User>[] = createColumns([
       }
     ]
   },
-  // FIXME: Uncomment this when the audit log is implemented
-  // {
-  //   id: 'created_by',
-  //   label: 'Created by',
-  //   header: 'Created By'
-  // },
+  {
+    id: 'created_by',
+    header: () => <div className='text-center'>Created by</div>,
+    cell: user => <div className='flex justify-center'>{user.attributes.created_by?.name}</div>
+  },
   {
     id: 'actions',
-    label: 'Actions',
     header: () => (
       <div className='flex justify-center'>
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id, name }) => {
+    cell: user => {
       const { initializeDeleteModal } = useDeleteModal()
 
       const deleteModalData: DeleteModalData = {
-        id,
-        name,
+        id: user.id,
+        name: user.attributes.name,
         title: 'user',
         onConfirm: () => router.visit('/products')
       }
@@ -120,8 +113,8 @@ const columns: TableColumn<User>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy user ID</DropdownMenuItem>
-              <Link href={`/users/${id}`}>
+              <DropdownMenuItem onClick={() => handleCopyId(user.id)}>Copy user ID</DropdownMenuItem>
+              <Link href={`/users/${user.id}`}>
                 <DropdownMenuItem>View user details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>

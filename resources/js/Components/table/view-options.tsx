@@ -6,6 +6,7 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from '@/Components/ui/dropdown-menu'
 import { TableColumn } from '@/Types'
+import { toTitleCase } from '@/Lib/utils'
 
 export function DataTableViewOptions<T>({ columns }: { columns: TableColumn<T>[] }) {
   return (
@@ -31,7 +32,7 @@ export function DataTableViewOptions<T>({ columns }: { columns: TableColumn<T>[]
                 checked={!column.hidden} // Show checkbox if column is visible
                 onCheckedChange={checked => column.toggleVisibility(!checked)}
               >
-                {column.label}
+                {toTitleCase(column?.id.toString())}
               </DropdownMenuCheckboxItem>
             )
           })}

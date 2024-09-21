@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons'
-import { cn } from '@/Lib/utils'
+import { cn, toTitleCase } from '@/Lib/utils'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/Components/ui/command'
@@ -129,7 +129,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
             <PopoverTrigger asChild>
               <Button variant='outline' size='sm' className='h-8 border-dashed'>
                 <PlusCircledIcon className='mr-2 h-4 w-4' />
-                {column?.label}
+                {toTitleCase(column?.id.toString())}
                 {filterValue.length > 0 && (
                   <>
                     <Separator orientation='vertical' className='mx-2 h-4' />
@@ -157,7 +157,7 @@ export const DataTableToolbar = <T,>({ columns, disableFilter = false, filterCol
             </PopoverTrigger>
             <PopoverContent className='w-[200px] p-0' align='start'>
               <Command>
-                <CommandInput placeholder={column?.label} />
+                <CommandInput placeholder={toTitleCase(column?.id.toString())} />
                 <CommandList>
                   <CommandEmpty>No results found.</CommandEmpty>
                   <CommandGroup>

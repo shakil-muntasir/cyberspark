@@ -1,3 +1,5 @@
+import { CreatedOrUpdatedBy } from '@/Types'
+
 type Attributes = {
     id: string
     name: string
@@ -6,9 +8,12 @@ type Attributes = {
     status: string
     variants_count: string
     variants_sum_quantity: string
+    order_variants_sum_quantity: string
     availability: string
     category: string
     category_id: string
+    created_by: CreatedOrUpdatedBy
+    updated_by: CreatedOrUpdatedBy
     created_at: string
     updated_at: string
 }
@@ -41,6 +46,14 @@ type VariantAttributes = {
     retail_price?: string
     selling_price: string
     status: string
+    created_by: {
+        id: string
+        name: string
+    } | null
+    updated_by?: {
+        id: string
+        name: string
+    } | null
     created_at: string
     updated_at: string
 }

@@ -36,27 +36,25 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 const columns: TableColumn<Order>[] = createColumns([
   {
     id: 'id',
-    label: 'Code',
     header: column => <DataTableColumnHeader column={column} title='Code' />,
-    cell: ({ id, code }) => (
-      <Link href={`/orders/${id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
-        {code}
+    cell: order => (
+      <Link href={`/orders/${order.id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+        {order.attributes.code}
       </Link>
     )
   },
 
   {
     id: 'total_payable',
-    label: 'Payable',
     header: column => <DataTableColumnHeader column={column} title='Payable' align='end' />,
-    cell: ({ total_payable }) => <div className='mr-4 text-right'>{formatCurrency(total_payable)}</div>
+    cell: order => <div className='mr-4 text-right'>{formatCurrency(order.attributes.total_payable)}</div>
   },
   {
     id: 'payment_status',
-    label: 'Payment Status',
     header: () => <div className='text-center'>Payment Status</div>,
-    cell: ({ payment_status }) => {
+    cell: order => {
       let variant: 'draft' | 'due' | 'partial' | 'paid' = 'draft'
+      const { payment_status } = order.attributes
       switch (payment_status) {
         case 'paid':
           variant = 'paid'
@@ -80,40 +78,37 @@ const columns: TableColumn<Order>[] = createColumns([
   },
   {
     id: 'customer',
-    label: 'Customer',
-    header: 'Customer'
+    header: () => <div className='text-center'>Customer</div>,
+    cell: order => <div className='flex justify-center'>{order.attributes.customer}</div>
   },
   {
     id: 'delivered_by',
-    label: 'Delivered By',
     header: 'Delivered By',
-    cell: ({ delivery_method, delivered_by }) => (
+    cell: order => (
       <div className='flex items-center gap-1'>
-        {delivery_method === 'in-house' ? <BikeIcon className='h-4.5 w-4.5' /> : <TruckIcon className='h-4.5 w-4.5' />}
-        {delivered_by}
+        {order.attributes.delivery_method === 'in-house' ? <BikeIcon className='h-4.5 w-4.5' /> : <TruckIcon className='h-4.5 w-4.5' />}
+        {order.attributes.delivered_by}
       </div>
     )
   },
-  // FIXME: Uncomment this when the audit log is implemented
-  // {
-  //   id: 'created_by',
-  //   label: 'Created by',
-  //   header: 'Created By'
-  // },
+  {
+    id: 'created_by',
+    header: () => <div className='text-center'>Created by</div>,
+    cell: user => <div className='flex justify-center'>{user.attributes.created_by?.name}</div>
+  },
   {
     id: 'actions',
-    label: 'Actions',
     header: () => (
       <div className='flex justify-center'>
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id, code }) => {
+    cell: order => {
       const { initializeDeleteModal } = useDeleteModal()
 
       const deleteModalData: DeleteModalData = {
-        id,
-        name: `${code}`,
+        id: order.id,
+        name: `${order.attributes.code}`,
         title: 'order',
         onConfirm: () => router.visit('/orders')
       }
@@ -130,8 +125,8 @@ const columns: TableColumn<Order>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy order ID</DropdownMenuItem>
-              <Link href={`/orders/${id}`}>
+              <DropdownMenuItem onClick={() => handleCopyId(order.id)}>Copy order ID</DropdownMenuItem>
+              <Link href={`/orders/${order.id}`}>
                 <DropdownMenuItem>View order details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>

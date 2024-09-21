@@ -35,42 +35,37 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 const columns: TableColumn<Acquisition>[] = createColumns([
   {
     id: 'invoice_number',
-    label: 'Invoice Number',
     header: column => <DataTableColumnHeader column={column} title='Invoice Number' />,
-    cell: ({ invoice_number }) => <div className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>{invoice_number}</div>
+    cell: acquisition => <div className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>{acquisition.attributes.invoice_number}</div>
   },
   {
     id: 'products_count',
-    label: 'Products',
     header: column => <DataTableColumnHeader column={column} title='Products' />,
-    cell: ({ products_count }) => <div className='mr-4 font-medium'>{products_count}</div>
+    cell: acquisition => <div className='mr-4 font-medium'>{acquisition.attributes.products_count}</div>
   },
   {
     id: 'acquired_date',
-    label: 'Acquired Date',
     header: column => <DataTableColumnHeader column={column} title='Acquired Date' />,
-    cell: ({ acquired_date }) => <div className='mr-4 font-medium'>{acquired_date}</div>
+    cell: acquisition => <div className='mr-4 font-medium'>{acquisition.attributes.acquired_date}</div>
   },
-  // FIXME: Uncomment this when the audit log is implemented
-  // {
-  //   id: 'created_by',
-  //   label: 'Created by',
-  //   header: 'Created By'
-  // },
+  {
+    id: 'created_by',
+    header: () => <div className='text-center'>Created by</div>,
+    cell: acquisition => <div className='flex justify-center'>{acquisition.attributes.created_by?.name}</div>
+  },
   {
     id: 'actions',
-    label: 'Actions',
     header: () => (
       <div className='flex justify-center'>
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id, invoice_number }) => {
+    cell: acquisition => {
       const { initializeDeleteModal } = useDeleteModal()
 
       const deleteModalData: DeleteModalData = {
-        id,
-        name: invoice_number,
+        id: acquisition.id,
+        name: acquisition.attributes.invoice_number,
         title: 'Acquisition',
         onConfirm: () => router.visit('/acquisitions')
       }
@@ -87,8 +82,8 @@ const columns: TableColumn<Acquisition>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy Acquisition ID</DropdownMenuItem>
-              <Link href={`/acquisitions/${id}`}>
+              <DropdownMenuItem onClick={() => handleCopyId(acquisition.id)}>Copy Acquisition ID</DropdownMenuItem>
+              <Link href={`/acquisitions/${acquisition.id}`}>
                 <DropdownMenuItem>View Acquisition Details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>

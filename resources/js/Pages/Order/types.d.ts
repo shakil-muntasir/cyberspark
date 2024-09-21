@@ -1,15 +1,20 @@
 import { ProductVariant } from '@/Pages/Product/types'
 import { User } from '@/Pages/User/types'
-import { SelectOption } from '@/Types'
+import { CreatedOrUpdatedBy, SelectOption } from '@/Types'
 
 type Attributes = {
     id: string
+    code: string
+    customer: string
     delivery_method: string
+    delivered_by: string
     delivery_cost: number
     payment_status: string
     total_payable: number
     total_paid: number
     total_remaining: number
+    created_by: CreatedOrUpdatedBy
+    updated_by: CreatedOrUpdatedBy
     created_at: string
     updated_at: string
 }

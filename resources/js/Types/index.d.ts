@@ -43,10 +43,9 @@ export type ColumnOption = {
 export type Attributes<T> = T extends { data: { attributes: infer A } } ? A : never
 
 export interface TableColumn<T> {
-    id: keyof Attributes<T> | ((row: Attributes<T>) => JSX.Element) | 'actions'
-    label: string
-    header: string | ((column: TableColumn<T>) => JSX.Element)
-    cell?: keyof Attributes<T> | ((row: Attributes<T>) => JSX.Element)
+    id: keyof Attributes<T> | 'id' | 'actions'
+    header: ((column: TableColumn<T>) => JSX.Element) | string
+    cell: (row: T) => JSX.Element
     sorted?: 'asc' | 'desc'
     toggleSorting: (desc: boolean) => void
     toggleVisibility: (hidden: boolean) => void
@@ -74,3 +73,8 @@ export type SelectOption = {
     label: string
     value: string
 }
+
+export type CreatedOrUpdatedBy = {
+    id: string
+    name: string
+} | null

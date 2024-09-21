@@ -14,8 +14,6 @@ import { toTitleCase } from '@/Lib/utils'
 import { Product } from '@/Pages/Product/types'
 import { TableColumn } from '@/Types'
 
-// TODO: add orders to product
-
 const handleCopyId = (id: string): void => {
   navigator.clipboard.writeText(id)
   setTimeout(() => {
@@ -40,44 +38,44 @@ const createColumns = <T,>(columns: (Omit<TableColumn<T>, 'toggleSorting' | 'tog
 const columns: TableColumn<Product>[] = createColumns([
   {
     id: 'name',
-    label: 'Name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
-    cell: ({ id, name }) => (
-      <Link href={`/products/${id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
-        {name}
+    cell: product => (
+      <Link href={`/products/${product.id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+        {product.attributes.name}
       </Link>
     )
   },
   {
     id: 'sku_prefix',
-    label: 'SKU Prefix',
     header: column => <DataTableColumnHeader column={column} title='SKU Prefix' />,
-    cell: ({ sku_prefix }) => <div className='font-medium'>{sku_prefix}</div>
+    cell: product => <div className='font-medium'>{product.attributes.sku_prefix}</div>
   },
   {
     id: 'category',
-    label: 'Category',
-    header: 'Category',
-    cell: ({ category }) => <div>{category}</div>
+    header: () => <div className='text-center'>Category</div>,
+    cell: product => <div className='flex justify-center'>{product.attributes.category}</div>
   },
   {
     id: 'variants_sum_quantity',
-    label: 'Total Stock',
     header: column => <DataTableColumnHeader column={column} title='Total Stock' align='end' />,
-    cell: ({ variants_sum_quantity }) => <div className='mr-4 text-right'>{variants_sum_quantity}</div>
+    cell: product => <div className='mr-4 text-right font-medium'>{product.attributes.variants_sum_quantity}</div>
+  },
+  {
+    id: 'order_variants_sum_quantity',
+    header: column => <DataTableColumnHeader column={column} title='Total Sold' align='end' />,
+    cell: product => <div className='mr-4 text-right font-medium'>{product.attributes.order_variants_sum_quantity}</div>
   },
   {
     id: 'variants_count',
-    label: 'Variants',
     header: column => <DataTableColumnHeader column={column} title='Variants' align='end' />,
-    cell: ({ variants_count }) => <div className='mr-4 text-right'>{variants_count}</div>
+    cell: product => <div className='mr-4 text-right'>{product.attributes.variants_count}</div>
   },
   {
     id: 'availability',
-    label: 'Availability',
     header: () => <div className='text-center'>Availability</div>,
-    cell: ({ availability }) => {
+    cell: product => {
       let variant: 'default' | 'destructive' | 'secondary' | 'outline' = 'default'
+      const { availability } = product.attributes
       switch (availability) {
         case 'available':
           variant = 'default'
@@ -101,11 +99,10 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'status',
-    label: 'Status',
     header: column => <DataTableColumnHeader column={column} title='Status' align='center' />,
-    cell: ({ status }) => (
+    cell: product => (
       <span className='flex justify-center'>
-        <Badge variant={status === 'active' ? 'default' : 'secondary'}>{toTitleCase(status)}</Badge>
+        <Badge variant={product.attributes.status === 'active' ? 'default' : 'secondary'}>{toTitleCase(product.attributes.status)}</Badge>
       </span>
     ),
     options: [
@@ -121,26 +118,24 @@ const columns: TableColumn<Product>[] = createColumns([
       }
     ]
   },
-  // FIXME: Uncomment this when the audit log is implemented
-  // {
-  //   id: 'created_by',
-  //   label: 'Created by',
-  //   header: 'Created By'
-  // },
+  {
+    id: 'created_by',
+    header: () => <div className='text-center'>Created by</div>,
+    cell: product => <div className='flex justify-center'>{product.attributes.created_by?.name}</div>
+  },
   {
     id: 'actions',
-    label: 'Actions',
     header: () => (
       <div className='flex justify-center'>
         <span>Actions</span>
       </div>
     ),
-    cell: ({ id, name }) => {
+    cell: product => {
       const { initializeDeleteModal } = useDeleteModal()
 
       const deleteModalData: DeleteModalData = {
-        id,
-        name,
+        id: product.id,
+        name: product.attributes.name,
         title: 'product',
         onConfirm: () => router.visit('/products')
       }
@@ -157,8 +152,8 @@ const columns: TableColumn<Product>[] = createColumns([
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleCopyId(id)}>Copy product ID</DropdownMenuItem>
-              <Link href={`/products/${id}`}>
+              <DropdownMenuItem onClick={() => handleCopyId(product.id)}>Copy product ID</DropdownMenuItem>
+              <Link href={`/products/${product.id}`}>
                 <DropdownMenuItem>View product details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>

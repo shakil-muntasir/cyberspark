@@ -1,4 +1,4 @@
-import { SelectOption } from '@/Types'
+import { CreatedOrUpdatedBy, SelectOption } from '@/Types'
 
 type Attributes = {
     id: string
@@ -10,7 +10,10 @@ type Attributes = {
     status: 'active' | 'inactive'
     roles: SelectOption[]
     email_verified_at?: string
-    url: string
+    created_by: CreatedOrUpdatedBy
+    updated_by: CreatedOrUpdatedBy
+    created_at: string
+    updated_at: string
 }
 
 type Relationships = {

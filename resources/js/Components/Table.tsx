@@ -2,7 +2,7 @@ import DeleteModal from '@/Components/DeleteModal'
 import DataTablePagination from '@/Components/table/pagination'
 import { DataTableToolbar } from '@/Components/table/toolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
-import { Attributes, TableProps } from '@/Types'
+import { TableProps } from '@/Types'
 
 export default function DataTable<T>({ data, columns, filterColumnBy, searchPlaceholder }: TableProps<T>) {
   return (
@@ -11,25 +11,11 @@ export default function DataTable<T>({ data, columns, filterColumnBy, searchPlac
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
-            <TableRow>{columns.map(column => !column.hidden && <TableHead key={String(column.id)}>{typeof column.header === 'string' ? column.header : column.header(column)}</TableHead>)}</TableRow>
+            <TableRow>{columns.map(column => (!column.hidden ? <TableHead key={String(column.id)}>{typeof column.header === 'string' ? column.header : column.header(column)}</TableHead> : null))}</TableRow>
           </TableHeader>
           <TableBody>
             {data.data.length > 0 ? (
-              (data.data as Array<{ attributes: Attributes<T> }>).map(({ attributes: row }, index) => (
-                <TableRow key={index}>
-                  {columns.map(
-                    column =>
-                      !column.hidden && (
-                        <TableCell key={String(column.id)}>
-                          {/* eslint-disable */}
-                          {/** @ts-expect-error FIXME: later */}
-                          {column.cell ? (typeof column.cell === 'string' ? row[column.cell as keyof Attributes<T>] : column.cell(row as any)) : typeof column.id === 'function' ? column.id(row) : row[column.id as keyof Attributes<T>]}
-                          {/* eslint-enable */}
-                        </TableCell>
-                      )
-                  )}
-                </TableRow>
-              ))
+              (data.data as Array<T>).map((row, index) => <TableRow key={index}>{columns.map(column => (!column.hidden ? <TableCell key={String(column.id)}>{column.cell(row)}</TableCell> : null))}</TableRow>)
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
