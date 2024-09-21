@@ -117,7 +117,7 @@ class Product extends Model implements Auditable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['category:id,name'])
+            ->with(['category:id,name', 'audits.user'])
             ->withCount('variants') // This will add 'variants_counts' to the result
             ->withSum('variants', 'quantity') // This will add 'variants_sum_quantity' to the result
             ->withSum('orderVariants', 'quantity') // This will add 'order_variants_sum_quantity' to the result

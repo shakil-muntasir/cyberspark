@@ -106,7 +106,7 @@ class Order extends Model implements Auditable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['courierService:id,name', 'customer:id,name', 'deliveryMan'])
+            ->with(['courierService', 'customer', 'deliveryMan', 'audits.user'])
             ->withSum('transactions', 'amount')
             ->search($params['search'] ?? '')
             ->when(

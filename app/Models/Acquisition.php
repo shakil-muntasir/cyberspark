@@ -65,6 +65,7 @@ class Acquisition extends Model implements Auditable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
+            ->with(['audits.user'])
             ->withCount('products')
             ->search($params['search'] ?? '')
             ->when(

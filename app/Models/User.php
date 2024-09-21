@@ -171,6 +171,7 @@ class User extends Authenticatable implements Auditable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
+            ->with(['audits.user'])
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())

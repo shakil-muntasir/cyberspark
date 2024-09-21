@@ -48,7 +48,11 @@ class UserController extends Controller
     {
         Gate::authorize('view', $user);
 
-        $user->load(['address', 'roles']);
+        $user->load([
+            'address',
+            'roles',
+            'audits.user'
+        ]);
 
         return inertia('User/Show', [
             'user' => new UserResource($user),

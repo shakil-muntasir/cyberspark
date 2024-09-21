@@ -42,7 +42,8 @@ class ProductController extends Controller
         $product->load([
             'category:id,name',
             'variants',
-            'variants.product'
+            'variants.product',
+            'audits.user'
         ])->loadSum('variants', 'quantity');
 
         return inertia('Product/Show', [

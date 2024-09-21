@@ -17,29 +17,24 @@ trait AuditableTrait
     use Auditable;
 
     /**
-     * Boot the trait and automatically eager load the audits relation.
-     */
-    public static function bootAuditableTrait()
-    {
-        // Ensure audits and audits.user are always eager-loaded
-        static::addGlobalScope('auditable', function ($query) {
-            $query->with(['audits.user']);
-        });
-    }
-
-    /**
      * Get the user who created the product variant.
      *
      * @return array<string, mixed>|null
      */
     public function getCreatedByAttribute(): ?array
     {
-        $audit = $this->audits->firstWhere('event', 'created');
+        // Ensure the audits relationship is loaded before accessing it
+        if ($this->relationLoaded('audits')) {
+            $audit = $this->audits->firstWhere('event', 'created');
 
-        return $audit && $audit->user ? [
-            'id' => (string) $audit->user->id,
-            'name' => $audit->user->name,
-        ] : null;
+            return $audit && $audit->user ? [
+                'id' => (string) $audit->user->id,
+                'name' => $audit->user->name,
+            ] : null;
+        }
+
+        // Return null if the audits relationship is not loaded
+        return null;
     }
 
     /**
@@ -49,11 +44,17 @@ trait AuditableTrait
      */
     public function getUpdatedByAttribute(): ?array
     {
-        $audit = $this->audits->firstWhere('event', 'updated');
+        // Ensure the audits relationship is loaded before accessing it
+        if ($this->relationLoaded('audits')) {
+            $audit = $this->audits->firstWhere('event', 'updated');
 
-        return $audit && $audit->user ? [
-            'id' => (string) $audit->user->id,
-            'name' => $audit->user->name,
-        ] : null;
+            return $audit && $audit->user ? [
+                'id' => (string) $audit->user->id,
+                'name' => $audit->user->name,
+            ] : null;
+        }
+
+        // Return null if the audits relationship is not loaded
+        return null;
     }
 }

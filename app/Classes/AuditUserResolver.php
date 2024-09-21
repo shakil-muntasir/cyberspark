@@ -9,9 +9,9 @@ class AuditUserResolver implements \OwenIt\Auditing\Contracts\UserResolver
      */
     public static function resolve()
     {
-        // If we are in a local environment and running in console or unit tests, return the first admin user
+        // If we are in a local environment and running in console or unit tests, return a random user with admin or sales_rep role
         if (!app()->isProduction() && (app()->runningInConsole() || app()->runningUnitTests())) {
-            return \App\Models\User::role('admin')->first();
+            return \App\Models\User::role(['admin', 'sales_rep'])->inRandomOrder()->first();
         }
 
         $guards = config('audit.user.guards', [
