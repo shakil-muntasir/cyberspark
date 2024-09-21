@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('order_variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->nullOnDelete();
-            $table->foreignId('product_variant_id')->constrained('product_variants')->nullOnDelete();
+            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
+            $table->foreignId('product_variant_id')->constrained('product_variants')->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('price', 10, 2); // saving the current price of the variant
             $table->timestamps();
