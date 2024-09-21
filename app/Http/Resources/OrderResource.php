@@ -35,10 +35,6 @@ class OrderResource extends JsonResource
                 'delivery_cost' => $this->delivery_cost,
                 'payment_status' => $this->payment_status,
                 'total_payable' => $this->total_payable,
-                'created_by_id' => (string) $this->created_by_id,
-                'updated_by_id' => (string) $this->updated_by_id,
-                'created_by' => $this->createdBy->name,
-                'updated_by' => $this->updatedBy->name,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),
                 'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ]

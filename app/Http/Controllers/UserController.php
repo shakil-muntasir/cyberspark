@@ -48,11 +48,7 @@ class UserController extends Controller
     {
         Gate::authorize('view', $user);
 
-        $user->load([
-            'address',
-            'roles',
-            'createdBy:id,name',
-        ]);
+        $user->load(['address', 'roles']);
 
         return inertia('User/Show', [
             'user' => new UserResource($user),
@@ -67,12 +63,12 @@ class UserController extends Controller
     {
         $search = request()->input('search');
 
-        // TODO: revisit this query later.
+        // TODO: revisit and take closer look into this query later.
         $users = User::with(['address'])->role('customer')
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('phone', 'like', "%$search%");
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('phone', 'like', "%$search%");
             })
             ->latest('id')
             ->take(10)

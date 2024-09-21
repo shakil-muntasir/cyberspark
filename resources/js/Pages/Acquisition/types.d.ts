@@ -5,10 +5,6 @@ type Attributes = {
     invoice_number: string
     acquired_date: string
     products_count: string
-    created_by_id: string
-    updated_by_id: string
-    created_by: string
-    updated_by: string
     created_at: string
     updated_at: string
 }

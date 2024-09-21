@@ -28,8 +28,6 @@ class TransactionFactory extends Factory
             'txn_id' => fake()->uuid,
             'bank_name' => fake()->company,
             'cheque_number' => fake()->bothify('###-######'),
-            'created_by_id' => User::factory(),
-            'updated_by_id' => User::factory(),
         ];
     }
 

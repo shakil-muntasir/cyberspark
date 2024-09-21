@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('txn_id')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('cheque_number')->nullable();
-            $table->foreignId('created_by_id')->constrained('users');
-            $table->foreignId('updated_by_id')->constrained('users');
             $table->timestamps();
         });
     }

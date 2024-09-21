@@ -10,10 +10,6 @@ type Attributes = {
     total_payable: number
     total_paid: number
     total_remaining: number
-    created_by_id: string
-    updated_by_id: string
-    created_by: string
-    updated_by: string
     created_at: string
     updated_at: string
 }
@@ -53,6 +49,7 @@ export type OrderForm = {
     total_payable?: number // The total amount to be paid for the order
 
     order_variants: OrderVariant[]
+
     address: {
         contact_number: string
         email: string

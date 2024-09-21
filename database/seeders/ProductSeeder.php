@@ -5,14 +5,11 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Run the database seeds.
      */
@@ -21,16 +18,12 @@ class ProductSeeder extends Seeder
         foreach (range(1, 25) as $i) {
             $product = Product::factory()->create([
                 'category_id' => Category::inRandomOrder()->first()->id,
-                'created_by_id' => User::inRandomOrder()->first()->id,
-                'updated_by_id' => User::inRandomOrder()->first()->id,
             ]);
 
             // Create 3-5 random variants for each product
             $variantsCount = rand(3, 5);
             ProductVariant::factory($variantsCount)->create([
                 'product_id' => $product->id,
-                'created_by_id' => User::inRandomOrder()->first()->id,
-                'updated_by_id' => User::inRandomOrder()->first()->id,
             ]);
         }
     }

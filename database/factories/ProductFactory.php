@@ -25,8 +25,6 @@ class ProductFactory extends Factory
             'description' => fake()->sentence,
             'status' => fake()->randomElement(['active', 'inactive']),
             'category_id' => Category::factory(),
-            'created_by_id' => User::factory(),
-            'updated_by_id' => User::factory(),
             'created_at' => fake()->dateTimeBetween('-15 days', '-7 days'),
             'updated_at' => fake()->dateTimeBetween('-6 days', '-1 days')
         ];

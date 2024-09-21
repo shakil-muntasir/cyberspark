@@ -32,8 +32,6 @@ class UserResource extends JsonResource
                 'phone' => $this->phone,
                 'image' => $this->image ? asset("storage/{$this->image}") : null,
                 'status' => $this->status,
-                'created_by_id' => $this->created_by_id,
-                'created_by' => $this->whenLoaded('createdBy', fn() => $this->createdBy->name) ?? 'N/A',
                 'email_verified_at' => $this->email_verified_at,
             ],
         ];

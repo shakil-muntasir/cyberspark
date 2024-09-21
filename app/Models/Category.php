@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +9,7 @@ use Str;
 
 class Category extends Model
 {
-    use HasFactory, HasUserTracking, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name'];
 

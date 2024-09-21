@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_number')->unique();
             $table->date('acquired_date');
-            $table->foreignId('created_by_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('updated_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

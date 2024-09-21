@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Gender;
 use App\Enums\UserStatus;
-use App\Traits\HasUserTracking;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +18,7 @@ use Str;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasRoles, HasUserTracking, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -63,15 +62,9 @@ class User extends Authenticatable
         'status' => UserStatus::class
     ];
 
-
     public function address(): HasOne
     {
         return $this->hasOne(Address::class, 'user_id');
-    }
-
-    public function acquisitions(): HasMany
-    {
-        return $this->hasMany(Acquisition::class, 'created_by_id');
     }
 
     public function customerOrders(): HasMany
@@ -82,16 +75,6 @@ class User extends Authenticatable
     public function deliveryManOrders(): HasMany
     {
         return $this->hasMany(Order::class, 'delivery_man_id');
-    }
-
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class, 'created_by_id');
-    }
-
-    public function users(): HasMany
-    {
-        return $this->hasMany(User::class, 'created_by_id');
     }
 
     /**
@@ -112,35 +95,6 @@ class User extends Authenticatable
                 'value' => $role->name
             ];
         })->toArray();
-    }
-
-    /**
-     * Scope a query to search users based on given search query.
-     *
-     * @param  Builder $query
-     * @param  string|null $search
-     * @return Builder
-     */
-    public function scopeSearch(Builder $query, ?string $search): Builder
-    {
-        if (!empty($search)) {
-            return $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%")
-                    ->orWhereHas('address', function ($q) use ($search) {
-                        $q->where('street', 'like', "%{$search}%")
-                            ->orWhere('city', 'like', "%{$search}%")
-                            ->orWhere('state', 'like', "%{$search}%")
-                            ->orWhere('zip', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('createdBy', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        return $query;
     }
 
     /**
@@ -181,15 +135,29 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope a query to only include updated by given user.
+     * Scope a query to search users based on given search query.
      *
      * @param  Builder $query
-     * @param  int $userId
+     * @param  string|null $search
      * @return Builder
      */
-    public function scopeUpdatedBy(Builder $query, int $userId): Builder
+    public function scopeSearch(Builder $query, ?string $search): Builder
     {
-        return $query->where('updated_by_id', $userId);
+        if (!empty($search)) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhereHas('address', function ($q) use ($search) {
+                        $q->where('street', 'like', "%{$search}%")
+                            ->orWhere('city', 'like', "%{$search}%")
+                            ->orWhere('state', 'like', "%{$search}%")
+                            ->orWhere('zip', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        return $query;
     }
 
     /**
@@ -201,14 +169,13 @@ class User extends Authenticatable
     public static function filterAndSort(array $params): LengthAwarePaginator
     {
         return self::query()
-            ->with(['createdBy:id,name'])
             ->search($params['search'] ?? '')
             ->when($params['active'], fn($q) => $q->active())
             ->when($params['inactive'], fn($q) => $q->inactive())
             ->when(
                 isset($params['sort_by']) && isset($params['sort_to']),
                 fn($q) => $q->orderBy($params['sort_by'], $params['sort_to']),
-                fn($q) => $q->latest('updated_at') // Use 'latest' method for descending order by 'updated_at' if no sort parameters are provided
+                fn($q) => $q->latest() // Default sorting by latest created_at date
             )
             ->paginate($params['per_page'] ?? 10);
     }

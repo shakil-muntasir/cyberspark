@@ -84,11 +84,12 @@ const columns: TableColumn<User>[] = createColumns([
       }
     ]
   },
-  {
-    id: 'created_by',
-    label: 'Created By',
-    header: column => <DataTableColumnHeader column={column} title='Created by' />
-  },
+  // FIXME: Uncomment this when the audit log is implemented
+  // {
+  //   id: 'created_by',
+  //   label: 'Created by',
+  //   header: 'Created By'
+  // },
   {
     id: 'actions',
     label: 'Actions',

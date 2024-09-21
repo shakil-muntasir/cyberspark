@@ -25,8 +25,6 @@ class ProductVariantFactory extends Factory
             'retail_price' => fake()->randomFloat(2, 1500, 2500),
             'selling_price' => fake()->randomFloat(2, 2000, 3000),
             'status' => fake()->randomElement(['active', 'inactive']),
-            'created_by_id' => User::factory(),
-            'updated_by_id' => User::factory(),
             'created_at' => fake()->dateTimeBetween('-15 days', '-7 days'),
             'updated_at' => fake()->dateTimeBetween('-6 days', '-1 days'),
         ];

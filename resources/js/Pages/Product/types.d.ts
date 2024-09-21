@@ -9,10 +9,6 @@ type Attributes = {
     availability: string
     category: string
     category_id: string
-    created_by_id: string
-    updated_by_id: string
-    created_by: string
-    updated_by: string
     created_at: string
     updated_at: string
 }
@@ -45,10 +41,6 @@ type VariantAttributes = {
     retail_price?: string
     selling_price: string
     status: string
-    created_by_id: string
-    updated_by_id: string
-    created_by: string
-    updated_by: string
     created_at: string
     updated_at: string
 }

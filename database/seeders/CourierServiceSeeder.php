@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CourierService;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CourierServiceSeeder extends Seeder

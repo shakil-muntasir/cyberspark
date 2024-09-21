@@ -9,7 +9,6 @@ type Attributes = {
     image?: string
     status: 'active' | 'inactive'
     roles: SelectOption[]
-    created_by?: string
     email_verified_at?: string
     url: string
 }

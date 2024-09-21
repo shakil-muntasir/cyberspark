@@ -94,11 +94,12 @@ const columns: TableColumn<Order>[] = createColumns([
       </div>
     )
   },
-  {
-    id: 'created_by',
-    label: 'Created by',
-    header: 'Created By'
-  },
+  // FIXME: Uncomment this when the audit log is implemented
+  // {
+  //   id: 'created_by',
+  //   label: 'Created by',
+  //   header: 'Created By'
+  // },
   {
     id: 'actions',
     label: 'Actions',

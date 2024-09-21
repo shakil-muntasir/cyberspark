@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('status')->default(ProductStatus::ACTIVE);
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('acquisition_id')->nullable()->constrained('acquisitions')->nullOnDelete();
-            $table->foreignId('created_by_id')->constrained('users');
-            $table->foreignId('updated_by_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });

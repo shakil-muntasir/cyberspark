@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreignId('delivery_man_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('courier_service_id')->nullable()->constrained('courier_services');
             $table->decimal('total_payable', 10, 2);
-            $table->foreignId('created_by_id')->constrained('users');
-            $table->foreignId('updated_by_id')->constrained('users');
             $table->timestamps();
         });
     }

@@ -133,12 +133,13 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
                     </div>
                   </div>
                 </CardContent>
+                {/* FIXME: get created/updated user info from audits relationship */}
                 <CardFooter className='grid gap-7 border-t py-6 lg:gap-6'>
                   <div className='grid gap-3'>
                     <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Created by</span>
                     <div className='flex items-center justify-between'>
-                      <Link href={`/users/${product.data.attributes.created_by_id}`}>
-                        <p className='text-sm underline underline-offset-2'>{product.data.attributes.created_by}</p>
+                      <Link href={`/users/`}>
+                        <p className='text-sm underline underline-offset-2'>Created by name</p>
                       </Link>
                       <p className='text-[0.7rem] text-muted-foreground'>
                         <span className='hidden lg:inline'>Created at: </span>
@@ -149,8 +150,8 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
                   <div className='grid gap-3'>
                     <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Updated by</span>
                     <div className='flex items-center justify-between'>
-                      <Link href={`/users/${product.data.attributes.updated_by_id}`}>
-                        <p className='text-sm underline underline-offset-2'>{product.data.attributes.updated_by}</p>
+                      <Link href={`/users/`}>
+                        <p className='text-sm underline underline-offset-2'>Created by name</p>
                       </Link>
                       <p className='text-[0.7rem] text-muted-foreground'>
                         <span className='hidden lg:inline'>Updated at: </span>
@@ -164,6 +165,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
               {/* The Product Variants table and add form will be rendered here */}
               <ProductVariantData product={product.data} variants={product.data.relationships?.variants} />
             </div>
+
             <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-8'>
               <Card>
                 <CardHeader>

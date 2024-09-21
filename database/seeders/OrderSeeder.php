@@ -9,12 +9,11 @@ use App\Models\ProductVariant;
 use App\Models\ShippingAddress;
 use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
 {
-    use WithoutModelEvents;
     /**
      * Run the database seeds.
      */
@@ -62,8 +61,6 @@ class OrderSeeder extends Seeder
             'delivery_man_id' => $deliveryMethod === 'in-house' ? User::role('delivery_man')->inRandomOrder()->first()->id : null,
             'courier_service_id' => $deliveryMethod === 'external' ? $courierService->id : null,
             'total_payable' => $totalPayable,  // Correctly set total payable
-            'created_by_id' => User::inRandomOrder()->first()->id,
-            'updated_by_id' => User::inRandomOrder()->first()->id,
         ]);
 
         // Create Shipping Address
@@ -155,8 +152,6 @@ class OrderSeeder extends Seeder
             'order_id' => $order->id,
             'amount' => $amount,
             'payment_method' => $paymentMethod,
-            'created_by_id' => User::inRandomOrder()->first()->id,
-            'updated_by_id' => User::inRandomOrder()->first()->id,
             'service_provider' => null,  // Set to null by default
             'account_number' => null,
             'txn_id' => null,

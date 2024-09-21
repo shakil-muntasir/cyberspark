@@ -42,8 +42,8 @@ class ProductVariantController extends Controller
     {
         $search = request()->input('search');
 
-        // TODO: revisit this query later.
-        $variants = ProductVariant::with(['product', 'product.category', 'createdBy:id,name', 'updatedBy:id,name'])
+        // TODO: revisit and take closer look into this query later.
+        $variants = ProductVariant::with(['product', 'product.category'])
             ->when($search, function ($query, $search) {
                 return $query->where('sku', 'like', "%$search%")
                     ->orWhereHas('product', function ($query) use ($search) {
