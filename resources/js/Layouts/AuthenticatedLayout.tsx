@@ -67,7 +67,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
           </footer>
         </div>
       </div>
-      {url !== '/orders/create' && (
+      {!['/orders', '/orders/create'].includes(url) && (
         <Link href='/orders/create'>
           <Button className='group fixed bottom-5 right-5 flex h-12 w-12 items-center justify-center rounded-full font-medium transition-all duration-500 hover:w-36 hover:bg-foreground'>
             <span className='z-20 inline-block max-w-0 -translate-x-3.5 overflow-hidden opacity-0 transition-all duration-700 group-hover:max-w-xs group-hover:opacity-100'>Create Order</span>

@@ -44,15 +44,11 @@ const columns: TableColumn<Order>[] = createColumns([
       </Link>
     )
   },
-  {
-    id: 'customer',
-    label: 'Customer',
-    header: 'Customer'
-  },
+
   {
     id: 'total_payable',
-    label: 'Total Payable',
-    header: column => <DataTableColumnHeader column={column} title='Total Payable' align='end' />,
+    label: 'Payable',
+    header: column => <DataTableColumnHeader column={column} title='Payable' align='end' />,
     cell: ({ total_payable }) => <div className='mr-4 text-right'>{formatCurrency(total_payable)}</div>
   },
   {
@@ -81,6 +77,11 @@ const columns: TableColumn<Order>[] = createColumns([
         </span>
       )
     }
+  },
+  {
+    id: 'customer',
+    label: 'Customer',
+    header: 'Customer'
   },
   {
     id: 'delivered_by',

@@ -43,10 +43,10 @@ const CartItem: React.FC<CartItemProps> = ({ data, removeFromCart, handleCartIte
           </TooltipProvider>
         </div>
         <div className='mb-4 flex flex-col items-end justify-between'>
-          <p className='flex items-center gap-2'>
+          <div className='flex items-center gap-2'>
             <span className='text-sm'>{formatCurrency(parseFloat(data.variant.attributes.selling_price))}</span> <span className='text-foreground/60'>&times;</span>
             <InputNumber className='h-8 w-16' id='quantity' name='quantity' value={data.quantity} onChange={e => handleCartItemChange(data.variant, e)} />
-          </p>
+          </div>
         </div>
       </div>
     </CardContent>

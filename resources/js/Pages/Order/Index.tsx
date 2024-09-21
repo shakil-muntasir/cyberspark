@@ -6,7 +6,9 @@ import { Order } from '@/Pages/Order/types'
 import { TableData } from '@/Types'
 import { columns as initialColumns } from '@/Pages/Order/_data/columns'
 import { useEffect, useState } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
+import { Button } from '@/Components/ui/button'
+import { PlusCircleIcon } from 'lucide-react'
 
 interface OrdersPageProps {
   orders: TableData<Order>
@@ -40,7 +42,15 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ orders }) => {
 
   return (
     <AuthenticatedLayout title='Orders'>
-      <PageHeader title='Orders' description='This is the orders page. You can view, edit, and delete orders here.' />
+      <div className='flex items-center justify-between'>
+        <PageHeader title='Orders' description='This is the orders page. You can view, edit, and delete orders here.' />
+        <Link href='/orders/create'>
+          <Button className='gap-1'>
+            <PlusCircleIcon className='h-4 w-4' />
+            <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Order</span>
+          </Button>
+        </Link>
+      </div>
 
       <Separator className='mt-4' />
 

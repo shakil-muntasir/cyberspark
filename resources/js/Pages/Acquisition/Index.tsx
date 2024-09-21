@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
 import PageHeader from '@/Layouts/Partials/page-header'
 import AddAcquisition from '@/Pages/Acquisition/Partials/add-acquisition'
-import { columns as initialColumns } from '@/Pages/Acquisition/data/columns'
+import { columns as initialColumns } from '@/Pages/Acquisition/_data/columns'
 
 import DataTable from '@/Components/Table'
 import { Separator } from '@/Components/ui/separator'
