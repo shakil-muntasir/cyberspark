@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CourierService>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Acquisition>
  */
 class AcquisitionFactory extends Factory
 {
@@ -17,8 +17,8 @@ class AcquisitionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word,
-            'delivery_price' => fake()->numberBetween(50, 100),
+            'invoice_number' => $this->faker->unique()->numerify('INV-####'),
+            'acquired_date' => now()->subDays(rand(7, 15))->format('m-d-Y')
         ];
     }
 }
