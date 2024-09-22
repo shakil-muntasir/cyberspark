@@ -11,7 +11,7 @@ class OrderVariantResource extends JsonResource
      */
     protected array $relationships = [
         'order' => OrderResource::class,
-        'product_variant' => ProductVariantResource::class
+        'productVariant' => ProductVariantResource::class
     ];
 
     /**

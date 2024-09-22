@@ -15,7 +15,7 @@ const FormInput: React.FC<FormInputProps> = ({ id, label, errorMessage, children
       <Label htmlFor={id} className={errorMessage?.length ? 'text-destructive' : ''}>
         {label}
       </Label>
-      <div className='space-y-px'>
+      <div className='w-full space-y-px'>
         {children}
         <InputError message={errorMessage} />
       </div>

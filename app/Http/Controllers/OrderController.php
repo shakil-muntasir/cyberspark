@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\State;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderResource;
 use App\Models\CourierService;
 use App\Models\Order;
 use App\Models\ProductVariant;
@@ -46,9 +47,21 @@ class OrderController extends Controller
         return redirect()->route('orders.index');
     }
 
-    public function show()
+    public function show(Order $order): InertiaResponse
     {
-        return inertia('Order/Show');
+        $order->load([
+            'customer',
+            'deliveryMan',
+            'courierService',
+            'variants',
+            'variants.productVariant',
+            'transactions',
+            'audits.user'
+        ]);
+
+        return inertia('Order/Show', [
+            'order' => new OrderResource($order),
+        ]);
     }
 
     private function createOrderVariants(Order $order, array $order_variants): void

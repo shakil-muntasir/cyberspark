@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcquisitionController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -17,16 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [AcquisitionController::class, 'store'])->name('store');
     });
 
-    Route::prefix('/products')->name('products.')->group(function () {
-        Route::get('/', [ProductController::class, 'index'])->name('index');
-        Route::post('/', [ProductController::class, 'store'])->name('store');
-        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
-
-        Route::prefix('/{product}/variants')->name('variants.')->group(function () {
-            Route::post('/', [ProductVariantController::class, 'store'])->name('store');
-            Route::patch('/{variant}', [ProductVariantController::class, 'update'])->name('update');
-            Route::delete('/{variant}', [ProductVariantController::class, 'destroy'])->name('destroy');
-        });
+    Route::prefix('/customers')->name('customers.')->group(function () {
+        Route::get('/dropdown', [CustomerController::class, 'dropdown'])->name('dropdown');
     });
 
     Route::prefix('/orders')->name('orders.')->group(function () {
@@ -36,10 +29,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     });
 
-    Route::prefix('/users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::prefix('/products')->name('products.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::get('/dropdown', [ProductController::class, 'dropdown'])->name('dropdown');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+
+        Route::prefix('/{product}/variants')->name('variants.')->group(function () {
+            Route::post('/', [ProductVariantController::class, 'store'])->name('store');
+
+            Route::patch('/{variant}', [ProductVariantController::class, 'update'])->name('update');
+            Route::delete('/{variant}', [ProductVariantController::class, 'destroy'])->name('destroy');
+        });
     });
 
     Route::prefix('/profile')->name('profile.')->group(function () {
@@ -48,13 +49,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('/users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('/variants')->name('variants.')->group(function () {
+        Route::get('/dropdown', [ProductVariantController::class, 'dropdown'])->name('dropdown');
+    });
 });
 
-// Miscellaneous routes
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Dropdown routes
-    Route::get('/customers/dropdown', [UserController::class, 'customersDropdown'])->name('customers.dropdown');
-    Route::get('/variants/dropdown', [ProductVariantController::class, 'dropdown'])->name('variants.dropdown');
-});
 
 require __DIR__ . '/auth.php';

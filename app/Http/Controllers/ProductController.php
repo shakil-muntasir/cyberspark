@@ -52,4 +52,21 @@ class ProductController extends Controller
             'statuses' => ProductStatus::getAllOptions(),
         ]);
     }
+
+    public function dropdown(): ProductCollection
+    {
+        $search = request()->input('search');
+
+        // TODO: revisit and take closer look into this query later.
+        $products = Product::with(['category'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%$search%")
+                    ->orWhere('sku_prefix', 'like', "%$search%");
+            })
+            ->latest('id')
+            ->take(10)
+            ->get();
+
+        return new ProductCollection($products);
+    }
 }

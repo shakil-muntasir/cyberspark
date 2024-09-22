@@ -4,7 +4,6 @@ import { AlertCircle, Loader2, PlusCircle } from 'lucide-react'
 
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
-import { Label } from '@/Components/ui/label'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Separator } from '@/Components/ui/separator'
@@ -12,12 +11,12 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { Textarea } from '@/Components/ui/textarea'
 import { useToast } from '@/Components/ui/use-toast'
 
-import InputError from '@/Components/InputError'
 import { ProductForm } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
 import { abbreviateWords } from '@/Lib/utils'
+import FormInput from '@/Components/FormInput'
 
 interface AddProductProps {
   categories: SelectOption[]
@@ -120,46 +119,31 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
         <ScrollArea className='h-[calc(100vh-80px)]'>
           <form onSubmit={handleAddProduct} className='mx-6 mb-8 mt-3 grid gap-3'>
-            <div className='grid gap-2'>
-              <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
-                Product Name
-              </Label>
-              <div className='space-y-px'>
-                <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' />
-                <InputError message={errors.name} />
-              </div>
-            </div>
+            <FormInput id='name' label='Product Name' errorMessage={errors.name}>
+              <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' />
+            </FormInput>
 
-            <div className='grid gap-2'>
-              <Label htmlFor='sku_prefix' className={errors.sku_prefix?.length ? 'text-destructive' : ''}>
-                SKU Prefix
-              </Label>
-              <div className='space-y-px'>
-                <div className='relative'>
-                  <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
-                  <div className='absolute right-1 top-1/2 flex items-center'>
-                    <TooltipProvider>
-                      <Tooltip delayDuration={0}>
-                        <TooltipTrigger asChild>
-                          <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
-                            {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Manual Input?</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+            <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
+              <div className='relative'>
+                <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
+                <div className='absolute right-1 top-1/2 flex items-center'>
+                  <TooltipProvider>
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger asChild>
+                        <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
+                          {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Manual Input?</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
-                <InputError message={errors.sku_prefix} />
               </div>
-            </div>
+            </FormInput>
 
-            <div className='grid gap-2'>
-              <Label htmlFor='category_id' className={errors.category_id?.length ? 'text-destructive' : ''}>
-                Category
-              </Label>
+            <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
               <Select
                 name='category_id'
                 value={data.category_id}
@@ -179,18 +163,11 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                   ))}
                 </SelectContent>
               </Select>
-              <InputError message={errors.category_id} />
-            </div>
+            </FormInput>
 
-            <div className='grid gap-2'>
-              <Label htmlFor='description' className={errors.description?.length ? 'text-destructive' : ''}>
-                Description
-              </Label>
-              <div className='space-y-px'>
-                <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' />
-                <InputError message={errors.description} />
-              </div>
-            </div>
+            <FormInput id='description' label='description' errorMessage={errors.description}>
+              <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' />
+            </FormInput>
 
             <SheetFooter>
               <div className='flex justify-end gap-2'>

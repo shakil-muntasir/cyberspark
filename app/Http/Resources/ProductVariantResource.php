@@ -10,7 +10,7 @@ class ProductVariantResource extends JsonResource
      * @var array<string, string>
      */
     protected array $relationships = [
-        //
+        'product' => ProductResource::class
     ];
 
     /**

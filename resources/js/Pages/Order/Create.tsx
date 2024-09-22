@@ -21,7 +21,6 @@ import { BkashIcon } from '@/Icons/BkashIcon'
 import { RocketIcon } from '@/Icons/RocketIcon'
 import { NagadIcon } from '@/Icons/NagadIcon'
 import { UpayIcon } from '@/Icons/UpayIcon'
-import ProductDropdownList from '@/Components/ProductDropdownList'
 import CustomerDropdownList from '@/Components/CustomerDropdownList'
 import { CartItemType, ProductVariant } from '@/Pages/Product/types'
 import { AlertCircleIcon, ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon, Loader2Icon, ShoppingCartIcon } from 'lucide-react'
@@ -33,6 +32,7 @@ import { OrderForm, OrderVariant } from '@/Pages/Order/types'
 import { useToast } from '@/Components/ui/use-toast'
 import CartItem from '@/Components/CartItem'
 import FormInput from '@/Components/FormInput'
+import ProductVariantDropdownList from '@/Components/ProductVariantDropdownList'
 
 interface CourierServiceProps extends SelectOption {
   id: string
@@ -47,12 +47,12 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
   const { toast } = useToast()
 
   const { data, setData, post, reset, errors, clearErrors } = useForm<OrderForm>({
-    customer_id: undefined,
-    delivery_method: undefined,
-    delivery_cost: undefined,
-    delivery_man_id: undefined,
-    courier_service_id: undefined,
-    total_payable: undefined,
+    customer_id: '',
+    delivery_method: null,
+    delivery_cost: null,
+    delivery_man_id: '',
+    courier_service_id: '',
+    total_payable: null,
 
     order_variants: [],
     address: {
@@ -61,17 +61,17 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
       street: '',
       city: '',
       state: '',
-      zip: undefined
+      zip: null
     },
 
-    payment_status: undefined,
-    total_paid: undefined,
-    payment_method: undefined,
-    service_provider: undefined,
-    account_number: undefined,
-    txn_id: undefined,
-    bank_name: undefined,
-    cheque_number: undefined
+    payment_status: null,
+    total_paid: null,
+    payment_method: null,
+    service_provider: '',
+    account_number: '',
+    txn_id: '',
+    bank_name: '',
+    cheque_number: ''
   })
 
   const [openPartialPaymentPopover, setOpenPartialPaymentPopover] = useState(false)
@@ -130,7 +130,9 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
   const handleSelectedCustomerInformation = (user: User) => {
     setData(data => ({
       ...data,
+      customer_id: user.id,
       address: {
+        ...data.address,
         contact_number: user.attributes.phone,
         email: user.attributes.email,
         street: user.relationships!.address!.attributes.street,
@@ -139,8 +141,6 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
         zip: parseInt(user.relationships!.address!.attributes.zip)
       }
     }))
-
-    setData('customer_id', user.id)
     clearErrors('address.contact_number')
     clearErrors('address.email')
     clearErrors('address.street')
@@ -256,8 +256,8 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
     setData('total_payable', subtotal + (data.delivery_cost ?? 0))
     setData(data => ({
       ...data,
-      total_paid: undefined,
-      payment_status: undefined
+      total_paid: null,
+      payment_status: null
     }))
   }, [subtotal, data.delivery_cost])
 
@@ -301,7 +301,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
 
   return (
     <AuthenticatedLayout title='Create Order'>
-      <div className='mx-auto flex max-w-[80rem] flex-1 flex-col gap-4'>
+      <main className='mx-auto flex max-w-[80rem] flex-1 flex-col gap-4'>
         <div className='flex items-center gap-4'>
           <TooltipProvider>
             <Tooltip delayDuration={0}>
@@ -327,7 +327,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
               </CardHeader>
               <CardContent className='pb-0 lg:pb-6'>
                 <FormInput id='order_variants' label='Products' errorMessage={errors.order_variants}>
-                  <ProductDropdownList id='order_variants' handleAddToCart={handleAddToCart} />
+                  <ProductVariantDropdownList id='order_variants' handleAddToCart={handleAddToCart} />
                 </FormInput>
               </CardContent>
               {/* for mobile view only */}
@@ -430,7 +430,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                   </FormInput>
 
                   <FormInput id='zip' label='ZIP' errorMessage={errors['address.zip']}>
-                    <Input id='zip' type='text' name='address.zip' value={data.address.zip} onChange={handleInputChange} placeholder='ZIP' />
+                    <Input id='zip' type='text' name='address.zip' value={data.address.zip ?? ''} onChange={handleInputChange} placeholder='ZIP' />
                   </FormInput>
                 </div>
               </CardContent>
@@ -452,7 +452,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             ...data,
                             delivery_method: 'in-house',
                             delivery_cost: 60,
-                            courier_service_id: undefined
+                            courier_service_id: ''
                           }))
                           clearErrors('delivery_method')
                           clearErrors('courier_service_id')
@@ -479,7 +479,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                               ...data,
                               delivery_method: 'external',
                               delivery_cost: 100,
-                              delivery_man_id: undefined
+                              delivery_man_id: ''
                             }))
                             clearErrors('delivery_method')
                             clearErrors('delivery_man_id')
@@ -551,11 +551,11 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             setData(data => ({
                               ...data,
                               payment_method: 'cash_on_delivery',
-                              bank_name: undefined,
-                              cheque_number: undefined,
-                              service_provider: undefined,
-                              account_number: undefined,
-                              txn_id: undefined
+                              bank_name: '',
+                              cheque_number: '',
+                              service_provider: '',
+                              account_number: '',
+                              txn_id: ''
                             }))
                             clearErrors('payment_method')
                             clearErrors('bank_name')
@@ -578,9 +578,9 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             setData(data => ({
                               ...data,
                               payment_method: 'mobile_banking',
-                              payment_status: data.payment_status !== 'due' ? data.payment_status : undefined,
-                              bank_name: undefined,
-                              cheque_number: undefined
+                              payment_status: data.payment_status !== 'due' ? data.payment_status : null,
+                              bank_name: '',
+                              cheque_number: ''
                             }))
                             clearErrors('payment_method')
                             clearErrors('bank_name')
@@ -600,9 +600,9 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             setData(data => ({
                               ...data,
                               payment_method: 'cheque',
-                              service_provider: undefined,
-                              account_number: undefined,
-                              txn_id: undefined
+                              service_provider: '',
+                              account_number: '',
+                              txn_id: ''
                             }))
                             clearErrors('payment_method')
                             clearErrors('service_provider')
@@ -663,7 +663,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             id='total_paid'
                             name='total_paid'
                             type='number'
-                            value={data.total_paid}
+                            value={data.total_paid ?? ''}
                             className='h-8 w-36 no-spin'
                             placeholder='Amount'
                             onChange={e => {
@@ -854,7 +854,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </AuthenticatedLayout>
   )
 }

@@ -45,12 +45,12 @@ export type OrderCollection = {
 }
 
 export type OrderForm = {
-    customer_id?: string
-    delivery_method?: 'in-house' | 'external'
-    delivery_cost?: number
-    delivery_man_id?: string
-    courier_service_id?: string
-    total_payable?: number
+    customer_id: string
+    delivery_method: 'in-house' | 'external' | null
+    delivery_cost: number | null
+    delivery_man_id: string
+    courier_service_id: string
+    total_payable: number | null
 
     order_variants: OrderVariant[]
 
@@ -60,17 +60,17 @@ export type OrderForm = {
         street: string
         city: string
         state: string
-        zip?: number
+        zip: number | null
     }
 
-    payment_status?: 'due' | 'partial' | 'paid'
-    total_paid?: number
-    payment_method?: 'cash_on_delivery' | 'cheque' | 'mobile_banking'
-    service_provider?: string
-    account_number?: string
-    txn_id?: string
-    bank_name?: string
-    cheque_number?: string
+    payment_status: 'due' | 'partial' | 'paid' | null
+    total_paid: number | null
+    payment_method: 'cash_on_delivery' | 'cheque' | 'mobile_banking' | null
+    service_provider: string
+    account_number: string
+    txn_id: string
+    bank_name: string
+    cheque_number: string
 }
 
 export type OrderVariant = {
