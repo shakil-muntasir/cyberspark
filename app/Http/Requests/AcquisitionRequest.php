@@ -51,11 +51,11 @@ class AcquisitionRequest extends FormRequest
             $products = $this->input('products', []);
 
             foreach ($products as $index => $product) {
-                if (empty($product['product_id'])) {
+                if (empty($product['id'])) {
                     $validator->addRules([
                         "products.$index.sku_prefix" => [
                             'required',
-                            Rule::unique('products', 'sku_prefix'),
+                            Rule::unique('products', 'sku_prefix')
                         ],
                     ]);
                 } else {

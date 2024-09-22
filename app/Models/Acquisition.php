@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -25,9 +25,9 @@ class Acquisition extends Model implements Auditable
         'acquired_date' => 'date'
     ];
 
-    public function products(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsToMany(Product::class)->withTimestamps();
     }
 
     // Mutator to convert 'm-d-Y' format to 'Y-m-d' before saving to the database

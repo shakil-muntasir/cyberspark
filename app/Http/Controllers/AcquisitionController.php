@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AcquisitionRequest;
 use App\Http\Resources\AcquisitionCollection;
+use App\Http\Resources\AcquisitionResource;
 use App\Models\Acquisition;
 use App\Models\Category;
 use App\Models\Product;
@@ -39,37 +40,44 @@ class AcquisitionController extends Controller
             ]);
 
             foreach ($data['products'] as $productRequestData) {
-                if (!empty($productRequestData['id'])) {
-                    $product = Product::find($productRequestData['id']);
+                $productData = [
+                    'name' => $productRequestData['name'],
+                    'sku_prefix' => $productRequestData['sku_prefix'],
+                    'category_id' => $productRequestData['category_id'],
+                    'description' => $productRequestData['description'],
+                ];
+                $variantData = [
+                    'quantity' => $productRequestData['quantity'],
+                    'buying_price' => $productRequestData['buying_price'],
+                    'retail_price' => $productRequestData['retail_price'],
+                    'selling_price' => $productRequestData['selling_price'],
+                ];
 
-                    if ($product) {
-                        $product->attach($acquisition);
-
-                        $product->variants()->create([
-                            'quantity' => $productRequestData['quantity'],
-                            'buying_price' => $productRequestData['buying_price'],
-                            'retail_price' => $productRequestData['retail_price'],
-                            'selling_price' => $productRequestData['selling_price'],
-                        ]);
-                    }
+                if (empty($productData['id'])) {
+                    $product = Product::create($productData);
                 } else {
-                    $product = $acquisition->products()->create([
-                        'name' => $productRequestData['name'],
-                        'sku_prefix' => $productRequestData['sku_prefix'],
-                        'category_id' => $productRequestData['category_id'],
-                        'description' => $productRequestData['description']
-                    ]);
-
-                    $product->variants()->create([
-                        'quantity' => $productRequestData['quantity'],
-                        'buying_price' => $productRequestData['buying_price'],
-                        'retail_price' => $productRequestData['retail_price'],
-                        'selling_price' => $productRequestData['selling_price'],
-                    ]);
+                    $product = Product::find($productRequestData['id']);
                 }
+
+                $product->variants()->create($variantData);
+
+                $acquisition->products()->attach($product);
             }
         });
 
         return redirect()->route('acquisitions.index');
+    }
+
+    public function show(Acquisition $acquisition): InertiaResponse
+    {
+        $acquisition->load([
+            'products',
+            'products.variants',
+            'audits.user'
+        ])->loadCount('products');
+
+        return inertia('Acquisition/Show', [
+            'acquisition' => new AcquisitionResource($acquisition)
+        ]);
     }
 }

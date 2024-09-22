@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -29,9 +30,9 @@ class Product extends Model implements Auditable
         'status' => ProductStatus::class
     ];
 
-    public function acquisition(): BelongsTo
+    public function acquisitions(): BelongsToMany
     {
-        return $this->belongsTo(Acquisition::class);
+        return $this->belongsToMany(Acquisition::class)->withTimestamps();
     }
 
     public function category(): BelongsTo
@@ -99,6 +100,7 @@ class Product extends Model implements Auditable
         if (!empty($search)) {
             return $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku_prefix', 'like', "%{$search}%")
                     ->orWhereHas('category', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
