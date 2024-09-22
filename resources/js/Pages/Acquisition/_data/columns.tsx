@@ -36,7 +36,11 @@ const columns: TableColumn<Acquisition>[] = createColumns([
   {
     id: 'invoice_number',
     header: column => <DataTableColumnHeader column={column} title='Invoice Number' />,
-    cell: acquisition => <div className='text-nowrap font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>{acquisition.attributes.invoice_number}</div>
+    cell: acquisition => (
+      <Link href={`/acquisitions/${acquisition.id}`} className='text-nowrap font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+        {acquisition.attributes.invoice_number}
+      </Link>
+    )
   },
   {
     id: 'products_count',
