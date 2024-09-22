@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AcquisitionRequest extends FormRequest
 {
@@ -32,8 +33,8 @@ class AcquisitionRequest extends FormRequest
             'invoice_number' => 'required',
             'acquired_date' => 'required|date_format:m-d-Y',
             'products' => 'required|array',
+            'products.*.id' => 'nullable|exists:products,id',
             'products.*.name' => 'required|string',
-            'products.*.sku_prefix' => 'required|unique:products,sku_prefix',
             'products.*.category_id' => 'required|exists:categories,id',
             'products.*.product_id' => 'nullable|exists:products,id',
             'products.*.description' => 'nullable|string',
@@ -42,6 +43,28 @@ class AcquisitionRequest extends FormRequest
             'products.*.retail_price' => 'nullable|numeric|min:0',
             'products.*.selling_price' => 'required|numeric|min:0',
         ];
+    }
+
+    protected function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $products = $this->input('products', []);
+
+            foreach ($products as $index => $product) {
+                if (empty($product['product_id'])) {
+                    $validator->addRules([
+                        "products.$index.sku_prefix" => [
+                            'required',
+                            Rule::unique('products', 'sku_prefix'),
+                        ],
+                    ]);
+                } else {
+                    $validator->addRules([
+                        "products.$index.sku_prefix" => 'required',
+                    ]);
+                }
+            }
+        });
     }
 
     /**

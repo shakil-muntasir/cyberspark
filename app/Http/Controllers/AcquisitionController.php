@@ -6,6 +6,7 @@ use App\Http\Requests\AcquisitionRequest;
 use App\Http\Resources\AcquisitionCollection;
 use App\Models\Acquisition;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -38,20 +39,34 @@ class AcquisitionController extends Controller
             ]);
 
             foreach ($data['products'] as $productRequestData) {
-                // TODO: implement product select or create
-                $product = $acquisition->products()->create([
-                    'name' => $productRequestData['name'],
-                    'sku_prefix' => $productRequestData['sku_prefix'],
-                    'category_id' => $productRequestData['category_id'],
-                    'description' => $productRequestData['description']
-                ]);
+                if (!empty($productRequestData['id'])) {
+                    $product = Product::find($productRequestData['id']);
 
-                $product->variants()->create([
-                    'quantity' => $productRequestData['quantity'],
-                    'buying_price' => $productRequestData['buying_price'],
-                    'retail_price' => $productRequestData['retail_price'],
-                    'selling_price' => $productRequestData['selling_price'],
-                ]);
+                    if ($product) {
+                        $product->attach($acquisition);
+
+                        $product->variants()->create([
+                            'quantity' => $productRequestData['quantity'],
+                            'buying_price' => $productRequestData['buying_price'],
+                            'retail_price' => $productRequestData['retail_price'],
+                            'selling_price' => $productRequestData['selling_price'],
+                        ]);
+                    }
+                } else {
+                    $product = $acquisition->products()->create([
+                        'name' => $productRequestData['name'],
+                        'sku_prefix' => $productRequestData['sku_prefix'],
+                        'category_id' => $productRequestData['category_id'],
+                        'description' => $productRequestData['description']
+                    ]);
+
+                    $product->variants()->create([
+                        'quantity' => $productRequestData['quantity'],
+                        'buying_price' => $productRequestData['buying_price'],
+                        'retail_price' => $productRequestData['retail_price'],
+                        'selling_price' => $productRequestData['selling_price'],
+                    ]);
+                }
             }
         });
 

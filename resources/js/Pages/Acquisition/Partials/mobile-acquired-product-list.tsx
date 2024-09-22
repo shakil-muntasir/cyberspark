@@ -8,6 +8,7 @@ import { useTheme } from '@/Providers/theme-provider'
 import { AcquiredProductForm } from '@/Pages/Acquisition/types'
 
 import { formatCurrency } from '@/Lib/utils'
+import { Label } from '@/Components/ui/label'
 
 interface AcquiredProductsListProps {
   products: AcquiredProductForm[]
@@ -25,11 +26,12 @@ const MobileAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ produ
 
   return (
     <>
-      {products.length > 0 ? (
-        <div className='lg:hidden'>
+      {products.length > 0 && (
+        <div className='mx-4 space-y-2 lg:hidden'>
+          <Label>Products acquired</Label>
           <ul className='flex flex-col space-y-2 pb-4'>
             {products.map((product, index) => (
-              <li key={index} className='mx-4 flex h-auto items-center justify-between rounded-md bg-muted-foreground/5 p-4 text-start dark:bg-accent/50'>
+              <li key={index} className='flex h-auto items-center justify-between rounded-md bg-muted-foreground/5 p-4 text-start dark:bg-accent/50'>
                 <div className='w-full space-y-0.5'>
                   <div className='flex items-center justify-between border-b pb-2'>
                     <div className='flex-1 space-y-1'>
@@ -102,10 +104,6 @@ const MobileAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ produ
               </li>
             ))}
           </ul>
-        </div>
-      ) : (
-        <div className='flex justify-center lg:hidden'>
-          <p className='py-4'>No products added yet.</p>
         </div>
       )}
     </>

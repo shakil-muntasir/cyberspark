@@ -69,8 +69,8 @@ export function toTitleCase(str: string) {
         .join(' ')
 }
 
-export function formatCurrency(amount?: number, currency = 'BDT'): string {
-    if (amount === 0 || amount === undefined) {
+export function formatCurrency(amount?: number | null, currency = 'BDT'): string {
+    if (amount === 0 || amount === undefined || amount === null) {
         return `${currency} 0.00`
     }
 

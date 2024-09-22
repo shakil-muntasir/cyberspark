@@ -26,8 +26,8 @@ const PCAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ products,
   return (
     <ul className='flex flex-col space-y-2'>
       {products.map((product, index) => (
-        <li key={index} className='flex h-auto items-center justify-between rounded-md bg-muted-foreground/5 px-3 py-2 text-start dark:bg-accent/50'>
-          <div className='w-full space-y-0.5'>
+        <li key={index} className='flex h-auto w-fit items-center justify-between rounded-md bg-muted-foreground/5 px-3 py-2 text-start dark:bg-accent/50'>
+          <div className='space-y-0.5'>
             <div className='flex items-center justify-between border-b pb-2'>
               <div className='flex-1'>
                 <div className='flex items-center'>
@@ -86,13 +86,13 @@ const PCAcquiredProductsList: React.FC<AcquiredProductsListProps> = ({ products,
             </div>
             <div className='flex pt-1.5'>
               <p className='border-r pr-2 text-xs font-light'>
-                Buying Price <span className='font-semibold'>{formatCurrency(parseFloat(product.buying_price))}</span>
+                Buying Price <span className='text-wrap font-semibold'>{formatCurrency(parseFloat(product.buying_price))}</span>
               </p>
               <p className='border-r px-2 text-xs font-light'>
-                Retail Price <span className='font-semibold'>{formatCurrency(parseFloat(product.retail_price))}</span>
+                Retail Price <span className='text-wrap font-semibold'>{formatCurrency(parseFloat(product.retail_price))}</span>
               </p>
               <p className='pl-2 text-xs font-light'>
-                Selling Price <span className='font-semibold'>{formatCurrency(parseFloat(product.selling_price))}</span>
+                Selling Price <span className='text-wrap font-semibold'>{formatCurrency(parseFloat(product.selling_price))}</span>
               </p>
             </div>
           </div>

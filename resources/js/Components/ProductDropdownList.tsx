@@ -2,31 +2,30 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
-import { formatCurrency } from '@/Lib/utils'
 import axios from 'axios'
-import { ProductVariant, ProductVariantCollection } from '@/Pages/Product/types'
+import { Product, ProductCollection } from '@/Pages/Product/types'
 import { Button } from '@/Components/ui/button'
-import { ChevronsUpDownIcon } from 'lucide-react'
-import { CheckCircleIcon } from '@/Icons/CheckCircleIcon'
+import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 interface ProductDropdownListProps {
-  handleAddToCart: (variant: ProductVariant) => void
+  handleAddToCart: (product: Product) => void
+  clearProductName?: boolean
   id?: string
 }
 
-const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id }) => {
-  const [open, setOpen] = useState(false)
-  const widthRef = useRef<HTMLDivElement>(null)
-  const [variants, setVariants] = useState<ProductVariant[]>([])
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null)
+const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id, clearProductName }) => {
+  const [products, setProducts] = useState<Product[]>([])
+  const [selectedProduct, setSelectedProduct] = useState<Product>()
   const [search, setSearch] = useState<string | undefined>()
-  const [productAdded, setProductAdded] = useState(false)
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null)
+  const widthRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false)
 
   const fetchProducts = async (search?: string) => {
     try {
-      const url = !search ? '/variants/dropdown' : `/variants/dropdown?search=${search}`
-      const { data } = await axios.get<ProductVariantCollection>(url)
-      setVariants(data.data)
+      const url = !search ? '/products/dropdown' : `/products/dropdown?search=${search}`
+      const { data } = await axios.get<ProductCollection>(url)
+      setProducts(data.data)
     } catch (_) {}
   }
 
@@ -51,12 +50,10 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
   }, [search])
 
   useEffect(() => {
-    if (productAdded) {
-      setTimeout(() => {
-        setProductAdded(false)
-      }, 1000)
+    if (clearProductName) {
+      setSelectedProduct(undefined)
     }
-  }, [productAdded])
+  }, [clearProductName])
 
   return (
     <div>
@@ -67,16 +64,7 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
           <PopoverTrigger asChild>
             <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
               <div className='flex flex-wrap justify-start gap-2'>
-                <span className='flex justify-center'>
-                  {productAdded ? (
-                    <span className='flex items-center space-x-2'>
-                      <CheckCircleIcon className='h-4 w-4' />
-                      <span>Product Added</span>
-                    </span>
-                  ) : (
-                    'Select Products'
-                  )}
-                </span>
+                <span className='flex justify-center'>{selectedProduct ? selectedProduct.attributes.name : 'Select Product'}</span>
               </div>
               <div className='flex items-center self-center'>
                 <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
@@ -86,16 +74,16 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
 
           <PopoverContent className='p-0' style={{ width: widthRef.current?.offsetWidth ?? 'auto' }}>
             <Command shouldFilter={false}>
-              <CommandInput id={id} value={search} onValueChange={setSearch} placeholder='Search Product Variants...' />
+              <CommandInput id={id} value={search} onValueChange={setSearch} placeholder='Search Product products...' />
               <CommandEmpty>No item found.</CommandEmpty>
               <CommandList>
                 <CommandGroup>
-                  {variants?.map(variant => (
+                  {products?.map(product => (
                     <CommandItem
-                      key={variant.id}
+                      key={product.id}
                       onSelect={() => {
-                        handleAddToCart(variant)
-                        setProductAdded(true)
+                        handleAddToCart(product)
+                        setSelectedProduct(product)
                         setOpen(false)
                       }}
                       className='group flex justify-between rounded-md p-2 hover:bg-muted'
@@ -104,14 +92,15 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
                         <div>
                           <img className='h-10 w-8 rounded-md object-cover' src='https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg' />
                         </div>
-                        <div className=''>
+                        <div>
                           <div className='flex items-center gap-2'>
-                            <span className='border-r pr-2 text-sm font-semibold group-hover:border-muted-foreground/20'>{variant.attributes.sku}</span>
-                            <span className='text-sm font-semibold tracking-wide text-muted-foreground'>{variant.relationships?.product?.attributes.name}</span>
+                            <span className='border-r pr-2 text-sm font-semibold group-hover:border-muted-foreground/20'>{product.attributes.name}</span>
+                            <span className='text-sm font-semibold tracking-wide text-muted-foreground'>{product.attributes.sku_prefix}</span>
                           </div>
-                          <span className='text-xs font-semibold tracking-wide text-primary/70'>{formatCurrency(parseFloat(variant.attributes.selling_price))}</span>
+                          <span className='text-xs font-semibold tracking-wide text-primary/70'>{product.attributes.category}</span>
                         </div>
                       </div>
+                      <CheckIcon className={product.id === selectedProduct?.id ? 'mr-2 h-4 w-4 opacity-100' : 'mr-2 h-4 w-4 opacity-0'} />
                     </CommandItem>
                   ))}
                 </CommandGroup>

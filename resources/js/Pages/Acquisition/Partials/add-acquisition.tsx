@@ -6,7 +6,6 @@ import { Button } from '@/Components/ui/button'
 import { Calendar } from '@/Components/ui/calendar'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
-import { Label } from '@/Components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 
@@ -17,6 +16,8 @@ import useForm from '@/Hooks/form'
 import { AcquiredProductForm as AcquiredProductFormType, AcquisitionForm } from '@/Pages/Acquisition/types'
 import { SelectOption } from '@/Types'
 import { toast } from '@/Components/ui/use-toast'
+import FormInput from '@/Components/FormInput'
+import { Separator } from '@/Components/ui/separator'
 
 interface AddAcquisitionProps {
   categories: SelectOption[]
@@ -24,7 +25,8 @@ interface AddAcquisitionProps {
 
 const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
   const [productToEdit, setProductToEdit] = useState<AcquiredProductFormType | undefined>(undefined)
-  const [openCalendarPopover, setOpenCalendarPopover] = useState(false)
+  const [openPCCalendarPopover, setOpenPCCalendarPopover] = useState(false)
+  const [openMobileCalendarPopover, setOpenMobileCalendarPopover] = useState(false)
   const [openAddAcquisitionDialog, setOpenAddAcquisitionDialog] = useState(false)
   const [isFormDirty, setIsFormDirty] = useState(false)
   const [showEditConfirmation, setShowEditConfirmation] = useState(false) // Manage the popover state for edit confirmation
@@ -130,55 +132,103 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
           <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>Add Acquisition</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className='flex h-screen flex-col justify-between gap-0 overflow-y-auto p-0 lg:h-auto lg:max-w-[60rem]'>
-        <div className='flex flex-col-reverse justify-end lg:flex-row'>
-          {/* for mobile view only */}
-          <MobileAcquiredProductsList products={data.products} onEditProduct={handleEditProduct} onRemoveProduct={handleRemoveProduct} showEditConfirmation={showEditConfirmation} onConfirmEditProduct={handleConfirmEditProduct} onCancelEditProduct={handleCancelEditProduct} />
+      <DialogContent className='flex h-screen flex-col justify-between gap-0 overflow-y-auto p-0 lg:h-auto lg:min-w-[64rem]'>
+        <div className='flex flex-col justify-end lg:flex-row'>
+          <div className='pt-6'>
+            <DialogHeader className='px-4'>
+              <DialogTitle>Add Products</DialogTitle>
+              <DialogDescription>Add the acquired products to the store.</DialogDescription>
+            </DialogHeader>
+            <Separator className='mb-6 mt-4 lg:my-3' />
 
-          <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} discardFormData={discardFormData} categories={categories} />
+            <div className='mx-4 flex gap-2 pt-0.5 lg:hidden'>
+              <div className='w-1/2'>
+                <FormInput id='invoice_number' label='Invoice Number'>
+                  <Input id='invoice_number' type='text' name='invoice_number' value={data.invoice_number} onChange={handleInputChange} placeholder='Invoice Number' />
+                </FormInput>
+              </div>
+              <div className='flex w-1/2'>
+                <FormInput id='calendar' label='Acquired Date'>
+                  <Popover open={openMobileCalendarPopover} onOpenChange={setOpenMobileCalendarPopover}>
+                    <PopoverTrigger asChild>
+                      <Button type='button' variant='outline' id='calendar' className='flex w-full justify-between px-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setOpenMobileCalendarPopover(true)}>
+                        {data.acquired_date ? <p>{data.acquired_date && format(data.acquired_date, 'MM-dd-yyyy')}</p> : 'Select Date'}
+                        <CalendarIcon className='h-4 w-4' />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align='end'>
+                      <Calendar
+                        mode='single'
+                        captionLayout='dropdown-buttons'
+                        selected={parse(data.acquired_date, 'MM-dd-yyyy', new Date())}
+                        onSelect={e => {
+                          if (e) {
+                            setData('acquired_date', format(e, 'MM-dd-yyyy'))
+                            setOpenMobileCalendarPopover(false)
+                          }
+                        }}
+                        fromYear={new Date().getFullYear() - 5}
+                        toYear={new Date().getFullYear() + 5}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormInput>
+              </div>
+            </div>
 
-          <div className='space-y-4 bg-primary-foreground pl-4 pt-6 lg:w-1/2'>
+            {/* for mobile view only */}
+            <MobileAcquiredProductsList products={data.products} onEditProduct={handleEditProduct} onRemoveProduct={handleRemoveProduct} showEditConfirmation={showEditConfirmation} onConfirmEditProduct={handleConfirmEditProduct} onCancelEditProduct={handleCancelEditProduct} />
+
+            <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} discardFormData={discardFormData} categories={categories} />
+          </div>
+
+          {/* for PC view only */}
+
+          <div className='hidden space-y-4 bg-primary-foreground pl-4 pt-6 lg:block lg:w-1/3'>
             <div className='mb-6'>
               <DialogHeader>
                 <DialogTitle>Acquisition Information</DialogTitle>
                 <DialogDescription>Add new acquisition to the store.</DialogDescription>
               </DialogHeader>
             </div>
-            <div className='mr-4 flex flex-1 gap-2 border-b pb-4 pt-px'>
-              <div className='grid w-1/2 gap-2'>
-                <Label htmlFor='invoice_number'>Invoice Number</Label>
-                <Input id='invoice_number' type='text' name='invoice_number' value={data.invoice_number} onChange={handleInputChange} placeholder='Invoice Number' />
+            <div className='mr-4 flex gap-2 border-b pt-0.5'>
+              <div className='w-1/2'>
+                <FormInput id='invoice_number' label='Invoice Number'>
+                  <Input id='invoice_number' type='text' name='invoice_number' value={data.invoice_number} onChange={handleInputChange} placeholder='Invoice Number' />
+                </FormInput>
               </div>
-              <div className='grid w-1/2 gap-2'>
-                <Label htmlFor='calendar'>Acquired Date</Label>
-                <Popover open={openCalendarPopover} onOpenChange={setOpenCalendarPopover}>
-                  <PopoverTrigger asChild>
-                    <Button type='button' variant='outline' id='calendar' className='flex justify-between px-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setOpenCalendarPopover(true)}>
-                      {data.acquired_date ? <p>{data.acquired_date && format(data.acquired_date, 'MM-dd-yyyy')}</p> : 'Select Date'}
-                      <CalendarIcon className='h-4 w-4' />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align='end'>
-                    <Calendar
-                      mode='single'
-                      captionLayout='dropdown-buttons'
-                      selected={parse(data.acquired_date, 'MM-dd-yyyy', new Date())}
-                      onSelect={e => {
-                        if (e) {
-                          setData('acquired_date', format(e, 'MM-dd-yyyy'))
-                          setOpenCalendarPopover(false)
-                        }
-                      }}
-                      fromYear={new Date().getFullYear() - 5}
-                      toYear={new Date().getFullYear() + 5}
-                    />
-                  </PopoverContent>
-                </Popover>
+              <div className='flex w-1/2'>
+                <FormInput id='calendar' label='Acquired Date'>
+                  <Popover open={openPCCalendarPopover} onOpenChange={setOpenPCCalendarPopover}>
+                    <PopoverTrigger asChild>
+                      <Button type='button' variant='outline' id='calendar' className='flex w-full justify-between px-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setOpenPCCalendarPopover(true)}>
+                        {data.acquired_date ? <p>{data.acquired_date && format(data.acquired_date, 'MM-dd-yyyy')}</p> : 'Select Date'}
+                        <CalendarIcon className='h-4 w-4' />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align='end'>
+                      <Calendar
+                        mode='single'
+                        captionLayout='dropdown-buttons'
+                        selected={parse(data.acquired_date, 'MM-dd-yyyy', new Date())}
+                        onSelect={e => {
+                          if (e) {
+                            setData('acquired_date', format(e, 'MM-dd-yyyy'))
+                            setOpenPCCalendarPopover(false)
+                          }
+                        }}
+                        fromYear={new Date().getFullYear() - 5}
+                        toYear={new Date().getFullYear() + 5}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormInput>
               </div>
             </div>
 
-            {/* for PC view only */}
-            <ScrollArea className='mr-1 hidden h-[326px] pr-3 lg:block'>
+            {/* for mobile view only */}
+
+            <ScrollArea className='mr-1 h-[326px] pr-3'>
               <PCAcquiredProductsList products={data.products} onEditProduct={handleEditProduct} onRemoveProduct={handleRemoveProduct} showEditConfirmation={showEditConfirmation} onConfirmEditProduct={handleConfirmEditProduct} onCancelEditProduct={handleCancelEditProduct} />
             </ScrollArea>
           </div>

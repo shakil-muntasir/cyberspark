@@ -3,20 +3,20 @@ import { z } from 'zod'
 import { CheckIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
 
 import { Button } from '@/Components/ui/button'
-import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
+import { DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
 import { InputNumber } from '@/Components/ui/input-number'
-import { Label } from '@/Components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
-import { Separator } from '@/Components/ui/separator'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
-
-import InputError from '@/Components/InputError'
 
 import { abbreviateWords } from '@/Lib/utils'
 import { AcquiredProductForm as AcquiredProductFormType } from '@/Pages/Acquisition/types'
 import { SelectOption } from '@/Types'
+import ProductDropdownList from '@/Components/ProductDropdownList'
+import { Product } from '@/Pages/Product/types'
+import { Checkbox } from '@/Components/ui/checkbox'
+import FormInput from '@/Components/FormInput'
 
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -68,6 +68,7 @@ interface AcquiredProductFormProps {
 
 const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, checkDirtyBeforeEdit, discardFormData = false, onProductAdd, productToEdit }) => {
   const initialFormData: AcquiredProductFormType = {
+    id: '',
     name: '',
     sku_prefix: '',
     category_id: '',
@@ -80,9 +81,11 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
 
   const [productForm, setProductForm] = useState<AcquiredProductFormType>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string | undefined>>({})
-  const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
+  const [productManualInput, setProductManualInput] = useState<boolean>(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
-  const [isDirty, setIsDirty] = useState(false) // Track form dirty state
+  const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
+  const [isDirty, setIsDirty] = useState(false)
+  const [clearProductName, setClearProductName] = useState(false)
 
   useEffect(() => {
     if (productToEdit) {
@@ -99,7 +102,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   }, [productForm])
 
   useEffect(() => {
-    if (!skuManualInput) {
+    if (!skuManualInput && productManualInput) {
       if (productForm.name !== '') {
         setProductFormData('sku_prefix', abbreviateWords(productForm.name))
 
@@ -108,7 +111,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
 
       return setProductFormData('sku_prefix', '')
     }
-  }, [productForm.name, skuManualInput])
+  }, [productForm.name, skuManualInput, productManualInput])
 
   useEffect(() => {
     if (discardFormData) {
@@ -129,6 +132,10 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       setErrors(newErrors)
     } else {
       handleAddProduct(e)
+      setClearProductName(true)
+      setTimeout(() => {
+        setClearProductName(false)
+      }, 100)
       setErrors({})
     }
   }
@@ -142,6 +149,17 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     setTimeout(() => {
       setProductAddButtonTitle('Add')
     }, 1300)
+  }
+
+  const handleProductSelect = (product: Product) => {
+    setProductForm(data => ({
+      ...data,
+      id: product.id,
+      name: product.attributes.name,
+      sku_prefix: product.attributes.sku_prefix,
+      category_id: product.attributes.category_id,
+      description: product.attributes.description
+    }))
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -171,119 +189,106 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   }
 
   return (
-    <form className='w-full pb-4 pt-6 lg:h-auto' onSubmit={handleSubmit}>
-      <DialogHeader className='px-4'>
-        <DialogTitle>Add Products</DialogTitle>
-        <DialogDescription>Add the acquired products to the store.</DialogDescription>
-      </DialogHeader>
-      <Separator className='my-3' />
-
+    <form className='w-full pb-4 lg:h-auto' onSubmit={handleSubmit}>
       <div className='space-y-2 px-4'>
-        <div className='flex gap-2'>
-          <div className='w-9/12'>
-            <div className='grid gap-2'>
-              <Label htmlFor='name' className={errors.name?.length ? 'text-destructive' : ''}>
-                Product Name
-              </Label>
-              <Input id='name' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />
+        <div className='flex flex-col gap-2 lg:flex-row'>
+          <div className='relative w-full'>
+            <FormInput id='name' label='Product Name'>
+              {!productManualInput ? <ProductDropdownList handleAddToCart={handleProductSelect} id='product' clearProductName={clearProductName} /> : <Input id='product' className='mt-px' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />}
+            </FormInput>
+            <div className='absolute right-0 top-0 flex flex-row-reverse items-center gap-1.5 text-xs text-muted-foreground lg:left-28 lg:flex-row'>
+              <Checkbox
+                checked={productManualInput}
+                onCheckedChange={checked => {
+                  setProductForm(initialFormData)
+                  if (typeof checked === 'boolean') {
+                    setProductManualInput(checked)
+                  }
+                }}
+              />
+              <p>New Product?</p>
             </div>
-            <InputError message={errors.name} />
           </div>
           <div>
-            <div className='grid gap-2'>
-              <Label htmlFor='sku_prefix' className={errors.sku_prefix?.length ? 'text-destructive' : ''}>
-                SKU Prefix
-              </Label>
+            <FormInput id='sku_prefix' label='SKU' errorMessage={errors.sku_prefix}>
               <div className='relative'>
-                <Input id='sku_prefix' name='sku_prefix' value={productForm.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
-                <div className='absolute right-1 top-1/2 flex items-center'>
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger asChild>
-                        <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
-                          {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Manual Input?</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+                <Input id='sku_prefix' className='mt-px' name='sku_prefix' value={productForm.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
+                {productManualInput && (
+                  <div className='absolute right-1 top-1/2 flex items-center'>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type='button'
+                            variant='ghost'
+                            size='icon'
+                            className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                            onClick={() => {
+                              if (productManualInput) {
+                                setSkuManualInput(!skuManualInput)
+                              }
+                            }}
+                          >
+                            {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Manual Input?</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                )}
               </div>
-            </div>
-            <InputError message={errors.sku_prefix} />
+            </FormInput>
           </div>
         </div>
-        <div className='flex w-full gap-2'>
-          <div className='w-9/12'>
-            <div className='grid gap-2'>
-              <Label htmlFor='category_id' className={errors.category_id?.length ? 'text-destructive' : ''}>
-                Category
-              </Label>
-              <div className='space-y-px'>
-                <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)}>
-                  <SelectTrigger id='category_id' aria-label='Select Category'>
-                    <SelectValue placeholder='Select Category' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <InputError message={errors.category} />
+        <div className='flex flex-col gap-2 lg:flex-row'>
+          <div className='w-full'>
+            <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
+              <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)} disabled={!productManualInput}>
+                <SelectTrigger id='category_id' aria-label='Select Category'>
+                  <SelectValue placeholder='Select Category' />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category.value} value={category.value}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormInput>
           </div>
           <div>
-            <div className='grid gap-2'>
-              <Label htmlFor='quantity' className={errors.quantity?.length ? 'text-destructive' : ''}>
-                Quantity
-              </Label>
+            <FormInput id='quantity' label='Quantity' errorMessage={errors.quantity}>
               <InputNumber id='quantity' name='quantity' value={productForm.quantity} onChange={handleInputChange} placeholder='Quantity' />
-            </div>
-            <InputError message={errors.quantity} />
+            </FormInput>
           </div>
         </div>
-        <div className='flex w-full gap-2'>
-          <div className='w-1/3'>
-            <div className='grid gap-2'>
-              <Label htmlFor='buying_price' className={errors.buying_price?.length ? 'text-destructive' : ''}>
-                Buying Price
-              </Label>
+        <div className='flex flex-col gap-2 lg:flex-row'>
+          <div className='lg:w-1/3'>
+            <FormInput id='buying_price' label='Buying Price' errorMessage={errors.buying_price}>
               <InputNumber id='buying_price' name='buying_price' value={productForm.buying_price} onChange={handleInputChange} placeholder='Buying Price' />
-            </div>
-            <InputError message={errors.buying_price} />
+            </FormInput>
           </div>
-          <div className='w-1/3'>
-            <div className='grid gap-2'>
-              <Label htmlFor='retail_price' className={errors.retail_price?.length ? 'text-destructive' : ''}>
-                Retail Price
-              </Label>
+          <div className='lg:w-1/3'>
+            <FormInput id='retail_price' label='Retail Price' errorMessage={errors.retail_price}>
               <InputNumber id='retail_price' name='retail_price' value={productForm.retail_price} onChange={handleInputChange} placeholder='Retail Price' />
-            </div>
-            <InputError message={errors.retail_price} />
+            </FormInput>
           </div>
-          <div className='w-1/3'>
-            <div className='grid gap-2'>
-              <Label htmlFor='selling_price' className={errors.selling_price?.length ? 'text-destructive' : ''}>
-                Selling Price
-              </Label>
+          <div className='lg:w-1/3'>
+            <FormInput id='selling_price' label='Selling Price' errorMessage={errors.selling_price}>
               <InputNumber id='selling_price' name='selling_price' value={productForm.selling_price} onChange={handleInputChange} placeholder='Selling Price' />
-            </div>
-            <InputError message={errors.selling_price} />
+            </FormInput>
           </div>
         </div>
-        <div className='grid gap-2'>
-          <Label htmlFor='description'>Description</Label>
-          <Textarea id='description' name='description' value={productForm.description} onChange={handleInputChange} rows={4} placeholder='Description' />
-        </div>
+        <FormInput id='description' label='Description' errorMessage={errors.description}>
+          <Textarea id='description' name='description' value={productForm.description} onChange={handleInputChange} rows={4} placeholder='Description' readOnly={!productManualInput} />
+        </FormInput>
       </div>
       <DialogFooter>
-        <div className='flex justify-end gap-2 px-4 pt-4'>
+        <div className='flex justify-end gap-2 px-4'>
           <Button variant='secondary' className='px-2.5' onClick={() => setProductForm(initialFormData)} disabled={!isDirty}>
             Discard
           </Button>
