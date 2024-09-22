@@ -36,22 +36,22 @@ const columns: TableColumn<Acquisition>[] = createColumns([
   {
     id: 'invoice_number',
     header: column => <DataTableColumnHeader column={column} title='Invoice Number' />,
-    cell: acquisition => <div className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>{acquisition.attributes.invoice_number}</div>
+    cell: acquisition => <div className='text-nowrap font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>{acquisition.attributes.invoice_number}</div>
   },
   {
     id: 'products_count',
-    header: column => <DataTableColumnHeader column={column} title='Products' />,
-    cell: acquisition => <div className='mr-4 font-medium'>{acquisition.attributes.products_count}</div>
+    header: column => <DataTableColumnHeader column={column} title='Products' align='end' />,
+    cell: acquisition => <div className='mr-4 text-end font-medium'>{acquisition.attributes.products_count}</div>
   },
   {
     id: 'acquired_date',
-    header: column => <DataTableColumnHeader column={column} title='Acquired Date' />,
-    cell: acquisition => <div className='mr-4 font-medium'>{acquisition.attributes.acquired_date}</div>
+    header: column => <DataTableColumnHeader column={column} title='Acquired Date' align='center' />,
+    cell: acquisition => <div className='mr-4 text-center font-medium'>{acquisition.attributes.acquired_date}</div>
   },
   {
     id: 'created_by',
-    header: () => <div className='text-center'>Created by</div>,
-    cell: acquisition => <div className='flex justify-center'>{acquisition.attributes.created_by?.name}</div>
+    header: 'Created by',
+    cell: acquisition => <div className='text-nowrap'>{acquisition.attributes.created_by?.name}</div>
   },
   {
     id: 'actions',

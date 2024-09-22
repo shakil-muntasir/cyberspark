@@ -833,7 +833,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                     <p className='text-sm transition-all duration-300'>BDT {totalRemaining}</p>
                   </div>
                 </CardContent>
-                <CardFooter className={cn('justify-end space-x-2 pt-4 transition-all duration-300 lg:space-x-0', ((subtotal && data.delivery_cost) || data.total_paid) && 'pt-0')}>
+                <CardFooter className={cn('justify-end space-x-2 pt-6 transition-all duration-300 lg:space-x-0', ((subtotal && data.delivery_cost) || data.total_paid) && 'pt-0')}>
                   <Button variant='secondary' className='rounded-sm lg:hidden'>
                     Cancel
                   </Button>

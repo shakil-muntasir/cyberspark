@@ -47,11 +47,11 @@ const columns: TableColumn<Order>[] = createColumns([
   {
     id: 'total_payable',
     header: column => <DataTableColumnHeader column={column} title='Payable' align='end' />,
-    cell: order => <div className='mr-4 text-right'>{formatCurrency(order.attributes.total_payable)}</div>
+    cell: order => <div className='mr-4 text-nowrap text-right'>{formatCurrency(order.attributes.total_payable)}</div>
   },
   {
     id: 'payment_status',
-    header: () => <div className='text-center'>Payment Status</div>,
+    header: () => <div className='text-nowrap text-center'>Payment Status</div>,
     cell: order => {
       let variant: 'draft' | 'due' | 'partial' | 'paid' = 'draft'
       const { payment_status } = order.attributes
@@ -78,14 +78,14 @@ const columns: TableColumn<Order>[] = createColumns([
   },
   {
     id: 'customer',
-    header: () => <div className='text-center'>Customer</div>,
-    cell: order => <div className='flex justify-center'>{order.attributes.customer}</div>
+    header: 'Customer',
+    cell: order => <div className='text-nowrap'>{order.attributes.customer}</div>
   },
   {
     id: 'delivered_by',
     header: 'Delivered By',
     cell: order => (
-      <div className='flex items-center gap-1'>
+      <div className='flex items-center gap-1 text-nowrap'>
         {order.attributes.delivery_method === 'in-house' ? <BikeIcon className='h-4.5 w-4.5' /> : <TruckIcon className='h-4.5 w-4.5' />}
         {order.attributes.delivered_by}
       </div>
@@ -93,8 +93,8 @@ const columns: TableColumn<Order>[] = createColumns([
   },
   {
     id: 'created_by',
-    header: () => <div className='text-center'>Created by</div>,
-    cell: user => <div className='flex justify-center'>{user.attributes.created_by?.name}</div>
+    header: 'Created by',
+    cell: user => <div className='text-nowrap'>{user.attributes.created_by?.name}</div>
   },
   {
     id: 'actions',

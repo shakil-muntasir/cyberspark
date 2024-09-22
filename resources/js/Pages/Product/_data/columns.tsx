@@ -40,7 +40,7 @@ const columns: TableColumn<Product>[] = createColumns([
     id: 'name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
     cell: product => (
-      <Link href={`/products/${product.id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+      <Link href={`/products/${product.id}`} className='text-nowrap font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
         {product.attributes.name}
       </Link>
     )
@@ -52,8 +52,8 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'category',
-    header: () => <div className='text-center'>Category</div>,
-    cell: product => <div className='flex justify-center'>{product.attributes.category}</div>
+    header: 'Category',
+    cell: product => <div className='text-nowrap'>{product.attributes.category}</div>
   },
   {
     id: 'variants_sum_quantity',
@@ -120,8 +120,8 @@ const columns: TableColumn<Product>[] = createColumns([
   },
   {
     id: 'created_by',
-    header: () => <div className='text-center'>Created by</div>,
-    cell: product => <div className='flex justify-center'>{product.attributes.created_by?.name}</div>
+    header: 'Created by',
+    cell: product => <div className='text-nowrap'>{product.attributes.created_by?.name}</div>
   },
   {
     id: 'actions',

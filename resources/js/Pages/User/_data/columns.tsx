@@ -38,7 +38,7 @@ const columns: TableColumn<User>[] = createColumns([
     id: 'name',
     header: column => <DataTableColumnHeader column={column} title='Name' />,
     cell: user => (
-      <Link href={`/users/${user.id}`} className='font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
+      <Link href={`/users/${user.id}`} className='text-nowrap font-medium text-blue-500 underline-offset-2 hover:underline dark:text-blue-300'>
         {user.attributes.name}
       </Link>
     )
@@ -46,17 +46,17 @@ const columns: TableColumn<User>[] = createColumns([
   {
     id: 'email',
     header: column => <DataTableColumnHeader column={column} title='Email' />,
-    cell: user => <div className='font-medium'>{user.attributes.email}</div>
+    cell: user => <div className='text-nowrap font-medium'>{user.attributes.email}</div>
   },
   {
     id: 'phone',
     header: column => <DataTableColumnHeader column={column} title='Phone' />,
-    cell: user => <div className='font-medium'>{user.attributes.email}</div>
+    cell: user => <div className='text-nowrap font-medium'>{user.attributes.phone}</div>
   },
   {
     id: 'gender',
     header: column => <DataTableColumnHeader column={column} title='Gender' />,
-    cell: user => <>{toTitleCase(user.attributes.gender)}</>
+    cell: user => <div>{toTitleCase(user.attributes.gender)}</div>
   },
   {
     id: 'status',
@@ -81,8 +81,8 @@ const columns: TableColumn<User>[] = createColumns([
   },
   {
     id: 'created_by',
-    header: () => <div className='text-center'>Created by</div>,
-    cell: user => <div className='flex justify-center'>{user.attributes.created_by?.name}</div>
+    header: 'Created by',
+    cell: user => <div className='text-nowrap'>{user.attributes.created_by?.name}</div>
   },
   {
     id: 'actions',
