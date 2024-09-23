@@ -57,7 +57,7 @@ class OrderController extends Controller
             'variants.productVariant',
             'transactions',
             'audits.user'
-        ]);
+        ])->loadSum('transactions', 'amount');
 
         return inertia('Order/Show', [
             'order' => new OrderResource($order),

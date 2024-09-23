@@ -61,7 +61,7 @@ class Order extends Model implements Auditable
         if (isset($totalPaid)) {
             if ($totalPaid == $this->total_payable) {
                 return 'paid';
-            } else {
+            } elseif ($totalPaid > 0 && $totalPaid < $this->total_payable) {
                 return 'partial';
             }
         }

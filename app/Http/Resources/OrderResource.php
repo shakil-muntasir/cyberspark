@@ -13,7 +13,8 @@ class OrderResource extends JsonResource
         'customer' => UserResource::class,
         'courierService' => CourierServiceResource::class,
         'deliveryMan' => UserResource::class,
-        'variants' => OrderVariantResource::class
+        'variants' => OrderVariantResource::class,
+        'transactions' => TransactionResource::class,
     ];
 
     /**
@@ -29,7 +30,7 @@ class OrderResource extends JsonResource
             'attributes' => [
                 'code' => sprintf('%05d', $this->id),
                 'customer' => $this->whenLoaded('customer', fn() => $this->customer->name),
-                'delivered_by' =>$this->delivered_by,
+                'delivered_by' => $this->delivered_by,
                 'delivery_method' => $this->delivery_method,
                 'delivery_cost' => $this->delivery_cost,
                 'payment_status' => $this->payment_status,
