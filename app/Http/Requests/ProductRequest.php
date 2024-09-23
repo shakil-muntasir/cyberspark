@@ -32,6 +32,14 @@ class ProductRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'category_id.required' => 'Select a category.',
+            'category_id.exists' => 'The selected category is invalid.',
+        ];
+    }
+
     /**
      * Sanitize and retrieve query parameters.
      *

@@ -53,6 +53,15 @@ class ProductController extends Controller
         ]);
     }
 
+    public function update(ProductRequest $request, Product $product): RedirectResponse
+    {
+        Gate::authorize('update', $product);
+
+        $product->update($request->validated());
+
+        return redirect()->back();
+    }
+
     public function dropdown(): ProductCollection
     {
         $search = request()->input('search');
