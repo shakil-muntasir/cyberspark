@@ -29,9 +29,11 @@ class ProductVariantController extends Controller
         return redirect()->back();
     }
 
-    public function destroy($_, ProductVariant $variant): RedirectResponse
+    public function destroy(ProductVariantRequest $request, $_, ProductVariant $variant): RedirectResponse
     {
         Gate::authorize('delete', $variant);
+
+        $request->validated();
 
         $variant->delete();
 
@@ -42,13 +44,12 @@ class ProductVariantController extends Controller
     {
         $search = request()->input('search');
 
-        // TODO: revisit and take closer look into this query later.
         $variants = ProductVariant::with(['product', 'product.category'])
             ->when($search, function ($query, $search) {
-                return $query->where('sku', 'like', "%$search%")
-                    ->orWhereHas('product', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
-                    });
+                return $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', "%$search%")
+                        ->orWhereRaw("CONCAT(products.sku_prefix, LPAD(product_variants.id, 5, '0')) LIKE ?", ["%$search%"]);
+                });
             })
             ->latest('id')
             ->take(10)

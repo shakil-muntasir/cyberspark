@@ -527,6 +527,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       onClick={() => {
                         setIsAddFormOpen(false)
                         setAccordionValue('')
+                        reset()
                       }}
                     >
                       <div className='flex items-center gap-2'>

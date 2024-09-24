@@ -8,6 +8,7 @@ use App\Enums\ProductVariantStatus;
 use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -29,6 +30,18 @@ class ProductVariant extends Model implements Auditable
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function orders(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Order::class,
+            OrderVariant::class,
+            'product_variant_id',
+            'id',
+            'id',
+            'order_id'
+        );
     }
 
     public function orderVariants(): HasMany
