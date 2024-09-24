@@ -225,7 +225,7 @@ const ShowUser: React.FC<UserProps> = ({ genders, roles, states, statuses, user 
                       <div className='grid gap-6'>
                         <div className='grid gap-2'>
                           <Label htmlFor='street'>Street</Label>
-                          <Input id='street' type='text' name='street' value={data.address.street} onChange={handleInputChange} className='w-full' placeholder='street' autoComplete='street' />
+                          <Input id='street' type='text' name='street' value={data.address.street} onChange={handleInputChange} className='w-full' placeholder='street' autoComplete='street-address' />
                         </div>
                         <div className='grid gap-2'>
                           <Label htmlFor='city'>City</Label>

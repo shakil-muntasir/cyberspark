@@ -29,7 +29,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ id, values = [], onVal
       <div ref={widthRef} />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
+          <Button id={id} variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
             <div className='flex flex-wrap justify-start gap-2'>
               {selectedValues.length
                 ? selectedValues.map((val, i) => (
@@ -48,7 +48,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ id, values = [], onVal
         </PopoverTrigger>
         <PopoverContent className='p-0' style={{ width: widthRef.current?.offsetWidth ?? 'auto' }}>
           <Command>
-            <CommandInput id={id} placeholder='Search items...' />
+            <CommandInput placeholder='Search items...' />
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandList>
               <CommandGroup>

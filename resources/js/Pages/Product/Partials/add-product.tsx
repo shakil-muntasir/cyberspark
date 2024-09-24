@@ -34,7 +34,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
-  const [submitButtonText, setSubmitButtonText] = useState<string>('Save changes')
+  const [submitButtonText, setSubmitButtonText] = useState<'Save Changes' | 'Processing' | 'Error'>('Save Changes')
 
   useEffect(() => {
     if (!skuManualInput) {
@@ -52,7 +52,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
   const handleAddProduct = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
-    setSubmitButtonText('Saving')
+    setSubmitButtonText('Processing')
 
     setTimeout(() => {
       post(route('products.store'), {
@@ -72,7 +72,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
         duration: 2000
       })
       setLoading(false)
-      setSubmitButtonText('Save changes')
+      setSubmitButtonText('Save Changes')
     }, 200)
   }
 
@@ -80,7 +80,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
     setSubmitButtonText('Error')
     setTimeout(() => {
       setLoading(false)
-      setSubmitButtonText('Save changes')
+      setSubmitButtonText('Save Changes')
     }, 2000)
   }
 
@@ -120,12 +120,12 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
         <ScrollArea className='h-[calc(100vh-80px)]'>
           <form onSubmit={handleAddProduct} className='mx-6 mb-8 mt-3 grid gap-3'>
             <FormInput id='name' label='Product Name' errorMessage={errors.name}>
-              <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' />
+              <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' autoComplete='off' />
             </FormInput>
 
             <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
               <div className='relative'>
-                <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
+                <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} autoComplete='off' />
                 <div className='absolute right-1 top-1/2 flex items-center'>
                   <TooltipProvider>
                     <Tooltip delayDuration={0}>
@@ -165,8 +165,8 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
               </Select>
             </FormInput>
 
-            <FormInput id='description' label='description' errorMessage={errors.description}>
-              <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' />
+            <FormInput id='description' label='Description' errorMessage={errors.description}>
+              <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
             </FormInput>
 
             <SheetFooter>
@@ -184,19 +184,8 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                   Cancel
                 </Button>
                 <Button type='submit' className='w-32' disabled={loading}>
-                  {submitButtonText === 'Saving' ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      <span>{submitButtonText}</span>
-                    </>
-                  ) : submitButtonText === 'Error' ? (
-                    <>
-                      <AlertCircle className='mr-2 h-4 w-4 text-destructive' />
-                      <span>Failed</span>
-                    </>
-                  ) : (
-                    <span>{submitButtonText}</span>
-                  )}
+                  {submitButtonText === 'Processing' ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : submitButtonText === 'Error' ? <AlertCircle className='mr-2 h-4 w-4 text-destructive' /> : null}
+                  <span>{submitButtonText}</span>
                 </Button>
               </div>
             </SheetFooter>
