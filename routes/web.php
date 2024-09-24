@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dropdown', [ProductController::class, 'dropdown'])->name('dropdown');
         Route::get('/{product}', [ProductController::class, 'show'])->name('show');
         Route::patch('/{product}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
 
         Route::prefix('/{product}/variants')->name('variants.')->group(function () {
             Route::post('/', [ProductVariantController::class, 'store'])->name('store');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,8 +15,9 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('get')) {
-            // No validation for GET requests
+        $IGNORED_METHODS = ['get', 'delete'];
+        if (in_array(strtolower($this->method()), $IGNORED_METHODS)) {
+            // No validation for ignored request methods
             return [];
         }
 
@@ -38,6 +40,31 @@ class ProductRequest extends FormRequest
             'category_id.required' => 'Select a category.',
             'category_id.exists' => 'The selected category is invalid.',
         ];
+    }
+
+    /**
+     * Perform additional validation after the main rules have passed.
+     *
+     * @param Validator $validator
+     * 
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($validator) {
+            // Only perform these checks for DELETE requests
+            if ($this->isMethod('delete')) {
+                $product = $this->route('product');
+
+                if ($product->orders()->exists()) {
+                    $validator->errors()->add('order', 'Product has associated orders.');
+                }
+
+                if ($product->variants()->exists()) {
+                    $validator->errors()->add('variant', 'Product has associated variants.');
+                }
+            }
+        });
     }
 
     /**

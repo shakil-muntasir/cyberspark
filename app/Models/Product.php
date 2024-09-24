@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OwenIt\Auditing\Contracts\Auditable;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Product extends Model implements Auditable
 {
-    use AuditableTrait, HasFactory;
+    use AuditableTrait, HasFactory, HasRelationships;
 
     protected $fillable = [
         'name',
@@ -40,14 +42,24 @@ class Product extends Model implements Auditable
         return $this->belongsTo(Category::class);
     }
 
-    public function variants(): HasMany
+    public function orders(): HasManyDeep
     {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasManyDeep(
+            Order::class,
+            [ProductVariant::class, OrderVariant::class],
+            ['product_id', 'product_variant_id', 'id'],
+            ['id', 'id', 'order_id']
+        );
     }
 
     public function orderVariants(): HasManyThrough
     {
         return $this->hasManyThrough(OrderVariant::class, ProductVariant::class);
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 
     /**

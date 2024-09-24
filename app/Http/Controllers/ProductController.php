@@ -62,6 +62,17 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    public function destroy(ProductRequest $request, Product $product): RedirectResponse
+    {
+        Gate::authorize('delete', $product);
+
+        $request->validated();
+
+        $product->delete();
+
+        return redirect()->route('products.index');
+    }
+
     public function dropdown(): ProductCollection
     {
         $search = request()->input('search');

@@ -45,14 +45,14 @@ class Order extends Model implements Auditable
         return $this->hasMany(OrderVariant::class);
     }
 
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
-
     public function shippingAddress(): HasOne
     {
         return $this->hasOne(ShippingAddress::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     public function getPaymentStatusAttribute()

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, router, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { AlertCircleIcon, ChevronLeft, Loader2Icon } from 'lucide-react'
 import { LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
 
@@ -12,12 +12,13 @@ import { Input } from '@/Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import { toast } from '@/Components/ui/use-toast'
 
 import DeleteModal from '@/Components/DeleteModal'
 
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 import FormInput from '@/Components/FormInput'
-import { toast } from '@/Components/ui/use-toast'
+import ToastErrorDescription from '@/Components/ToastErrorDescription'
 
 import { toTitleCase } from '@/Lib/utils'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
@@ -42,7 +43,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
     category_id: product.data.attributes.category_id,
     status: product.data.attributes.status
   }
-  const { data, setData, patch, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
+  const { data, setData, patch, delete: destroy, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
   const [loading, setLoading] = useState(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
@@ -66,6 +67,29 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
         preserveScroll: true
       })
     }, 500)
+  }
+
+  const handleDeleteProduct = async () => {
+    setTimeout(() => {
+      destroy(route('products.destroy', product.data.id), {
+        onSuccess: () => {
+          toast({
+            title: 'Success!',
+            description: 'The product has been deleted successfully.',
+            duration: 2000
+          })
+        },
+        onError: (errors: Partial<Record<keyof ProductForm, string>>) => {
+          toast({
+            variant: 'destructive',
+            title: 'Error deleting product!',
+            description: <ToastErrorDescription errors={errors} />,
+            duration: 3000
+          })
+        },
+        preserveScroll: true
+      })
+    }, 1)
   }
 
   const handleSuccess = () => {
@@ -98,7 +122,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
     id: product.data.id,
     name: product.data.attributes.name,
     title: 'product',
-    onConfirm: () => router.visit('/products')
+    onConfirm: handleDeleteProduct
   }
 
   let availability: 'default' | 'destructive' | 'secondary' | 'outline' = 'default'
