@@ -15,6 +15,7 @@ import { useTheme } from '@/Providers/theme-provider'
 import { useForm } from '@inertiajs/react'
 import { Pencil2Icon } from '@radix-ui/react-icons'
 import { useState } from 'react'
+import ToastErrorDescription from '@/Components/ToastErrorDescription'
 
 interface ProductVariantDataProps {
   product: Product
@@ -48,7 +49,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     setTimeout(() => {
       post(route('products.variants.store', { product: product.id }), {
         preserveScroll: true,
-        onSuccess: () => handleSuccess('New product variant has been added successfully.'),
+        onSuccess: () => handleSuccess('New variant has been added successfully.'),
         onError: handleError
       })
     }, 500)
@@ -60,7 +61,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     setTimeout(() => {
       patch(route('products.variants.update', { product: product.id, variant: data.id }), {
         preserveScroll: true,
-        onSuccess: () => handleSuccess('Product variant has been updated successfully.'),
+        onSuccess: () => handleSuccess('The variant has been updated successfully.'),
         onError: handleError
       })
     }, 500)
@@ -75,8 +76,15 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
         setTimeout(() => {
           destroy(route('products.variants.destroy', { product: product.id, variant: variant.id }), {
             preserveScroll: true,
-            onSuccess: () => handleSuccess('Product variant has been deleted successfully.'),
-            onError: handleError
+            onSuccess: () => handleSuccess('The variant has been deleted successfully.'),
+            onError: (errors: Partial<Record<keyof ProductVariantForm, string>>) => {
+              toast({
+                variant: 'destructive',
+                title: 'Error deleting variant!',
+                description: <ToastErrorDescription errors={errors} />,
+                duration: 3000
+              })
+            }
           })
         }, 500)
       }
@@ -100,13 +108,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     toast({
       variant: 'destructive',
       title: 'Error adding variant!',
-      description: (
-        <div className='space-y-1'>
-          {Object.values(errors).map((error, index) => (
-            <p key={index}>• {error}</p>
-          ))}
-        </div>
-      ),
+      description: <ToastErrorDescription errors={errors} />,
       duration: 3000
     })
   }
@@ -345,7 +347,16 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       <TooltipProvider>
                         <Tooltip delayDuration={0}>
                           <TooltipTrigger asChild>
-                            <Button type='button' variant='destructive' size='icon' className='group h-7 w-7' onClick={() => setIsAddFormOpen(false)}>
+                            <Button
+                              type='button'
+                              variant='destructive'
+                              size='icon'
+                              className='group h-7 w-7'
+                              onClick={() => {
+                                setIsAddFormOpen(false)
+                                reset()
+                              }}
+                            >
                               <XIcon className='h-4 w-4 text-white/80 group-hover:text-white' />
                               <span className='sr-only'>Discard</span>
                             </Button>

@@ -71,7 +71,7 @@ const AddUser: React.FC<AddUserProps> = ({ genders, roles, states }) => {
       reset()
       toast({
         title: 'Success!',
-        description: 'The user has been added successfully.',
+        description: 'New user has been added successfully.',
         duration: 2000
       })
       setLoading(false)

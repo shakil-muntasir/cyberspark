@@ -68,7 +68,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
       reset()
       toast({
         title: 'Success!',
-        description: 'The product has been added successfully.',
+        description: 'New product has been added successfully.',
         duration: 2000
       })
       setLoading(false)
