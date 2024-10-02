@@ -112,7 +112,8 @@ const config = {
         }
       })
     }
-  ]
+  ],
+  safelist: ['bg-violet-400', 'bg-green-400', 'bg-yellow-400', 'bg-sky-400', 'bg-orange-400', 'bg-indigo-400', 'text-violet-400', 'text-green-400', 'text-yellow-400', 'text-sky-400', 'text-orange-400', 'text-indigo-400']
 } satisfies Config
 
 export default config
