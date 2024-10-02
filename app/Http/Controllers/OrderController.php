@@ -53,24 +53,26 @@ class OrderController extends Controller
             'customer',
             'deliveryMan',
             'courierService',
-            'variants',
-            'variants.productVariant',
+            'orderVariants',
+            'orderVariants.productVariant',
+            'orderVariants.productVariant.product',
             'transactions',
+            'shippingAddress',
             'audits.user'
         ])->loadSum('transactions', 'amount');
 
         return inertia('Order/Show', [
-            'order' => new OrderResource($order),
+            'order' => new OrderResource($order)
         ]);
     }
 
     private function createOrderVariants(Order $order, array $order_variants): void
     {
         foreach ($order_variants as $variant) {
-            $order->variants()->create([
+            $order->orderVariants()->create([
                 'product_variant_id' => $variant['product_variant_id'],
                 'quantity' => $variant['quantity'],
-                'price' => ProductVariant::find($variant['product_variant_id'])->selling_price,
+                'unit_price' => ProductVariant::find($variant['product_variant_id'])->selling_price,
             ]);
             $productVariant = ProductVariant::findOrFail($variant['product_variant_id']);
             $productVariant->update([

@@ -13,8 +13,10 @@ class OrderResource extends JsonResource
         'customer' => UserResource::class,
         'courierService' => CourierServiceResource::class,
         'deliveryMan' => UserResource::class,
-        'variants' => OrderVariantResource::class,
+        'orderVariants' => OrderVariantResource::class,
+        'productVariants' => ProductVariantResource::class,
         'transactions' => TransactionResource::class,
+        'shippingAddress' => ShippingAddressResource::class,
     ];
 
     /**

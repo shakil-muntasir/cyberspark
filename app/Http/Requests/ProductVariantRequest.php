@@ -42,8 +42,6 @@ class ProductVariantRequest extends FormRequest
             if ($this->isMethod('delete')) {
                 $variant = $this->route('variant');
 
-                dd($variant->orders);
-
                 if ($variant->orders()->exists()) {
                     $validator->errors()->add('order', 'Variant has associated orders.');
                 }

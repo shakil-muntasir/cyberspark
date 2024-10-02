@@ -30,7 +30,11 @@ class TransactionResource extends JsonResource
                 'account_number' => $this->account_number,
                 'txn_id' => $this->txn_id,
                 'bank_name' => $this->bank_name,
-                'cheque_number' => $this->cheque_number
+                'cheque_number' => $this->cheque_number,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
+                'created_at' => $this->created_at->format('jS F, Y h:i A'),
+                'updated_at' => $this->updated_at->format('jS F, Y h:i A'),
             ]
         ];
     }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -40,9 +41,21 @@ class Order extends Model implements Auditable
         return $this->belongsTo(User::class, 'delivery_man_id');
     }
 
-    public function variants(): HasMany
+    public function orderVariants(): HasMany
     {
         return $this->hasMany(OrderVariant::class);
+    }
+
+    public function productVariants(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            ProductVariant::class,
+            OrderVariant::class,
+            'order_id',
+            'id',
+            'id',
+            'product_variant_id'
+        );
     }
 
     public function shippingAddress(): HasOne
