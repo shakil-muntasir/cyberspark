@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->foreignId('delivery_man_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('courier_service_id')->nullable()->constrained('courier_services');
             $table->decimal('total_payable', 10, 2);
+            $table->string('status')->default(OrderStatus::PENDING);
             $table->timestamps();
         });
     }

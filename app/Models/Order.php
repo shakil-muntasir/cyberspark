@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Enums\OrderStatus;
 
 class Order extends Model implements Auditable
 {
@@ -24,6 +25,10 @@ class Order extends Model implements Auditable
         'delivery_man_id',
         'courier_service_id',
         'total_payable',
+    ];
+
+    protected $casts = [
+        'status' => OrderStatus::class
     ];
 
     public function courierService(): BelongsTo

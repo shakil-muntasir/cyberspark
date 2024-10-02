@@ -28,7 +28,8 @@ class OrderFactory extends Factory
             'delivery_cost' => fake()->randomElement([60, 100]),
             'delivery_man_id' => User::factory(),
             'courier_service_id' => CourierService::factory(),
-            'total_payable' => fake()->randomFloat(2, self::MIN_PAYABLE, self::MAX_PAYABLE)
+            'total_payable' => fake()->randomFloat(2, self::MIN_PAYABLE, self::MAX_PAYABLE),
+            'status' => fake()->randomElement(['pending', 'shipping', 'received', 'complete'])
         ];
     }
 

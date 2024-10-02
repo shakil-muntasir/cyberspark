@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Enums\State;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderCollection;
@@ -57,12 +58,14 @@ class OrderController extends Controller
             'orderVariants.productVariant',
             'orderVariants.productVariant.product',
             'transactions',
+            'transactions.audits.user',
             'shippingAddress',
             'audits.user'
         ])->loadSum('transactions', 'amount');
 
         return inertia('Order/Show', [
-            'order' => new OrderResource($order)
+            'order' => new OrderResource($order),
+            'statuses' => OrderStatus::getAllOptions()
         ]);
     }
 
