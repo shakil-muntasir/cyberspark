@@ -2,13 +2,13 @@ import DataTable from '@/Components/Table'
 import { Separator } from '@/Components/ui/separator'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import PageHeader from '@/Layouts/Partials/page-header'
-import { Order } from '@/Pages/Order/types'
 import { TableData } from '@/Types'
 import { columns as initialColumns } from '@/Pages/Order/_data/columns'
 import { useEffect, useState } from 'react'
 import { Link, router, usePage } from '@inertiajs/react'
 import { Button } from '@/Components/ui/button'
 import { PlusCircleIcon } from 'lucide-react'
+import { Order } from '@/Types/modules/order'
 
 interface OrdersPageProps {
   orders: TableData<Order>

@@ -1,48 +1,4 @@
-import { ProductVariant } from '@/Pages/Product/types'
-import { User } from '@/Pages/User/types'
-import { CreatedOrUpdatedBy, SelectOption } from '@/Types'
-
-type Attributes = {
-    code: string
-    customer: string
-    delivery_method: string
-    delivered_by: string
-    delivery_cost: number
-    payment_status: string
-    total_payable: number
-    total_paid: number
-    total_remaining: number
-    created_by: CreatedOrUpdatedBy
-    updated_by: CreatedOrUpdatedBy
-    created_at: string
-    updated_at: string
-}
-
-type CourierService = SelectOption & {
-    id: string
-}
-
-type Relationships = {
-    customer: User
-    delivery_man: User
-    courier_service: CourierService[]
-    variants: ProductVariant[]
-}
-
-export type Order = {
-    type: string
-    id: string
-    attributes: Attributes
-    relationships?: Relationships
-}
-
-export type OrderResource = {
-    data: Order
-}
-
-export type OrderCollection = {
-    data: Order[]
-}
+import { SelectOption } from '@/Types'
 
 export type OrderForm = {
     customer_id: string
@@ -52,16 +8,9 @@ export type OrderForm = {
     courier_service_id: string
     total_payable: number | null
 
-    order_variants: OrderVariant[]
+    order_variants: OrderVariantForm[]
 
-    address: {
-        contact_number: string
-        email: string
-        street: string
-        city: string
-        state: string
-        zip: number | null
-    }
+    address: ShippingAddressAttributes
 
     payment_status: 'due' | 'partial' | 'paid' | null
     total_paid: number | null
@@ -73,7 +22,11 @@ export type OrderForm = {
     cheque_number: string
 }
 
-export type OrderVariant = {
+export type OrderVariantForm = {
     product_variant_id: string
     quantity: number
+}
+
+export interface StatusOption extends SelectOption {
+    color: string
 }

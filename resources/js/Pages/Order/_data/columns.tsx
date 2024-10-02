@@ -8,9 +8,10 @@ import { DataTableColumnHeader } from '@/Components/table/column-header'
 import { DeleteModalData, useDeleteModal } from '@/Contexts/DeleteModalContext'
 
 import { TableColumn } from '@/Types'
-import { Order } from '@/Pages/Order/types'
+
 import { formatCurrency, toTitleCase } from '@/Lib/utils'
 import { PaymentBadge } from '@/Components/PaymentBadge'
+import { Order } from '@/Types/modules/order'
 
 const handleCopyId = (id: string): void => {
   navigator.clipboard.writeText(id)

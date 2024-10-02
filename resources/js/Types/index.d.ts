@@ -40,10 +40,10 @@ export type ColumnOption = {
 }
 
 // Define a generic type for the attributes structure
-export type Attributes<T> = T extends { data: { attributes: infer A } } ? A : never
+export type TableColumnAttributes<T> = T extends { data: { attributes: infer A } } ? A : never
 
 export interface TableColumn<T> {
-    id: keyof Attributes<T> | 'id' | 'actions'
+    id: keyof TableColumnAttributes<T> | 'id' | 'actions'
     header: ((column: TableColumn<T>) => JSX.Element) | string
     cell: (row: T) => JSX.Element
     sorted?: 'asc' | 'desc'
