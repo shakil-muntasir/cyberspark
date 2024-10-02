@@ -75,7 +75,7 @@ class OrderSeeder extends Seeder
                 'order_id' => $order->id,
                 'product_variant_id' => $productVariant->id,
                 'quantity' => $quantity,  // Use the same quantity as in totalPayable calculation
-                'price' => $productVariant->selling_price,
+                'unit_price' => $productVariant->selling_price,
             ]);
             $productVariant->update([
                 'quantity' => $productVariant->quantity - $quantity
@@ -156,7 +156,7 @@ class OrderSeeder extends Seeder
             'account_number' => null,
             'txn_id' => null,
             'bank_name' => null,
-            'cheque_number' => null,
+            'cheque_number' => null
         ];
 
         // Handle additional fields based on payment method

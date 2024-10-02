@@ -23,7 +23,7 @@ class OrderVariantFactory extends Factory
             'order_id' => Order::factory(),
             'product_variant_id' => ProductVariant::factory(),
             'quantity' => fake()->numberBetween(5, 10),
-            'price' => fake()->randomFloat(2, 2000, 3000),
+            'unit_price' => fake()->randomFloat(2, 2000, 3000),
         ];
     }
 }
