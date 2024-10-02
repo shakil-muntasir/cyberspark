@@ -28,11 +28,12 @@ import { User } from '@/Pages/User/types'
 import { SelectOption } from '@/Types'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import useForm from '@/Hooks/form'
-import { OrderForm, OrderVariant } from '@/Pages/Order/types'
+import { OrderForm } from '@/Pages/Order/types'
 import { useToast } from '@/Components/ui/use-toast'
 import CartItem from '@/Components/CartItem'
 import FormInput from '@/Components/FormInput'
 import ProductVariantDropdownList from '@/Components/ProductVariantDropdownList'
+import { OrderVariant } from '@/Types/modules/order-variant'
 
 interface CourierServiceProps extends SelectOption {
   id: string
@@ -478,7 +479,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                             setData((data: OrderForm) => ({
                               ...data,
                               delivery_method: 'external',
-                              delivery_cost: 100,
+                              delivery_cost: null,
                               delivery_man_id: ''
                             }))
                             clearErrors('delivery_method')
@@ -506,8 +507,13 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                     <FormInput id='courier_service' label='Courier Service' errorMessage={errors.courier_service_id}>
                       <Select
                         name='service_provider'
-                        onValueChange={value => {
-                          setData('courier_service_id', value)
+                        onValueChange={serviceId => {
+                          const service = courier_services.find(service => service.id === serviceId)
+                          setData(data => ({
+                            ...data,
+                            courier_service_id: service!.id,
+                            delivery_cost: parseFloat(service!.value)
+                          }))
                           clearErrors('courier_service_id')
                           clearErrors('delivery_man_id')
                         }}

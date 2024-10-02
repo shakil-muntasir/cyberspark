@@ -152,6 +152,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           <div className='font-medium'>{variant.attributes.sku}</div>
                         </>
                       </TableCell>
+
                       <TableCell>
                         {variant.id !== data.id ? (
                           <>
@@ -167,6 +168,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </>
                         )}
                       </TableCell>
+
                       <TableCell>
                         {variant.id !== data.id ? (
                           <>
@@ -182,6 +184,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </>
                         )}
                       </TableCell>
+
                       <TableCell>
                         {variant.id !== data.id ? (
                           <>
@@ -197,6 +200,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </>
                         )}
                       </TableCell>
+
                       <TableCell>
                         {variant.id !== data.id ? (
                           <>
@@ -212,6 +216,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                           </>
                         )}
                       </TableCell>
+
                       <TableCell>
                         <span className='sr-only'>Actions</span>
                         {variant.id !== data.id ? (
@@ -219,7 +224,18 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                             <TooltipProvider>
                               <Tooltip delayDuration={0}>
                                 <TooltipTrigger asChild>
-                                  <Button type='button' variant='ghost' size='icon' className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                                  <Button
+                                    type='button'
+                                    variant='ghost'
+                                    size='icon'
+                                    className='group h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                                    onClick={() =>
+                                      setData(() => ({
+                                        ...variant.attributes,
+                                        id: variant.id
+                                      }))
+                                    }
+                                  >
                                     <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                                     <span className='sr-only'>Edit</span>
                                   </Button>

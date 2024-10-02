@@ -142,7 +142,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
 
   return (
     <AuthenticatedLayout title='Product Details'>
-      <main className='grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8'>
+      <main className='grid flex-1 sm:px-6 sm:py-0'>
         <div className='mx-auto grid max-w-[80rem] flex-1 auto-rows-max gap-4'>
           <div className='flex items-center gap-4'>
             <TooltipProvider>
@@ -185,9 +185,8 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
               </Button>
             </div>
           </div>
-
-          <div className='flex flex-col gap-4 lg:flex-row lg:gap-8'>
-            <div className='grid auto-rows-max items-start gap-4 lg:gap-8'>
+          <div className='flex flex-col gap-4 lg:flex-row lg:gap-6'>
+            <div className='grid auto-rows-max items-start gap-4 lg:gap-6'>
               <Card>
                 <CardHeader>
                   <CardTitle>Product Details</CardTitle>
@@ -265,7 +264,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
               <ProductVariantData product={product.data} variants={product.data.relationships?.variants} />
             </div>
 
-            <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-8'>
+            <div className='grid w-full auto-rows-max items-start gap-4 lg:max-w-72 lg:gap-6'>
               <Card>
                 <CardHeader>
                   <CardTitle>Product Category</CardTitle>
