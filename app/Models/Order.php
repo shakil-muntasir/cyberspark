@@ -25,6 +25,7 @@ class Order extends Model implements Auditable
         'delivery_man_id',
         'courier_service_id',
         'total_payable',
+        'sales_rep_id'
     ];
 
     protected $casts = [
@@ -61,6 +62,11 @@ class Order extends Model implements Auditable
             'id',
             'product_variant_id'
         );
+    }
+
+    public function salesRep(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sales_rep_id');
     }
 
     public function shippingAddress(): HasOne

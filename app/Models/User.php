@@ -79,6 +79,11 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(Order::class, 'delivery_man_id');
     }
 
+    public function salesRepOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'sales_rep_id');
+    }
+
     /**
      * Get the current roles of the user.
      *

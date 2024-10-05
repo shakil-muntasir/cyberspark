@@ -44,6 +44,9 @@ type MakeSellProps = {
   states: SelectOption[]
 }
 
+// TODO: make delivery man dropdown list
+// TODO: add sales rep to ui
+
 const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
   const { toast } = useToast()
 
@@ -53,6 +56,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
     delivery_cost: null,
     delivery_man_id: '',
     courier_service_id: '',
+    sales_rep_id: '',
     total_payable: null,
 
     order_variants: [],
@@ -140,7 +144,8 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
         city: user.relationships!.address!.attributes.city,
         state: user.relationships!.address!.attributes.state,
         zip: parseInt(user.relationships!.address!.attributes.zip)
-      }
+      },
+      sales_rep_id: user.id
     }))
     clearErrors('address.contact_number')
     clearErrors('address.email')
@@ -333,7 +338,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
               </CardContent>
               {/* for mobile view only */}
               <Separator className={cn('lg:hidden', cartItems.length === 0 && 'hidden')} />
-              <CardContent className='px-3 pb-3 lg:hidden'>
+              <CardContent className='p-3 lg:hidden'>
                 {cartItems.length > 0 && (
                   <div className={cn('overflow-hidden', mobileExpand ? 'max-h-full' : 'max-h-[14.5rem]')}>
                     {cartItems.map((cartItem, index) => (
@@ -780,84 +785,82 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
           </div>
 
           <div className='lg:w-3/8'>
-            <div className='grid'>
-              <Card>
-                <CardHeader className='lg:pb-3'>
-                  <CardTitle>Order summary</CardTitle>
-                  <CardDescription>Check order details, quantities, and total amount.</CardDescription>
-                </CardHeader>
-                <Separator />
-                <CardContent className='hidden px-0 pb-0 lg:block'>
-                  {data.order_variants.length > 0 ? (
-                    <ScrollArea className='lg:h-[350px]'>
-                      <div>
-                        {cartItems.map((cartItem, index) => (
-                          <div key={cartItem.variant.id}>
-                            <div>
-                              <CartItem data={cartItem} removeFromCart={removeFromCart} handleCartItemChange={handleCartItemChange} />
-                            </div>
-                            {index !== cartItems.length - 1 && <Separator />}
+            <Card>
+              <CardHeader className='lg:pb-3'>
+                <CardTitle>Order summary</CardTitle>
+                <CardDescription>Check order details, quantities, and total amount.</CardDescription>
+              </CardHeader>
+              <Separator />
+              <CardContent className='hidden px-0 pb-0 lg:block'>
+                {data.order_variants.length > 0 ? (
+                  <ScrollArea className='lg:h-[350px]'>
+                    <div>
+                      {cartItems.map((cartItem, index) => (
+                        <div key={cartItem.variant.id}>
+                          <div>
+                            <CartItem data={cartItem} removeFromCart={removeFromCart} handleCartItemChange={handleCartItemChange} />
                           </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  ) : (
-                    <div className='flex flex-col items-center justify-center gap-2 text-muted-foreground lg:h-[350px]'>
-                      <ShoppingCartIcon className='mt-4 h-18 w-18' />
-                      <span className='ml-2 text-sm font-medium'>Add items to cart.</span>
+                          {index !== cartItems.length - 1 && <Separator />}
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </CardContent>
-                <Separator className='hidden lg:block' />
-                <CardContent className={cn('mx-6 max-h-max p-0 text-xs text-muted-foreground transition-height-padding-opacity duration-500 ease-in-out', subtotal !== 0 || data.delivery_cost ? 'border-b opacity-100' : 'opacity-0')}>
-                  <div className={`flex items-center justify-between overflow-hidden text-xs text-muted-foreground transition-all duration-300 ease-in-out ${subtotal !== 0 ? 'max-h-20 py-2 opacity-100' : 'max-h-0 py-0 opacity-0'}`}>
-                    <Label className='transition-all duration-300'>Subtotal</Label>
-                    <p className='text-sm transition-all duration-300'>{formatCurrency(subtotal)}</p>
+                  </ScrollArea>
+                ) : (
+                  <div className='flex flex-col items-center justify-center gap-2 text-muted-foreground lg:h-[350px]'>
+                    <ShoppingCartIcon className='mt-4 h-18 w-18' />
+                    <span className='ml-2 text-sm font-medium'>Add items to cart.</span>
                   </div>
+                )}
+              </CardContent>
+              <Separator className='hidden lg:block' />
+              <CardContent className={cn('mx-6 max-h-max p-0 text-xs text-muted-foreground transition-height-padding-opacity duration-500 ease-in-out', subtotal !== 0 || data.delivery_cost ? 'border-b opacity-100' : 'opacity-0')}>
+                <div className={`flex items-center justify-between overflow-hidden text-xs text-muted-foreground transition-all duration-300 ease-in-out ${subtotal !== 0 ? 'max-h-20 py-2 opacity-100' : 'max-h-0 py-0 opacity-0'}`}>
+                  <Label className='transition-all duration-300'>Subtotal</Label>
+                  <p className='text-sm transition-all duration-300'>{formatCurrency(subtotal)}</p>
+                </div>
 
-                  <div className={`flex items-center justify-between overflow-hidden text-xs text-muted-foreground transition-all duration-300 ease-in-out ${data.delivery_cost ? 'max-h-20 py-2 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <Label className='transition-all duration-300'>Shipping</Label>
-                    <p className='text-sm transition-all duration-300'>{formatCurrency(data.delivery_cost)}</p>
-                  </div>
-                </CardContent>
+                <div className={`flex items-center justify-between overflow-hidden text-xs text-muted-foreground transition-all duration-300 ease-in-out ${data.delivery_cost ? 'max-h-20 py-2 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <Label className='transition-all duration-300'>Shipping</Label>
+                  <p className='text-sm transition-all duration-300'>{formatCurrency(data.delivery_cost)}</p>
+                </div>
+              </CardContent>
 
-                <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', subtotal !== 0 && data.delivery_cost ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0', data.total_paid && 'border-b')}>
-                  <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${subtotal !== 0 && data.delivery_cost ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <Label className='text-sm transition-all duration-300'>Total Payable</Label>
-                    <p className='text-sm transition-all duration-300'>{formatCurrency(data.total_payable)}</p>
-                  </div>
-                </CardContent>
-                <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', data.total_paid ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0', data.total_paid !== totalRemaining && 'border-b')}>
-                  <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${data.total_paid ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <Label className='text-sm transition-all duration-300'>Total Paid</Label>
-                    <p className='text-sm transition-all duration-300'>{formatCurrency(data.total_paid)}</p>
-                  </div>
-                </CardContent>
-                <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', data.total_paid ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0')}>
-                  <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${data.total_paid && data.total_paid !== data.total_payable ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <Label className='text-sm transition-all duration-300'>Total Remaining</Label>
-                    <p className='text-sm transition-all duration-300'>BDT {totalRemaining}</p>
-                  </div>
-                </CardContent>
-                <CardFooter className={cn('justify-end space-x-2 pt-6 transition-all duration-300 lg:space-x-0', ((subtotal && data.delivery_cost) || data.total_paid) && 'pt-0')}>
-                  <Button variant='secondary' className='rounded-sm lg:hidden'>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddNewOrder} className='lg:w-full' disabled={loading}>
-                    {submitButtonText === 'Processing' ? (
-                      <>
-                        <Loader2Icon className='mr-2 h-4 w-4 animate-spin' />
-                      </>
-                    ) : submitButtonText === 'Failed to Place Order' ? (
-                      <>
-                        <AlertCircleIcon className='mr-2 h-4 w-4 text-destructive' />
-                      </>
-                    ) : null}
-                    <span>{submitButtonText}</span>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
+              <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', subtotal !== 0 && data.delivery_cost ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0', data.total_paid && 'border-b')}>
+                <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${subtotal !== 0 && data.delivery_cost ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <Label className='text-sm transition-all duration-300'>Total Payable</Label>
+                  <p className='text-sm transition-all duration-300'>{formatCurrency(data.total_payable)}</p>
+                </div>
+              </CardContent>
+              <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', data.total_paid ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0', data.total_paid !== totalRemaining && 'border-b')}>
+                <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${data.total_paid ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <Label className='text-sm transition-all duration-300'>Total Paid</Label>
+                  <p className='text-sm transition-all duration-300'>{formatCurrency(data.total_paid)}</p>
+                </div>
+              </CardContent>
+              <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', data.total_paid ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0')}>
+                <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${data.total_paid && data.total_paid !== data.total_payable ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <Label className='text-sm transition-all duration-300'>Total Remaining</Label>
+                  <p className='text-sm transition-all duration-300'>BDT {totalRemaining}</p>
+                </div>
+              </CardContent>
+              <CardFooter className={cn('justify-end space-x-2 pt-6 transition-all duration-300 lg:space-x-0', ((subtotal && data.delivery_cost) || data.total_paid) && 'pt-0')}>
+                <Button variant='secondary' className='rounded-sm lg:hidden'>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddNewOrder} className='lg:w-full' disabled={loading}>
+                  {submitButtonText === 'Processing' ? (
+                    <>
+                      <Loader2Icon className='mr-2 h-4 w-4 animate-spin' />
+                    </>
+                  ) : submitButtonText === 'Failed to Place Order' ? (
+                    <>
+                      <AlertCircleIcon className='mr-2 h-4 w-4 text-destructive' />
+                    </>
+                  ) : null}
+                  <span>{submitButtonText}</span>
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </div>
       </main>

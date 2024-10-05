@@ -59,6 +59,7 @@ class OrderController extends Controller
             'orderVariants.productVariant.product',
             'transactions',
             'transactions.audits.user',
+            'salesRep',
             'shippingAddress',
             'audits.user'
         ])->loadSum('transactions', 'amount');
@@ -71,11 +72,16 @@ class OrderController extends Controller
 
     private function createOrderVariants(Order $order, array $order_variants): void
     {
+
+
         foreach ($order_variants as $variant) {
+            $productVariant = ProductVariant::find($variant['product_variant_id']);
+
             $order->orderVariants()->create([
                 'product_variant_id' => $variant['product_variant_id'],
                 'quantity' => $variant['quantity'],
-                'unit_price' => ProductVariant::find($variant['product_variant_id'])->selling_price,
+                'unit_price' => $productVariant->selling_price,
+                'subtotal' => $variant['quantity'] * $productVariant->selling_price
             ]);
             $productVariant = ProductVariant::findOrFail($variant['product_variant_id']);
             $productVariant->update([

@@ -15,8 +15,9 @@ class OrderResource extends JsonResource
         'deliveryMan' => UserResource::class,
         'orderVariants' => OrderVariantResource::class,
         'productVariants' => ProductVariantResource::class,
-        'transactions' => TransactionResource::class,
+        'salesRep' => UserResource::class,
         'shippingAddress' => ShippingAddressResource::class,
+        'transactions' => TransactionResource::class,
     ];
 
     /**

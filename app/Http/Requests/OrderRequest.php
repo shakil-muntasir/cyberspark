@@ -24,6 +24,7 @@ class OrderRequest extends FormRequest
             'delivery_cost' => 'required|numeric',
             'delivery_man_id' => 'nullable|exists:users,id|required_if:delivery_method,in-house',
             'courier_service_id' => 'nullable|exists:courier_services,id|required_if:delivery_method,external',
+            'sales_rep_id' => 'required|exists:users,id',
             'total_payable' => 'required|numeric',
 
             // Order variant fields
@@ -54,26 +55,30 @@ class OrderRequest extends FormRequest
     public function messages()
     {
         return [
-            'order_variants' => 'Add product(s) to cart.',
             'customer_id' => 'Select a customer.',
+            'delivery_method' => 'Select a delivery method.',
+            'delivery_man_id' => 'Select a delivery man.',
+            'courier_service_id' => 'Select a courier service.',
+            'sales_rep_id' => 'Select a sales representative.',
+
+            'order_variants' => 'Add product(s) to cart.',
+
             'address.contact_number' => 'The contact number field is required.',
             'address.email' => 'The email field is required.',
             'address.street' => 'The street field is required.',
             'address.city' => 'The city field is required.',
             'address.state' => 'The state field is required.',
             'address.zip' => 'The zip field is required.',
-            'delivery_method' => 'Select a delivery method.',
-            'delivery_man_id' => 'Select a delivery man.',
-            'courier_service_id' => 'Select a courier service.',
-            'payment_method' => 'Select a payment method.',
+
             'payment_status.required_if' => 'Select a payment status.',
-            'service_provider' => 'Select a service provider.',
+            'payment_method' => 'Select a payment method.',
+            'total_paid.required_if' => 'Enter the partial payment amount.',
+            'total_paid.lte' => 'The partial amount must be less than total payable.',
             'account_number' => 'Enter the account number.',
+            'service_provider' => 'Select a service provider.',
             'txn_id' => 'Enter the transaction ID.',
             'bank_name' => 'The bank name field is required.',
             'cheque_number' => 'The cheque number field is required.',
-            'total_paid.required_if' => 'Enter the partial payment amount.',
-            'total_paid.lte' => 'The partial amount must be less than total payable.',
         ];
     }
 

@@ -60,6 +60,7 @@ class OrderSeeder extends Seeder
             'delivery_cost' => $deliveryCharge,
             'delivery_man_id' => $deliveryMethod === 'in-house' ? User::role('delivery_man')->inRandomOrder()->first()->id : null,
             'courier_service_id' => $deliveryMethod === 'external' ? $courierService->id : null,
+            'sales_rep_id' => User::role('sales_rep')->inRandomOrder()->first()->id,
             'total_payable' => $totalPayable,  // Correctly set total payable
         ]);
 

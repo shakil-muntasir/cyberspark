@@ -6,6 +6,7 @@ export type OrderForm = {
     delivery_cost: number | null
     delivery_man_id: string
     courier_service_id: string
+    sales_rep_id: string
     total_payable: number | null
 
     order_variants: OrderVariantForm[]
