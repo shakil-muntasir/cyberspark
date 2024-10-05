@@ -25,8 +25,9 @@ type OrderRelationships = {
     courier_service: CourierService
     order_variants: OrderVariant[]
     product_variants: ProductVariant[]
-    transactions: Transaction[]
+    sales_rep: User
     shipping_address: ShippingAddress
+    transactions: Transaction[]
 }
 
 export type Order = {

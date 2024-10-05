@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
@@ -62,7 +63,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/variants')->name('variants.')->group(function () {
         Route::get('/dropdown', [ProductVariantController::class, 'dropdown'])->name('dropdown');
     });
+
+    Route::prefix('/invoices')->name('invoices.')->group(function () {
+        Route::get('/{order}', [InvoiceController::class, 'show'])->name('show');
+    });
 });
+
 
 
 require __DIR__ . '/auth.php';

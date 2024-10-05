@@ -80,25 +80,33 @@ const ShowOrder: React.FC<ShowOrderProps> = ({ order, statuses }) => {
                     <CardTitle>Order #{order.data.attributes.code}</CardTitle>
                     <CardDescription>Here is an overview of your order.</CardDescription>
                   </div>
-                  <Button variant='outline' className='flex gap-2 px-3'>
-                    <ExportIcon className='text-muted-foreground' />
-                    <span>Export</span>
-                  </Button>
+                  <a href={`/invoices/${order.data.id}`} target='_blank' rel='noopener noreferrer'>
+                    <Button variant='outline' className='flex gap-2 px-3'>
+                      <ExportIcon className='text-muted-foreground' />
+                      <span>Export</span>
+                    </Button>
+                  </a>
                 </div>
               </CardHeader>
               <CardContent className='flex flex-col items-center justify-between lg:flex-row-reverse lg:items-end'>
                 <div className='w-full pb-6 lg:w-2/3 lg:pb-0'>
                   <ProgressBar steps={statuses} currentStep={order.data.attributes.status} />
                 </div>
-                <div className='flex h-fit w-full flex-col gap-2 lg:flex-row'>
-                  <Badge variant='secondary' className='flex w-fit gap-2 rounded-md py-1 dark:bg-secondary/50'>
-                    <span>Placed on:</span>
-                    <span className='text-muted-'>{order.data.attributes.created_at}</span>
+                <div>
+                  <Badge variant='secondary' className='mb-2 flex w-fit gap-2 rounded-md py-1 dark:bg-secondary/50'>
+                    <span>Sales Rep:</span>
+                    <span className='text-muted-'>{order.data.relationships?.sales_rep.attributes.name}</span>
                   </Badge>
-                  <Badge variant='secondary' className='flex w-fit gap-2 rounded-md py-1 dark:bg-secondary/50'>
-                    <span>Updated at:</span>
-                    <span className='text-muted-'>{order.data.attributes.updated_at}</span>
-                  </Badge>
+                  <div className='flex h-fit w-full flex-col gap-2 lg:flex-row'>
+                    <Badge variant='secondary' className='flex w-fit gap-2 rounded-md py-1 dark:bg-secondary/50'>
+                      <span>Placed on:</span>
+                      <span className='text-muted-'>{order.data.attributes.created_at}</span>
+                    </Badge>
+                    <Badge variant='secondary' className='flex w-fit gap-2 rounded-md py-1 dark:bg-secondary/50'>
+                      <span>Updated at:</span>
+                      <span className='text-muted-'>{order.data.attributes.updated_at}</span>
+                    </Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
