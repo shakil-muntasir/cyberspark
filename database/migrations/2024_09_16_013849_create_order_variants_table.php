@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('product_variant_id')->constrained('product_variants')->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2); // saving the current price of the variant
+            $table->decimal('subtotal', 10, 2);
             $table->timestamps();
         });
     }

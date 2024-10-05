@@ -17,6 +17,7 @@ class OrderVariant extends Model implements Auditable
         'product_variant_id',
         'quantity',
         'unit_price',
+        'subtotal'
     ];
 
     public function order(): BelongsTo
@@ -27,10 +28,5 @@ class OrderVariant extends Model implements Auditable
     public function productVariant(): BelongsTo
     {
         return $this->belongsTo(ProductVariant::class);
-    }
-
-    public function getSubtotalAttribute()
-    {
-        return $this->quantity * $this->unit_price;
     }
 }

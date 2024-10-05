@@ -76,6 +76,7 @@ class OrderSeeder extends Seeder
                 'product_variant_id' => $productVariant->id,
                 'quantity' => $quantity,  // Use the same quantity as in totalPayable calculation
                 'unit_price' => $productVariant->selling_price,
+                'subtotal' => $quantity * $productVariant->selling_price
             ]);
             $productVariant->update([
                 'quantity' => $productVariant->quantity - $quantity

@@ -18,12 +18,15 @@ class OrderVariantFactory extends Factory
      */
     public function definition(): array
     {
+        $quantity = fake()->numberBetween(5, 10);
+        $unitPrice = fake()->randomFloat(2, 2000, 3000);
 
         return [
             'order_id' => Order::factory(),
             'product_variant_id' => ProductVariant::factory(),
-            'quantity' => fake()->numberBetween(5, 10),
-            'unit_price' => fake()->randomFloat(2, 2000, 3000),
+            'quantity' => $quantity,
+            'unit_price' => $unitPrice,
+            'subtotal' => $quantity * $unitPrice
         ];
     }
 }
