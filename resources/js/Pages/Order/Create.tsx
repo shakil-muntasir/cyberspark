@@ -46,6 +46,7 @@ type MakeSellProps = {
 
 // TODO: make delivery man dropdown list
 // TODO: add sales rep to ui
+// TODO: create new user
 
 const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
   const { toast } = useToast()

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ChevronLeftIcon, PlusCircle } from 'lucide-react'
+import { ChevronLeftIcon, PlusCircle, PrinterIcon } from 'lucide-react'
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 
@@ -12,7 +12,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import { columns } from '@/Pages/Order/_data/variant-columns'
 import { PaymentBadge } from '@/Components/PaymentBadge'
 import ProgressBar from '@/Pages/Order/_partials/ProgressBar'
-import { ExportIcon } from '@/Icons/ExportIcon'
 import SimpleDataTable from '@/Components/SimpleDataTable'
 import { cn, formatCurrency, toTitleCase } from '@/Lib/utils'
 
@@ -80,10 +79,10 @@ const ShowOrder: React.FC<ShowOrderProps> = ({ order, statuses }) => {
                     <CardTitle>Order #{order.data.attributes.code}</CardTitle>
                     <CardDescription>Here is an overview of your order.</CardDescription>
                   </div>
-                  <a href={`/invoices/${order.data.id}`} target='_blank' rel='noopener noreferrer'>
+                  <a href={route('invoices.show', order.data.id)} target='_blank' rel='noreferrer'>
                     <Button variant='outline' className='flex gap-2 px-3'>
-                      <ExportIcon className='text-muted-foreground' />
-                      <span>Export</span>
+                      <PrinterIcon className='h-4 w-4 text-muted-foreground' />
+                      <span>Print</span>
                     </Button>
                   </a>
                 </div>
