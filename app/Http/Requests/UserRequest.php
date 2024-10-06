@@ -23,7 +23,7 @@ class UserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
-            'gender' => ['required', 'string', Rule::enum(Gender::class)],
+            'gender' => ['nullable', 'string', Rule::enum(Gender::class)],
             'phone' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'max:2048'],
             'password' => ['required', 'string', 'min:8'],
