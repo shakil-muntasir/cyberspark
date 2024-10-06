@@ -55,7 +55,7 @@ const productSchema = z.object({
     .refine(val => !isNaN(val) && val >= 0, {
       message: 'The selling price field must be greater than 0.'
     }),
-  description: z.string().optional()
+  description: z.string().nullable().optional()
 })
 
 interface AcquiredProductFormProps {
@@ -204,6 +204,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
                   if (typeof checked === 'boolean') {
                     setProductManualInput(checked)
                   }
+                  setErrors({})
                 }}
               />
               <p>New Product?</p>
@@ -284,7 +285,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
           </div>
         </div>
         <FormInput id='description' label='Description' errorMessage={errors.description}>
-          <Textarea id='description' name='description' value={productForm.description} onChange={handleInputChange} rows={4} placeholder='Description' readOnly={!productManualInput} />
+          <Textarea id='description' name='description' value={productForm.description ?? ''} onChange={handleInputChange} rows={4} placeholder='Description' readOnly={!productManualInput} />
         </FormInput>
       </div>
       <DialogFooter>

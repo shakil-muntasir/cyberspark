@@ -220,7 +220,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
                     </FormInput>
 
                     <FormInput id='description' label='Description' errorMessage={errors.description}>
-                      <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
+                      <Textarea id='description' name='description' value={data.description ?? ''} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
                     </FormInput>
                   </div>
                 </CardContent>

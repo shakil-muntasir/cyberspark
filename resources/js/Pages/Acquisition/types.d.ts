@@ -39,7 +39,7 @@ export type AcquiredProductForm = {
     buying_price: string
     retail_price: string
     selling_price: string
-    description?: string
+    description: string | null
 }
 
 export interface AcquisitionForm {

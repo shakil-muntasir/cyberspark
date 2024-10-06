@@ -3,7 +3,7 @@ import { CreatedOrUpdatedBy } from '@/Types'
 type Attributes = {
     name: string
     sku_prefix: string
-    description?: string
+    description: string | null
     status: string
     variants_count: string
     variants_sum_quantity: string
@@ -79,7 +79,7 @@ export type ProductVariantCollection = {
 export type ProductForm = {
     name: string
     sku_prefix: string
-    description?: string
+    description: string | null
     category_id: string
     status?: string
 }

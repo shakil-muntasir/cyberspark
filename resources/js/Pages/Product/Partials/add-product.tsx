@@ -166,7 +166,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
             </FormInput>
 
             <FormInput id='description' label='Description' errorMessage={errors.description}>
-              <Textarea id='description' name='description' value={data.description} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
+              <Textarea id='description' name='description' value={data.description ?? ''} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
             </FormInput>
 
             <SheetFooter>
