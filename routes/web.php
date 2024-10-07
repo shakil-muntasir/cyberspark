@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/acquisitions')->name('acquisitions.')->group(function () {
         Route::get('/', [AcquisitionController::class, 'index'])->name('index');
         Route::post('/', [AcquisitionController::class, 'store'])->name('store');
+        Route::post('/product/validate', [AcquisitionController::class, 'productValidate'])->name('product.validate');
         Route::get('/{acquisition}', [AcquisitionController::class, 'show'])->name('show');
     });
 
@@ -68,7 +69,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{order}', [InvoiceController::class, 'show'])->name('show');
     });
 });
-
-
 
 require __DIR__ . '/auth.php';

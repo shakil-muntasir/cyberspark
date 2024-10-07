@@ -1,5 +1,4 @@
 import { FormEvent, useEffect, useState } from 'react'
-import { z } from 'zod'
 import { CheckIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
 
 import { Button } from '@/Components/ui/button'
@@ -17,46 +16,7 @@ import ProductDropdownList from '@/Components/ProductDropdownList'
 import { Product } from '@/Pages/Product/types'
 import { Checkbox } from '@/Components/ui/checkbox'
 import FormInput from '@/Components/FormInput'
-
-const productSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  sku_prefix: z.string().min(1, 'SKU prefix is required'),
-  category_id: z.string().min(1, 'Category is required'),
-  quantity: z
-    .string()
-    .transform(val => Number(val))
-    .refine(val => !isNaN(val) && val > 0, {
-      message: 'Must be a positive number'
-    }),
-  buying_price: z
-    .string()
-    .refine(val => val.trim() !== '', {
-      message: 'Buying price is required'
-    })
-    .transform(val => Number(val))
-    .refine(val => !isNaN(val) && val >= 0, {
-      message: 'Must be a non-negative number'
-    }),
-  retail_price: z
-    .string()
-    .refine(val => val.trim() !== '', {
-      message: 'Retail price is required'
-    })
-    .transform(val => Number(val))
-    .refine(val => !isNaN(val) && val >= 0, {
-      message: 'Must be a non-negative number'
-    }),
-  selling_price: z
-    .string()
-    .refine(val => val.trim() !== '', {
-      message: 'Selling price is required'
-    })
-    .transform(val => Number(val))
-    .refine(val => !isNaN(val) && val >= 0, {
-      message: 'The selling price field must be greater than 0.'
-    }),
-  description: z.string().nullable().optional()
-})
+import axios, { AxiosError } from 'axios'
 
 interface AcquiredProductFormProps {
   categories: SelectOption[]
@@ -102,7 +62,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   }, [productForm])
 
   useEffect(() => {
-    if (!skuManualInput && productManualInput) {
+    if (!skuManualInput && productManualInput && !productToEdit) {
       if (productForm.name !== '') {
         setProductFormData('sku_prefix', abbreviateWords(productForm.name))
 
@@ -120,23 +80,41 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     }
   }, [discardFormData])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const result = productSchema.safeParse(productForm)
 
-    if (!result.success) {
-      const newErrors: Record<string, string | undefined> = {}
-      result.error.errors.forEach(error => {
-        newErrors[error.path[0]] = error.message
-      })
-      setErrors(newErrors)
-    } else {
-      handleAddProduct(e)
-      setClearProductName(true)
-      setTimeout(() => {
-        setClearProductName(false)
-      }, 100)
-      setErrors({})
+    const isValidated = await validateProduct()
+
+    if (!isValidated) {
+      return
+    }
+
+    handleAddProduct(e)
+    setClearProductName(true)
+    setTimeout(() => {
+      setClearProductName(false)
+    }, 100)
+    clearErrors()
+  }
+
+  const validateProduct = async (): Promise<boolean> => {
+    try {
+      await axios.post<{ success: boolean }>(route('acquisitions.product.validate'), productForm)
+
+      return true
+    } catch (error: unknown) {
+      const errors = (error as AxiosError<{ errors: Record<string, string[] | string> }>)?.response?.data?.errors
+      const formatted: Record<string, string> = {}
+
+      if (errors) {
+        for (const key in errors) {
+          formatted[key] = Array.isArray(errors[key]) ? errors[key][0] : (errors[key] as string)
+        }
+      }
+
+      setErrors(formatted)
+
+      return false
     }
   }
 
@@ -179,7 +157,13 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     clearErrors(name as keyof AcquiredProductFormType)
   }
 
-  const clearErrors = (name: keyof AcquiredProductFormType) => {
+  const clearErrors = (name?: keyof AcquiredProductFormType) => {
+    if (!name) {
+      setErrors({})
+
+      return
+    }
+
     setErrors(currentErrors => {
       const newErrors = { ...currentErrors }
       delete newErrors[name]
@@ -192,8 +176,8 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     <form className='w-full pb-4 lg:h-auto' onSubmit={handleSubmit}>
       <div className='space-y-2 px-4'>
         <div className='flex flex-col gap-2 lg:flex-row'>
-          <div className='relative w-full'>
-            <FormInput id='name' label='Product Name'>
+          <div className='relative w-8/12'>
+            <FormInput id='name' label='Product Name' errorMessage={errors.id || errors.name}>
               {!productManualInput ? <ProductDropdownList handleAddToCart={handleProductSelect} id='product' clearProductName={clearProductName} /> : <Input id='product' className='mt-px' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />}
             </FormInput>
             <div className='absolute right-0 top-0 flex flex-row-reverse items-center gap-1.5 text-xs text-muted-foreground lg:left-28 lg:flex-row'>
@@ -204,14 +188,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
                   if (typeof checked === 'boolean') {
                     setProductManualInput(checked)
                   }
-                  setErrors({})
+                  clearErrors()
                 }}
               />
               <p>New Product?</p>
             </div>
           </div>
-          <div>
-            <FormInput id='sku_prefix' label='SKU' errorMessage={errors.sku_prefix}>
+          <div className='w-4/12'>
+            <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
               <div className='relative'>
                 <Input id='sku_prefix' className='mt-px' name='sku_prefix' value={productForm.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} />
                 {productManualInput && (
@@ -245,7 +229,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
           </div>
         </div>
         <div className='flex flex-col gap-2 lg:flex-row'>
-          <div className='w-full'>
+          <div className='w-8/12'>
             <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
               <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)} disabled={!productManualInput}>
                 <SelectTrigger id='category_id' aria-label='Select Category'>
@@ -261,7 +245,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
               </Select>
             </FormInput>
           </div>
-          <div>
+          <div className='w-4/12'>
             <FormInput id='quantity' label='Quantity' errorMessage={errors.quantity}>
               <InputNumber id='quantity' name='quantity' value={productForm.quantity} onChange={handleInputChange} placeholder='Quantity' />
             </FormInput>
@@ -290,7 +274,18 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       </div>
       <DialogFooter>
         <div className='flex justify-end gap-2 px-4'>
-          <Button variant='secondary' className='px-2.5' onClick={() => setProductForm(initialFormData)} disabled={!isDirty}>
+          <Button
+            variant='secondary'
+            className='px-2.5'
+            onClick={() => {
+              setProductForm(initialFormData)
+              setProductAddButtonTitle('Add')
+              setProductManualInput(false)
+              setSkuManualInput(false)
+              clearErrors()
+            }}
+            disabled={!isDirty}
+          >
             Discard
           </Button>
           <Button type='submit' className='w-21.5 space-x-px px-2.5 transition-all duration-200' disabled={productAddButtonTitle === 'Added'}>
