@@ -79,6 +79,11 @@ class Order extends Model implements Auditable
         return $this->hasMany(Transaction::class);
     }
 
+    public function getCodeAttribute()
+    {
+        return sprintf('%05d', $this->id);
+    }
+
     public function getPaymentStatusAttribute()
     {
         $totalPaid = $this->transactions_sum_amount;

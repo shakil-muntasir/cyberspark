@@ -31,7 +31,7 @@ class OrderResource extends JsonResource
             'type' => 'orders',
             'id' => (string) $this->id,
             'attributes' => [
-                'code' => sprintf('%05d', $this->id),
+                'code' => $this->code,
                 'customer' => $this->whenLoaded('customer', fn() => $this->customer->name),
                 'delivered_by' => $this->delivered_by,
                 'delivery_method' => $this->delivery_method,

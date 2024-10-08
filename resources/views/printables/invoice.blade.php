@@ -1,169 +1,293 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="x-apple-disable-message-reformatting">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
-  <meta name="color-scheme" content="light dark">
-  <meta name="supported-color-schemes" content="light dark">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-  <!--[if mso]>
-            <noscript>
-                <xml>
-                    <o:OfficeDocumentSettings xmlns:o="urn:schemas-microsoft-com:office:office">
-                        <o:PixelsPerInch>96</o:PixelsPerInch>
-                    </o:OfficeDocumentSettings>
-                </xml>
-            </noscript>
-            <style>
-                td,
-                th,
-                div,
-                p,
-                a,
-                h1,
-                h2,
-                h3,
-                h4,
-                h5,
-                h6 {
-                    font-family: 'Segoe UI', sans-serif;
-                    mso-line-height-rule: exactly;
-                }
-            </style>
-        <![endif]-->
-  <title>Invoice PDF Download</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="{{ public_path('favicon.png') }}">
+
+  <title>INV#{{ $order->code }} - {{ config('app.name', 'Laravel') }}</title>
+
   <style>
-    .space-y-6 > :not([hidden]) ~ :not([hidden]) {
-      --tw-space-y-reverse: 0 !important;
-      margin-top: calc(24px * calc(1 - var(--tw-space-y-reverse))) !important;
-      margin-bottom: calc(24px * var(--tw-space-y-reverse)) !important
+    html, body {
+      font-family: 'Inter', sans-serif;
+    }
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .table {
+      padding: 8px 32px;
+      width: 100%;
+      table-layout: auto;
+      font-size: 12px;
+    }
+    .data-table-header {
+      text-wrap: nowrap; 
+      border-bottom: solid #e5e7eb 1px;
+      padding: 12px 8px;
+      text-align: right;
+    }
+    .data-table-cell {
+      border-color: #e5e7eb;
+      border-style: solid;
+      border-width: 0px 1px 1px 0px;
+      padding: 6px 8px;
+      vertical-align: top;
+      text-align: right;
+    }
+    .payment-label {
+      color: #4b5563;
+      width: 50%;
+      float:left;
+      margin-left: 96px;
+    }
+    .payment-value {
+      font-family: 'Inter', sans-serif;
+      font-weight: bold;
+      text-align: right;
+      width: 50%;
+      float: right;
+      padding-right: 8px;
+    }
+    .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+    .signature-section {
+    position: absolute;
+    bottom: 50px; /* Adjust to align above footer */
+    width: 100%;
+    }
+    .signature-item {
+      width: 20%;
+      border-top: 1px solid #6b7280;
+      padding-top: 2px;
+      text-align: center;
+      font-size: 12px
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      border-top: gray solid 1px;
+    }
+    .page-break {
+      page-break-after: always;
     }
   </style>
 </head>
-<body style="margin: 0; width: 100%; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word"> @foreach ($pages as $page)
-  <main role="article" aria-roledescription="email" aria-label="Invoice PDF Download" lang="en" style="box-sizing: border-box; display: flex; height: 100vh; width: 100%; flex-direction: column; font-family: Inter, sans-serif; color: #000001">
-    <div style="flex: 1 1 0%; padding-left: 32px; padding-right: 32px">
-      <header style="margin-top: 32px; display: flex; align-items: center; justify-content: space-between">
-        <img src="{{ asset('assets/emails/cyberspark_full_light.svg') }}" style="max-width: 100%; vertical-align: middle; height: 64px; object-fit: contain" alt="">
-        <div style="display: flex; align-items: center; gap: 8px">
-          <div style="position: relative; display: flex; justify-content: center">
-            <svg xmlns="http://www.w3.org/2000/svg" style="color: {{ $order->payment_status == 'partial' ? '#fde68a' : ($order->payment_status == 'paid' ? '#86efac' : '#fecaca') }}; height: 48px; width: 48px" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M12.394 1.862 15.038.058a.329.329 0 0 1 .481.129l1.322 2.75a.699.699 0 0 0 .683.394l3.04-.23a.31.31 0 0 1 .334.334l-.23 3.041a.699.699 0 0 0 .395.683l2.75 1.322a.328.328 0 0 1 .13.481l-1.804 2.644a.699.699 0 0 0 0 .788l1.804 2.644a.328.328 0 0 1-.13.481l-2.75 1.322a.699.699 0 0 0-.394.683l.23 3.04a.31.31 0 0 1-.334.334l-3.041-.23a.699.699 0 0 0-.683.395l-1.322 2.75a.328.328 0 0 1-.481.13l-2.644-1.804a.699.699 0 0 0-.788 0l-2.644 1.804a.328.328 0 0 1-.481-.13l-1.322-2.75a.698.698 0 0 0-.683-.394l-3.04.23a.31.31 0 0 1-.334-.334l.23-3.041a.699.699 0 0 0-.395-.683L.187 15.52a.328.328 0 0 1-.13-.481l1.804-2.644a.698.698 0 0 0 0-.788L.057 8.962a.329.329 0 0 1 .13-.481l2.75-1.322a.698.698 0 0 0 .394-.683l-.23-3.04a.31.31 0 0 1 .334-.334l3.041.23a.698.698 0 0 0 .683-.395L8.48.187a.329.329 0 0 1 .481-.13l2.644 1.804a.698.698 0 0 0 .788 0v.001Z"></path>
-            </svg>
-            <span style="color: {{ $order->payment_status == 'partial' ? '#ca8a04' : ($order->payment_status == 'paid' ? '#15803d' : '#be123c') }}; transform: rotate(-20deg); position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; text-wrap: nowrap; font-size: 12px; font-weight: 700">
-            {{ \Str::title($order->payment_status) }}
-            </span>
-          </div>
-          <h2 style="margin-top: 0; margin-bottom: 0; display: flex; align-items: center; color: #4b5563">INV#{{ sprintf('%05d', $order->id) }}</h2>
-        </div>
-      </header>
-      @if($loop->first)
-      <section style="margin-top: 24px; display: flex; justify-content: space-between">
-        <div class="space-y-6" style="width: 58.333333%">
-          <div style="display: flex; gap: 8px; font-size: 14px">
-            <span style="font-weight: 700; color: #4b5563;">INVOICE DATE</span>
-            <span style="font-weight: 600">{{ $order->created_at->format('jS F, Y') }}</span>
-          </div>
-          <div style="display: flex; flex-direction: column; font-size: 14px; font-weight: 500; margin-top: calc(24px * calc(1 - 0)); margin-bottom: calc(24px * 0)">
-            <span style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em">Cyberspark</span>
-            <div style="margin-top: 4px; display: flex">
-              <span style="border: 0px solid #d1d5db; border-right-width: 1px; padding-right: 4px">0123456789</span>
-              <span style="padding-left: 4px">0123456789</span>
+
+<body>
+  @foreach ($pages as $page)
+  <header style="width: 100%; margin-top: 12px">
+    <table class="table">
+      <tr>
+        <!-- First TD (Logo) -->
+        <td style="width: 50%;">
+            <img src="{{ public_path('assets/cyberspark_full_light.svg') }}" style="max-width: 100%; vertical-align: middle; height: 64px;" alt="">
+        </td>
+    
+        <!-- Second TD (Payment Status & Invoice) - aligned to the right -->
+        <td style="width: 50%; text-align: right;">
+            <div style="display: inline-block; vertical-align: middle;">
+                <div style="width: 48px; height: 48px; display: inline-block;">
+                    @if($order->payment_status == 'due')
+                        <img src="{{ public_path('assets/payment_due.svg') }}" style="width: 100%; height: 100%; vertical-align: middle;" alt="">
+                    @elseif($order->payment_status == 'partial')
+                        <img src="{{ public_path('assets/payment_partial.svg') }}" style="width: 100%; height: 100%; vertical-align: middle;" alt="">
+                    @elseif($order->payment_status == 'paid')
+                        <img src="{{ public_path('assets/payment_paid.svg') }}" style="width: 100%; height: 100%; vertical-align: middle;" alt="">
+                    @endif
+                </div>
             </div>
-            <span>House - 38, Road - 7, Block - E, Banasree</span>
-            <span>Rampura, Dhaka - 1219</span>
-          </div>
-          <div style="font-size: 14px; font-weight: 600; margin-top: calc(24px * calc(1 - 0)); margin-bottom: calc(24px * 0);">Sales Rep: <span style="font-weight: 500;">{{ $order->salesRep->name }}</span></div>
-        </div>
-        <div class="space-y-6" style="width: 41.666667%; font-size: 14px">
-          <div style="font-weight: 700; color: #4b5563; text-underline-offset: 1px; text-decoration: underline">BILLED TO</div>
-          <div style="display: flex; flex-direction: column; font-size: 14px; font-weight: 500; margin-top: calc(24px * calc(1 - 0)); margin-bottom: calc(24px * 0);">
-            <span style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em;">{{ $order->customer->name }}</span>
-            <span style="margin-top: 4px;">{{ $order->shippingAddress->contact_number }}</span>
-            <span>{{ $order->shippingAddress->street }}, {{ $order->shippingAddress->city }}</span>
-            <span>{{ \Str::title($order->shippingAddress->state) }} - {{ $order->shippingAddress->zip }}</span>
-          </div>
-        </div>
-      </section>
-      @endif
-      <table style="margin-top: 16px; width: 100%; border: 0px solid #e5e7eb; border-top: 1px solid #e5e7eb" cellpadding="0" cellspacing="0" role="none">
-        <tr style="height: 32px; font-size: 12px">
-          <th style="border: solid #e5e7eb; border-width: 0px 0px 1px; padding-left: 8px; padding-right: 8px; text-align: start">ITEM DETAILS</th>
-          <th style="text-wrap: nowrap; border: solid #e5e7eb; border-width: 0px 0px 1px; padding-left: 8px; padding-right: 8px; text-align: end">RETAIL PRICE</th>
-          <th style="text-wrap: nowrap; border: solid #e5e7eb; border-width: 0px 0px 1px; padding-left: 8px; padding-right: 8px; text-align: end;">SELLING PRICE</th>
-          <th style="text-wrap: nowrap; border: solid #e5e7eb; border-width: 0px 0px 1px; padding-left: 8px; padding-right: 8px; text-align: end;">QUANTITY</th>
-          <th style="text-wrap: nowrap; border: solid #e5e7eb; border-width: 0px 0px 1px; padding-left: 8px; padding-right: 8px; text-align: end;">TOTAL</th>
-        </tr>
-        @foreach ($page as $variant)
-        <tr style="font-size: 14px; font-weight: 500;">
-          <td style="display: flex; flex-direction: column; gap: 8px; border-color: #e5e7eb; border-style: solid; border-width: 0px 1px 1px 0px; padding: 8px">
-            <span>{{ \Str::title($variant->productVariant->product->name) }}</span>
-            <span style="font-size: 12px; font-weight: 500; color: #6b7280">SKU: {{ $variant->productVariant->product->sku_prefix . sprintf('%05d', $variant->productVariant->id)}}</span>
+            <div style="display: inline-block; vertical-align: middle; padding-left: 8px;">
+                <h1 style="color: #4b5563;">INV#{{ $order->code }}</h1>
+            </div>
+        </td>
+      </tr>
+
+    </table>
+  </header>
+
+  @if($loop->first)
+    <section style="margin-top: 12px;">
+      <table class="table">
+        <tr>
+          <td style="width: 60%; font-size: 14px">
+            <div>
+              <div style="font-weight: 700;">
+                <span style="color: #4b5563;">INVOICE DATE</span>
+                <span style="text-wrap: no-wrap;">{{ $order->created_at->format('jS F, Y') }}</span>
+              </div>
+              <div style="margin-top: 16px">
+                <span style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.025em">Cyberspark</span>
+                <div style="margin-top: 4px;">
+                  01615 420444, 0967712313
+                </div>
+                <div>House - 38, Road - 7, Block - E, Banasree</div>
+                <div>Rampura, Dhaka - 1219</div>
+              </div>
+              <div style="margin-top: 16px">
+                <span style="font-weight: 700;">Sales Rep:</span>
+                <span>{{ $order->salesRep->name }}</span>
+              </div>
+            </div>
           </td>
-          <td style="border-color: #e5e7eb; border-style: solid; border-width: 0px 1px 1px 0px; padding: 8px; text-align: end; vertical-align: top">BDT {{ number_format((float) $variant->productVariant->retail_price, 2) }}</td>
-          <td style="border-color: #e5e7eb; border-style: solid; border-width: 0px 1px 1px 0px; padding: 8px; text-align: end; vertical-align: top;">BDT {{ number_format((float) $variant->unit_price, 2) }}</td>
-          <td style="border-color: #e5e7eb; border-style: solid; border-width: 0px 1px 1px 0px; padding: 8px; text-align: end; vertical-align: top;">{{ $variant->quantity }}&times;</td>
-          <td style="border: solid #e5e7eb; border-width: 0px 0px 1px; padding: 8px; text-align: end; vertical-align: top;">BDT {{ number_format((float) $variant->subtotal, 2) }}</td>
-        </tr>
-        @endforeach
-        @if ($loop->last)
-        <tr style="font-size: 14px;">
-          <td colspan="2"></td>
-          <td colspan="3">
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding: 12px 8px 8px">
-              <div style="display: flex; width: 100%; justify-content: space-between;">
-                <span style="font-weight: 500; color: #4b5563;">Subtotal</span>
-                <span style="font-weight: 600;">BDT {{ number_format((float) $order->total_subtotal,2)}}</span>
+          <td style="width: 40%; font-size: 14px; vertical-align: top;">
+            <div>
+              <div style="font-weight: 700; color: #4b5563; text-underline-offset: 1px; text-decoration: underline">BILLED TO</div>
+              <div style="font-size: 14px; margin-top: 16px;">
+                <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.025em;">{{ $order->customer->name }}</div>
+                <div style="margin-top: 4px;">{{ $order->shippingAddress->contact_number }}</div>
+                <div>{{ $order->shippingAddress->street }}, {{ $order->shippingAddress->city }}</div>
+                <div>{{ \Str::title($order->shippingAddress->state) }} - {{ $order->shippingAddress->zip }}</div>
               </div>
-              <div style="display: flex; width: 100%; justify-content: space-between;">
-                <span style="font-weight: 500; color: #4b5563;">Delivery Cost</span>
-                <span style="font-weight: 600;">BDT {{ number_format((float) $order->delivery_cost, 2) }}</span>
-              </div>
-              <div style="display: flex; width: 100%; justify-content: space-between;">
-                <span style="font-weight: 500; color: #4b5563;">Total Payable</span>
-                <span style="font-weight: 600;">BDT {{ number_format((float) $order->total_payable, 2) }}</span>
-              </div>
-              @if($order->transactions_sum_amount)
-              <div style="display: flex; width: 100%; justify-content: space-between;">
-                <span style="font-weight: 500; color: #4b5563;">Total Paid</span>
-                <span style="font-weight: 600;">BDT {{ number_format((float) $order->transactions_sum_amount, 2) }}</span>
-              </div>
-              @endif @if($order->transactions_sum_amount != $order->total_payable)
-              <div style="display: flex; width: 100%; justify-content: space-between; border: 0px solid #e5e7eb; border-top: 1px solid #e5e7eb; padding-top: 8px">
-                <span style="font-weight: 500; color: #4b5563;">Total Remaining</span>
-                <span style="font-weight: 600;">BDT {{ number_format((float) ($order->total_payable - $order->transactions_sum_amount), 2) }}</span>
-              </div>
-              @endif
             </div>
           </td>
         </tr>
-        @endif
       </table>
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      @if($loop->last)
-      <div style="display: flex; flex: 1 1 0%; justify-content: space-between; padding-left: 32px; padding-right: 32px;">
-        <div style="width: 128px; border: 0px solid #6b7280; border-top: 1px solid #6b7280; padding-top: 2px; text-align: center; font-size: 12px">Prepared by</div>
-        <div style="width: 128px; border: 0px solid #6b7280; border-top: 1px solid #6b7280; padding-top: 2px; text-align: center; font-size: 12px;">Manager's Signature</div>
-      </div>
-      @endif <footer style="margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; border: 0px solid #d1d5db; border-top: 1px solid #d1d5db; padding: 8px 32px">
-        <img src="{{ asset('assets/emails/sprint_devs_full_light.svg') }}" alt style="max-width: 100%; vertical-align: middle; height: 24px">
-        <div style="text-align: center; font-size: 12px;">
-          <a href="https://sprintdevs.com/" target="_blank" style="color: #df1a22; text-decoration: none">www.sprintdevs.com</a>
-          <div style="text-wrap: nowrap; font-weight: 500;">©2022-2024 Sprint Devs. All Rights Reserved.</div>
+    </section>
+  @endif
+
+  <table class="table" style="margin-top: 12px; border-top: 1px solid #e5e7eb" cellpadding="0" cellspacing="0" role="none">
+    <tr style="height: 32px;">
+      <th class="data-table-header" style="text-align: left;">ITEM DETAILS</th>
+      <th class="data-table-header">RETAIL PRICE</th>
+      <th class="data-table-header">SELLING PRICE</th>
+      <th class="data-table-header">QUANTITY</th>
+      <th class="data-table-header">TOTAL</th>
+    </tr>
+    @foreach ($page as $variant)
+    <tr style="font-size: 14px;">
+      <td class="data-table-cell" style="text-align: left">
+        <div style="white-space: nowrap;">{{ \Str::title($variant->productVariant->product->name) }}</div>
+        <div style="font-size: 10px; color: #374151; margin-top: 4px">SKU: {{ $variant->productVariant->product->sku_prefix . sprintf('%05d', $variant->productVariant->id)}}</div>
+      </td>
+      <td class="data-table-cell">BDT {{ number_format((float) $variant->productVariant->retail_price, 2) }}</td>
+      <td class="data-table-cell">BDT {{ number_format((float) $variant->unit_price, 2) }}</td>
+      <td class="data-table-cell">{{ $variant->quantity }}&times;</td>
+      <td class="data-table-cell" style="border-right: 0px">BDT {{ number_format((float) $variant->subtotal, 2) }}</td>
+    </tr>
+    @endforeach
+    @if ($loop->last)
+    <tr style="font-size: 14px;">
+      <td colspan="2"></td>
+      <td colspan="3">
+        <div class="clearfix" style="padding-top: 12px;">
+          <div class="payment-label">
+            Subtotal
+          </div>
+          
+          <div class="payment-value">
+            BDT {{ number_format((float) $order->total_subtotal, 2) }}
+          </div>
         </div>
-        <div style="display: flex; align-items: center; justify-content: flex-end; text-align: end; font-size: 12px">
-          @if($pages->count() > 1)
-          <span>Page {{ $loop->iteration }} of {{ $pages->count() }}</span>
-          @endif
+      
+        <div class="clearfix" style="padding-top: 10px;">
+          <div class="payment-label">
+            Delivery Cost
+          </div>
+          
+          <div class="payment-value">
+            BDT {{ number_format((float) $order->delivery_cost, 2) }}
+          </div>
         </div>
-      </footer>
-    </div>
-  </main>
+
+        <div class="clearfix" style="padding-top: 10px;">
+          <div class="payment-label">
+            Total Payable
+          </div>
+          
+          <div class="payment-value">
+            BDT {{ number_format((float) $order->total_payable, 2) }}
+          </div>
+        </div>
+
+        @if($order->transactions_sum_amount)
+        <div class="clearfix" style="padding-top: 10px;">
+          <div class="payment-label">
+            Total Paid
+          </div>
+          
+          <div class="payment-value">
+            BDT {{ number_format((float) $order->transactions_sum_amount, 2) }}
+          </div>
+        </div>
+        @endif
+
+        @if($order->transactions_sum_amount != $order->total_payable)
+        <div class="clearfix" style="padding-top: 5px; margin-top: 5px; border-top: 1px solid #e5e7eb; margin-left:88px">
+          <div class="payment-label" style="margin-left: 8px">
+            Total Remaining
+          </div>
+          
+          <div class="payment-value">
+            BDT {{ number_format((float) ($order->total_payable - $order->transactions_sum_amount), 2) }}
+          </div>
+        </div>
+        @endif
+      </td>
+    </tr>
+    @endif
+  </table>
+
+  @if(!$loop->last)
+  <section class="signature-section">
+    <table class="table">
+      <tr>
+        <td style="text-align: right; font-style: italic; color: #374151;">Please refer to all pages for full invoice information.</td>
+      </tr>
+    </table>
+  </section>
+  @endif
+
+  @if($loop->last)
+  <section class="signature-section">
+    <table class="table">
+      <tr>
+        <td class="signature-item">Prepared by</td>
+        <td class="spacer"></td>
+        <td class="signature-item">Manager's Signature</td>
+      </tr>
+    </table>
+  </section>
+  @endif
+
+  <footer class="footer">
+    <table class="table">
+      <tr>
+        <td style="width: 20%">
+          <img src="{{ public_path('assets/sprint_devs_full_light_solid.svg') }}" alt="" style="max-width: 100%; vertical-align: middle; height: 24px"/>
+        </td>
+        <td style="width: 60%; text-align: center;">
+          <div class="text-center text-xs">
+            <a href="https://sprintdevs.com/" target="_blank" style="color: #df1a22; text-decoration: none;">www.sprintdevs.com</a>
+            <div style="text-wrap: no-wrap">©2022-{{ now()->format('Y') }} Sprint Devs. All Rights Reserved.</div>
+          </div>
+        </td>
+        <td style="width: 20%; text-align: right;">
+          <div class="flex items-center justify-end text-end text-xs">
+            @if($pages->count() > 1)
+            <span>Page {{ $loop->iteration }} of {{ $pages->count() }}</span>
+            @endif
+        </div>
+        </td>
+      </tr>
+    </table>
+  </footer>
+
+  @if(!$loop->last)
+  <div style="page-break-after: always;"/></div>
+  @endif
+
   @endforeach
 </body>
+
 </html>

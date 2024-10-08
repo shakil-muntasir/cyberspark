@@ -53,7 +53,7 @@ class AcquisitionController extends Controller
                     'selling_price' => $productRequestData['selling_price'],
                 ];
 
-                if (empty($productData['id'])) {
+                if (empty($productRequestData['id'])) {
                     $product = Product::create($productData);
                 } else {
                     $product = Product::find($productRequestData['id']);
