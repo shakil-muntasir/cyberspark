@@ -59,10 +59,12 @@ export default function AuthenticatedLayout({ title, children }: { title: string
             </div>
             <Separator />
             <div className='my-4 flex items-center justify-center gap-1 text-sm text-muted-foreground lg:mb-0'>
-              <span>Copyright &copy;{currentDate.getFullYear()} </span>
-              <a href='https://sprintdevs.com' target='_blank' className='font-semibold text-brand underline-offset-2 hover:underline' rel='noreferrer'>
-                Sprint Devs
+              <span>&copy; 2022-{currentDate.getFullYear()} </span>
+              <a href='https://sprintdevs.com' target='_blank' rel='noreferrer'>
+                <span className='font-semibold text-brand underline-offset-2 hover:underline'>Sprint Devs</span>
+                <span className='text-muted-foreground no-underline'>.</span>
               </a>
+              <span>All Rights Reserved.</span>
             </div>
           </footer>
         </div>

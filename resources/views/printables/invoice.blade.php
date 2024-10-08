@@ -269,7 +269,7 @@
         <td style="width: 60%; text-align: center;">
           <div class="text-center text-xs">
             <a href="https://sprintdevs.com/" target="_blank" style="color: #df1a22; text-decoration: none;">www.sprintdevs.com</a>
-            <div style="text-wrap: no-wrap">©2022-{{ now()->format('Y') }} Sprint Devs. All Rights Reserved.</div>
+            <div style="text-wrap: no-wrap">&copy; 2022-{{ now()->format('Y') }} Sprint Devs. All Rights Reserved.</div>
           </div>
         </td>
         <td style="width: 20%; text-align: right;">
