@@ -130,6 +130,9 @@ const columns: TableColumn<Order>[] = createColumns([
               <Link href={`/orders/${order.id}`}>
                 <DropdownMenuItem>View order details</DropdownMenuItem>
               </Link>
+              <a href={route('invoices.show', order.id)} target='_blank' rel='noreferrer'>
+                <DropdownMenuItem>Print</DropdownMenuItem>
+              </a>
               <DropdownMenuItem className='text-red-600 focus:bg-destructive focus:text-destructive-foreground' onClick={() => initializeDeleteModal(deleteModalData)}>
                 Delete order
               </DropdownMenuItem>
