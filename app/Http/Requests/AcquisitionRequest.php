@@ -30,7 +30,7 @@ class AcquisitionRequest extends FormRequest
         }
 
         return [
-            'invoice_number' => 'required',
+            'invoice_number' => 'required|unique:acquisitions',
             'acquired_date' => 'required|date_format:m-d-Y',
             'products' => 'required|array',
             'products.*.id' => 'nullable|exists:products,id',
@@ -42,6 +42,7 @@ class AcquisitionRequest extends FormRequest
             'products.*.buying_price' => 'required|numeric|min:0',
             'products.*.retail_price' => 'nullable|numeric|min:0',
             'products.*.selling_price' => 'required|numeric|min:0',
+            'products.*.stock_threshold' => 'nullable|integer|min:1',
         ];
     }
 

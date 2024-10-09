@@ -25,7 +25,8 @@ class Product extends Model implements Auditable
         'sku_prefix',
         'category_id',
         'description',
-        'status'
+        'status',
+        'stock_threshold'
     ];
 
     protected $casts = [
@@ -66,16 +67,22 @@ class Product extends Model implements Auditable
      * Accessor to get stock status based on total stock.
      */
     public function getAvailabilityAttribute(): string
-    {
+    {   
+        // TODO: update this with initial and remaining stock
         $totalStock = $this->variants_sum_quantity;
 
-        if ($totalStock > 120) {
-            return 'available';
-        } elseif ($totalStock > 90) {
-            return 'stock low';
-        } else {
-            return 'out of stock';
+        $threshold = $this->stock_threshold;
+        if (!$threshold) {
+            $threshold = $totalStock * 0.2;
         }
+
+        if ($totalStock <= 0) {
+            return 'out of stock';
+        } else if ($totalStock <= $threshold) {
+            return 'stock low';
+        }
+
+        return 'available';
     }
 
     /**

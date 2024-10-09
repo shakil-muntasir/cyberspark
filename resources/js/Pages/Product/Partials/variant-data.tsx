@@ -22,6 +22,8 @@ interface ProductVariantDataProps {
   variants?: ProductVariant[]
 }
 
+// TODO: add form dirty functionality
+
 const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, variants = [] }) => {
   const { theme } = useTheme()
   const [accordionValue, setAccordionValue] = useState('')
@@ -131,29 +133,29 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
         </CardHeader>
         <CardContent className='pb-3 lg:p-6 lg:pt-0'>
           {/* Desktop view */}
-          <Table className='hidden lg:block'>
-            <TableHeader>
-              <TableRow className='hover:bg-inherit'>
-                <TableHead>SKU</TableHead>
-                <TableHead className='text-end'>Quantity</TableHead>
-                <TableHead>Buying Price</TableHead>
-                <TableHead>Retail Price</TableHead>
-                <TableHead>Selling Price</TableHead>
-                <TableHead className='text-center'>Actions</TableHead>
+          <Table className='hidden flex-col lg:flex'>
+            <TableHeader className='flex flex-1'>
+              <TableRow className='flex flex-1 items-center hover:bg-inherit'>
+                <TableHead className='flex flex-1 items-center'>SKU</TableHead>
+                <TableHead className='flex flex-1 items-center justify-end text-end'>Quantity</TableHead>
+                <TableHead className='flex flex-1 items-center justify-end text-end'>Buying Price</TableHead>
+                <TableHead className='flex flex-1 items-center justify-end text-end'>Retail Price</TableHead>
+                <TableHead className='flex flex-1 items-center justify-end text-end'>Selling Price</TableHead>
+                <TableHead className='flex flex-1 items-center justify-center text-center'>Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className='flex flex-col'>
               {variants.length > 0
                 ? variants.map(variant => (
-                    <TableRow key={variant.id}>
-                      <TableCell>
+                    <TableRow key={variant.id} className='flex'>
+                      <TableCell className='flex flex-1 items-center'>
                         <>
                           <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>SKU</span>
                           <div className='font-medium'>{variant.attributes.sku}</div>
                         </>
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className='flex flex-1 items-center justify-end'>
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
@@ -169,7 +171,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         )}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className='flex flex-1 items-center justify-end'>
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
@@ -185,7 +187,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         )}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className='flex flex-1 items-center justify-end'>
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
@@ -201,7 +203,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         )}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className='flex flex-1 items-center justify-end'>
                         {variant.id !== data.id ? (
                           <>
                             <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
@@ -217,7 +219,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                         )}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className='flex flex-1 items-center justify-center'>
                         <span className='sr-only'>Actions</span>
                         {variant.id !== data.id ? (
                           <div className='flex h-full items-center justify-center'>
@@ -321,30 +323,34 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                     </TableRow>
                   )}
               {isAddFormOpen && (
-                <TableRow>
-                  <TableCell className='text-nowrap px-1'>Auto Generates</TableCell>
-                  <TableCell className='px-1'>
+                <TableRow className='flex'>
+                  <TableCell className='flex flex-1 items-center text-nowrap pr-0 text-muted-foreground'>Generated</TableCell>
+
+                  <TableCell className='flex-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                     <div>
                       <InputNumber id='quantity' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                     </div>
                   </TableCell>
-                  <TableCell className='px-1'>
+
+                  <TableCell className='flex-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                     <div>
                       <InputNumber id='buying_price' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                     </div>
                   </TableCell>
-                  <TableCell className='px-1'>
+
+                  <TableCell className='flex-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
                     <InputNumber id='retail_price' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                   </TableCell>
-                  <TableCell className='px-1'>
+
+                  <TableCell className='flex-1'>
                     <span className='sr-only text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
                     <InputNumber id='selling_price' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                   </TableCell>
 
-                  <TableCell className='px-1'>
+                  <TableCell className='flex-1'>
                     <span className='sr-only'>Actions</span>
                     <div className='flex h-full items-center justify-center gap-3'>
                       <TooltipProvider>
@@ -405,26 +411,30 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Quantity</span>
                             <div className='text-right font-medium'>{variant.attributes.quantity}</div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Buying Price</span>
                             <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.buying_price))}</div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Retail Price</span>
-
                             <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes?.retail_price ?? '0'))}</div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <span className='text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Selling Price</span>
                             <div className='text-right font-medium'>{formatCurrency(parseFloat(variant.attributes.selling_price))}</div>
                           </div>
+
                           <div className='grid grid-cols-3 space-x-2'>
-                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(variant.attributes)}>
+                            <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setData(() => ({ ...variant.attributes, id: variant.id }))}>
                               <div className='flex items-center gap-2'>
                                 <Pencil2Icon className='h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                                 <span className='tracking-wider'>Edit</span>
                               </div>
                             </Button>
+
                             <Button type='button' variant='ghost' size='sm' className='group text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => handleVariantStatusChange()}>
                               <div className='flex items-center gap-2'>
                                 {variant.attributes.status === 'active' ? <SquareCheckBig className='bg- h-4 w-4 text-foreground' /> : <SquareIcon className='h-4 w-4 text-muted-foreground' />}
@@ -445,34 +455,40 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                       <AccordionContent className='pb-0'>
                         <div className={cn('space-y-3', index !== 0 ? 'pt-2.5' : '')}>
                           <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Edit Variant</h1>
+
                           <div className='flex items-center space-x-2 font-semibold'>
                             <span className='text-muted-foreground'>SKU:</span>
                             <span className='text-foreground'>{variant.attributes.sku}</span>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <Label htmlFor={`edit_quantity_2_${variant.id}`}>Quantity</Label>
                             <div>
                               <InputNumber id={`edit_quantity_2_${variant.id}`} name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                             </div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <Label htmlFor={`edit_buying_price_2_${variant.id}`}>Buying Price</Label>
                             <div>
                               <InputNumber id={`edit_buying_price_2_${variant.id}`} name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                             </div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <Label htmlFor={`edit_retail_price_2_${variant.id}`}>Retail Price</Label>
                             <div>
                               <InputNumber id={`edit_retail_price_2_${variant.id}`} name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                             </div>
                           </div>
+
                           <div className='flex items-center justify-between'>
                             <Label htmlFor={`edit_selling_price_2_${variant.id}`}>Selling Price</Label>
                             <div>
                               <InputNumber id={`edit_selling_price_2_${variant.id}`} name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                             </div>
                           </div>
+
                           <div className='flex items-center justify-center space-x-2'>
                             <Button
                               type='button'
@@ -508,32 +524,37 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
                   <h1 className='py-0.5 text-lg font-semibold tracking-wide'>Add new Variant</h1>
                   <div className='flex items-center space-x-2 font-normal'>
                     <span className='text-muted-foreground'>SKU: </span>
-                    <span className='text-foreground'>Auto Generates</span>
+                    <span className='text-foreground'>Generated</span>
                   </div>
+
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='quantity_2'>Quantity</Label>
                     <div>
                       <InputNumber id='quantity_2' name='quantity' value={data.quantity} onChange={handleInputChange} placeholder='Quantity' />
                     </div>
                   </div>
+
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='buying_price_2'>Buying Price</Label>
                     <div>
                       <InputNumber id='buying_price_2' name='buying_price' value={data.buying_price} onChange={handleInputChange} placeholder='Buying price' />
                     </div>
                   </div>
+
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='retail_price_2'>Retail Price</Label>
                     <div>
                       <InputNumber id='retail_price_2' name='retail_price' value={data.retail_price ?? ''} onChange={handleInputChange} placeholder='Retail price' />
                     </div>
                   </div>
+
                   <div className='flex items-center justify-between'>
                     <Label htmlFor='selling_price_2'>Selling Price</Label>
                     <div>
                       <InputNumber id='selling_price_2' name='selling_price' value={data.selling_price} onChange={handleInputChange} placeholder='Selling price' />
                     </div>
                   </div>
+
                   <div className='flex items-center justify-center space-x-2'>
                     <Button
                       type='button'

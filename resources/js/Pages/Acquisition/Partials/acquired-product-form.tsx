@@ -36,12 +36,13 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     buying_price: '',
     retail_price: '',
     selling_price: '',
+    stock_threshold: '',
     description: ''
   }
 
   const [productForm, setProductForm] = useState<AcquiredProductFormType>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string | undefined>>({})
-  const [productManualInput, setProductManualInput] = useState<boolean>(false)
+  const [productManualInput, setProductManualInput] = useState(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
   const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
   const [isDirty, setIsDirty] = useState(false)
@@ -136,6 +137,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       name: product.attributes.name,
       sku_prefix: product.attributes.sku_prefix,
       category_id: product.attributes.category_id,
+      stock_threshold: product.attributes.stock_threshold,
       description: product.attributes.description
     }))
   }
@@ -229,13 +231,13 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
           </div>
         </div>
         <div className='flex flex-col gap-2 lg:flex-row'>
-          <div className='w-8/12'>
+          <div className='w-1/3'>
             <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
               <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)} disabled={!productManualInput}>
                 <SelectTrigger id='category_id' aria-label='Select Category'>
                   <SelectValue placeholder='Select Category' />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='max-h-80'>
                   {categories.map(category => (
                     <SelectItem key={category.value} value={category.value}>
                       {category.label}
@@ -245,9 +247,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
               </Select>
             </FormInput>
           </div>
-          <div className='w-4/12'>
+          <div className='w-1/3'>
             <FormInput id='quantity' label='Quantity' errorMessage={errors.quantity}>
               <InputNumber id='quantity' name='quantity' value={productForm.quantity} onChange={handleInputChange} placeholder='Quantity' />
+            </FormInput>
+          </div>
+          <div className='w-1/3'>
+            <FormInput id='stock_threshold' label='Threshold' errorMessage={errors.stock_threshold}>
+              <InputNumber id='stock_threshold' name='stock_threshold' value={productForm.stock_threshold ?? ''} onChange={handleInputChange} placeholder='Threshold' disabled={!productManualInput} />
             </FormInput>
           </div>
         </div>

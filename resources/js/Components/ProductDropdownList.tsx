@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-
-import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import axios from 'axios'
-import { Product, ProductCollection } from '@/Pages/Product/types'
-import { Button } from '@/Components/ui/button'
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
+
+import { Button } from '@/Components/ui/button'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
+
+import { Product, ProductCollection } from '@/Pages/Product/types'
 
 interface ProductDropdownListProps {
   handleAddToCart: (product: Product) => void

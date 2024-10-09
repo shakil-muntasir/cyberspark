@@ -145,8 +145,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
         city: user.relationships!.address!.attributes.city,
         state: user.relationships!.address!.attributes.state,
         zip: parseInt(user.relationships!.address!.attributes.zip)
-      },
-      sales_rep_id: user.id
+      }
     }))
     clearErrors('address.contact_number')
     clearErrors('address.email')
@@ -161,6 +160,11 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
     setData('delivery_man_id', user.id)
     clearErrors('delivery_man_id')
     clearErrors('courier_service_id')
+  }
+
+  const handleSelectedSalesRep = (user: User) => {
+    setData('sales_rep_id', user.id)
+    clearErrors('sales_rep_id')
   }
 
   const handleAddToCart = (variant: ProductVariant) => {
@@ -392,394 +396,429 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                 <FormInput id='customer_id' label='Customer' errorMessage={errors.customer_id}>
                   <CustomerDropdownList handleSelectedCustomer={handleSelectedCustomerInformation} id='customer_id' label='Customer' />
                 </FormInput>
-
-                <div className='grid grid-cols-2 gap-4'>
-                  <FormInput id='contact_number' label='Contact Number' errorMessage={errors['address.contact_number']}>
-                    <Input id='contact_number' type='text' name='address.contact_number' value={data.address.contact_number} onChange={handleInputChange} placeholder='+880 1XXX-XXXXXX' />
-                  </FormInput>
-
-                  <FormInput id='email' label='Email' errorMessage={errors['address.email']}>
-                    <Input id='email' type='email' name='address.email' value={data.address.email} onChange={handleInputChange} placeholder='your@email.com' />
-                  </FormInput>
-                </div>
-
-                <FormInput id='street' label='Street' errorMessage={errors['address.street']}>
-                  <Input id='street' type='text' name='address.street' value={data.address.street} onChange={handleInputChange} placeholder='Street' />
-                </FormInput>
-
-                <FormInput id='city' label='City' errorMessage={errors['address.city']}>
-                  <Input id='city' type='text' name='address.city' value={data.address.city} onChange={handleInputChange} placeholder='City' />
-                </FormInput>
-
-                <div className='grid grid-cols-2 gap-4'>
-                  <FormInput id='state' label='State' errorMessage={errors['address.state']}>
-                    <Select
-                      name='address.state'
-                      value={data.address.state}
-                      onValueChange={value => {
-                        setData('address.state', value)
-                        clearErrors('address.state')
-                      }}
-                    >
-                      <SelectTrigger id='state'>
-                        <SelectValue placeholder='Select State' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {states.map(state => (
-                            <SelectItem key={state.value} value={state.value}>
-                              {state.label}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormInput>
-
-                  <FormInput id='zip' label='ZIP' errorMessage={errors['address.zip']}>
-                    <Input id='zip' type='text' name='address.zip' value={data.address.zip ?? ''} onChange={handleInputChange} placeholder='ZIP' />
-                  </FormInput>
-                </div>
               </CardContent>
             </Card>
+
             <div className='flex flex-col gap-4 lg:flex-row lg:gap-8'>
-              <Card className='h-fit w-full'>
-                <CardHeader>
-                  <CardTitle>Delivery Information</CardTitle>
-                  <CardDescription>Choose delivery method and service.</CardDescription>
-                </CardHeader>
-                <CardContent className='pb-2'>
-                  <FormInput id='delivery_method' label='Delivery Method' errorMessage={errors.delivery_method}>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Button
-                        variant='outline'
-                        className={cn('relative h-auto p-0', data.delivery_method === 'in-house' ? 'border-[#6096ba] outline-2' : '')}
-                        onClick={() => {
-                          setData((data: OrderForm) => ({
-                            ...data,
-                            delivery_method: 'in-house',
-                            delivery_cost: 60,
-                            courier_service_id: ''
-                          }))
-                          clearErrors('delivery_method')
-                          clearErrors('courier_service_id')
-                        }}
-                        disabled={cartItems.length === 0}
-                      >
-                        <div className='flex w-full flex-col items-start px-4'>
-                          <div className='py-3.5'>
-                            <p className='text-start text-sm font-medium'>In House</p>
-                            <p className='text-sm tracking-tight text-muted-foreground'>4-10 business days</p>
-                          </div>
-                          <div className='pb-3.5'>
-                            <p className='text-sm font-medium'>{formatCurrency(60)}</p>
-                          </div>
-                        </div>
-                        <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#6096ba] transition-all duration-100', data.delivery_method === 'in-house' ? '' : 'opacity-0')} aria-hidden='true' />
-                      </Button>
-                      <Button
-                        className={cn('relative h-auto p-0', data.delivery_method === 'external' ? 'border-[#81c3d7] outline-2' : '')}
-                        variant='outline'
-                        onClick={() => {
-                          {
+              <div className='flex flex-col gap-8 lg:w-1/2'>
+                <Card className='h-fit'>
+                  <CardHeader>
+                    <CardTitle>Shipping Information</CardTitle>
+                    <CardDescription>Select a customer from the dropdown.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <FormInput id='contact_number' label='Contact Number' errorMessage={errors['address.contact_number']}>
+                      <Input id='contact_number' type='text' name='address.contact_number' value={data.address.contact_number} onChange={handleInputChange} placeholder='+880 1XXX-XXXXXX' />
+                    </FormInput>
+
+                    <FormInput id='email' label='Email' errorMessage={errors['address.email']}>
+                      <Input id='email' type='email' name='address.email' value={data.address.email} onChange={handleInputChange} placeholder='your@email.com' />
+                    </FormInput>
+
+                    <FormInput id='street' label='Street' errorMessage={errors['address.street']}>
+                      <Input id='street' type='text' name='address.street' value={data.address.street} onChange={handleInputChange} placeholder='Street' />
+                    </FormInput>
+
+                    <FormInput id='city' label='City' errorMessage={errors['address.city']}>
+                      <Input id='city' type='text' name='address.city' value={data.address.city} onChange={handleInputChange} placeholder='City' />
+                    </FormInput>
+
+                    <div className='grid grid-cols-2 gap-4'>
+                      <FormInput id='state' label='State' errorMessage={errors['address.state']}>
+                        <Select
+                          name='address.state'
+                          value={data.address.state}
+                          onValueChange={value => {
+                            setData('address.state', value)
+                            clearErrors('address.state')
+                          }}
+                        >
+                          <SelectTrigger id='state'>
+                            <SelectValue placeholder='Select State' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {states.map(state => (
+                                <SelectItem key={state.value} value={state.value}>
+                                  {state.label}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormInput>
+
+                      <FormInput id='zip' label='ZIP' errorMessage={errors['address.zip']}>
+                        <Input id='zip' type='text' name='address.zip' value={data.address.zip ?? ''} onChange={handleInputChange} placeholder='ZIP' />
+                      </FormInput>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className='hidden lg:block'>
+                  <CardHeader>
+                    <CardTitle>Sales Representative</CardTitle>
+                    <CardDescription>Select a customer from the dropdown.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <FormInput id='sales_rep' label='Sales Rep' errorMessage={errors.sales_rep_id}>
+                      <CustomerDropdownList id='sales_rep' label='Sales Rep' handleSelectedCustomer={handleSelectedSalesRep} />
+                    </FormInput>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className='flex flex-col gap-4 lg:w-1/2 lg:gap-8'>
+                <Card className='h-fit'>
+                  <CardHeader>
+                    <CardTitle>Delivery Information</CardTitle>
+                    <CardDescription>Choose delivery method and service.</CardDescription>
+                  </CardHeader>
+                  <CardContent className='pb-2'>
+                    <FormInput id='delivery_method' label='Delivery Method' errorMessage={errors.delivery_method}>
+                      <div className='grid grid-cols-2 gap-2'>
+                        <Button
+                          variant='outline'
+                          className={cn('relative h-auto p-0', data.delivery_method === 'in-house' ? 'border-[#6096ba] outline-2' : '')}
+                          onClick={() => {
                             setData((data: OrderForm) => ({
                               ...data,
-                              delivery_method: 'external',
-                              delivery_cost: null,
-                              delivery_man_id: ''
+                              delivery_method: 'in-house',
+                              delivery_cost: 60,
+                              courier_service_id: ''
                             }))
                             clearErrors('delivery_method')
+                            clearErrors('courier_service_id')
+                          }}
+                          disabled={cartItems.length === 0}
+                        >
+                          <div className='flex w-full flex-col items-start px-4'>
+                            <div className='py-3.5'>
+                              <p className='text-start text-sm font-medium'>In House</p>
+                              <p className='text-sm tracking-tight text-muted-foreground'>4-10 business days</p>
+                            </div>
+                            <div className='pb-3.5'>
+                              <p className='text-sm font-medium'>{formatCurrency(60)}</p>
+                            </div>
+                          </div>
+                          <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#6096ba] transition-all duration-100', data.delivery_method === 'in-house' ? '' : 'opacity-0')} aria-hidden='true' />
+                        </Button>
+                        <Button
+                          className={cn('relative h-auto p-0', data.delivery_method === 'external' ? 'border-[#81c3d7] outline-2' : '')}
+                          variant='outline'
+                          onClick={() => {
+                            {
+                              setData((data: OrderForm) => ({
+                                ...data,
+                                delivery_method: 'external',
+                                delivery_cost: null,
+                                delivery_man_id: ''
+                              }))
+                              clearErrors('delivery_method')
+                              clearErrors('delivery_man_id')
+                            }
+                          }}
+                          disabled={cartItems.length === 0}
+                        >
+                          <div className='flex w-full flex-col items-start px-4'>
+                            <div className='py-3.5'>
+                              <p className='text-start text-sm font-medium'>External</p>
+                              <p className='text-sm tracking-tight text-muted-foreground'>2-5 business days</p>
+                            </div>
+                            <div className='pb-3.5'>
+                              <p className='text-sm font-medium'>{formatCurrency(100)}</p>
+                            </div>
+                          </div>
+                          <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#81c3d7] transition-all duration-100', data.delivery_method === 'external' ? '' : 'opacity-0')} aria-hidden='true' />
+                        </Button>
+                      </div>
+                    </FormInput>
+                  </CardContent>
+                  <CardContent className='pb-2'>
+                    {data.delivery_method === 'external' ? (
+                      <FormInput id='courier_service' label='Courier Service' errorMessage={errors.courier_service_id}>
+                        <Select
+                          name='service_provider'
+                          onValueChange={serviceId => {
+                            const service = courier_services.find(service => service.id === serviceId)
+                            setData(data => ({
+                              ...data,
+                              courier_service_id: service!.id,
+                              delivery_cost: parseFloat(service!.value)
+                            }))
+                            clearErrors('courier_service_id')
                             clearErrors('delivery_man_id')
-                          }
-                        }}
-                        disabled={cartItems.length === 0}
-                      >
-                        <div className='flex w-full flex-col items-start px-4'>
-                          <div className='py-3.5'>
-                            <p className='text-start text-sm font-medium'>External</p>
-                            <p className='text-sm tracking-tight text-muted-foreground'>2-5 business days</p>
-                          </div>
-                          <div className='pb-3.5'>
-                            <p className='text-sm font-medium'>{formatCurrency(100)}</p>
-                          </div>
-                        </div>
-                        <CheckCircleIcon className={cn('absolute right-3 top-3 h-4 w-4 text-[#81c3d7] transition-all duration-100', data.delivery_method === 'external' ? '' : 'opacity-0')} aria-hidden='true' />
-                      </Button>
-                    </div>
-                  </FormInput>
-                </CardContent>
-                <CardContent className='pb-2'>
-                  {data.delivery_method === 'external' ? (
-                    <FormInput id='courier_service' label='Courier Service' errorMessage={errors.courier_service_id}>
-                      <Select
-                        name='service_provider'
-                        onValueChange={serviceId => {
-                          const service = courier_services.find(service => service.id === serviceId)
-                          setData(data => ({
-                            ...data,
-                            courier_service_id: service!.id,
-                            delivery_cost: parseFloat(service!.value)
-                          }))
-                          clearErrors('courier_service_id')
-                          clearErrors('delivery_man_id')
-                        }}
-                        disabled={data.order_variants.length === 0}
-                      >
-                        <SelectTrigger id='service_provider'>
-                          <SelectValue placeholder='Select Courier Service' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {courier_services.map(service => (
-                            <SelectItem key={service.value} value={service.id} checkPosition='right' className='group'>
-                              <div className='flex items-center gap-2'>
-                                <span>{service.label}</span>
-                                <span className='border-l pl-2 text-xs text-muted-foreground group-hover:border-muted-foreground/20'>BDT {service.value}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormInput>
-                  ) : (
-                    <FormInput id='delivery_man' label='Delivery Man' errorMessage={errors.delivery_man_id}>
-                      <CustomerDropdownList id='delivery_man' label='Delivery Man' handleSelectedCustomer={handleSelectedDeliveryMan} disabled={data.order_variants.length === 0} className='-mt-px' />
-                    </FormInput>
-                  )}
-                </CardContent>
-              </Card>
-              <Card className='h-fit w-full'>
-                <CardHeader>
-                  <CardTitle>Payment Information</CardTitle>
-                  <CardDescription>Choose payment status and method.</CardDescription>
-                </CardHeader>
-                <CardContent className='grid gap-2 pb-2'>
-                  <FormInput id='payment_method' label='Payment Method' errorMessage={errors.payment_method}>
-                    <Card>
-                      <CardContent className='flex h-18 p-0'>
-                        <Button
-                          variant='ghost'
-                          className={cn('flex h-full w-1/3 items-end justify-start rounded-r-none px-2.5 pb-2.5', data.payment_method === 'cash_on_delivery' ? 'bg-accent' : '')}
-                          onClick={() => {
-                            setData(data => ({
-                              ...data,
-                              payment_method: 'cash_on_delivery',
-                              bank_name: '',
-                              cheque_number: '',
-                              service_provider: '',
-                              account_number: '',
-                              txn_id: ''
-                            }))
-                            clearErrors('payment_method')
-                            clearErrors('bank_name')
-                            clearErrors('cheque_number')
-                            clearErrors('service_provider')
-                            clearErrors('account_number')
-                            clearErrors('txn_id')
                           }}
-                          disabled={cartItems.length === 0}
+                          disabled={data.order_variants.length === 0}
                         >
-                          <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'cash_on_delivery' ? 'text-[#70a288]' : '')}>
-                            <CashIcon className='h-5 w-5' />
-                            <p className='text-sm font-medium tracking-tighter'>On Delivery</p>
-                          </div>
-                        </Button>
-                        <Button
-                          variant='ghost'
-                          className={cn('flex h-full w-1/3 items-end justify-start rounded-none border-x px-2.5 pb-2.5', data.payment_method === 'mobile_banking' ? 'bg-accent' : '')}
-                          onClick={() => {
-                            setData(data => ({
-                              ...data,
-                              payment_method: 'mobile_banking',
-                              payment_status: data.payment_status !== 'due' ? data.payment_status : null,
-                              bank_name: '',
-                              cheque_number: ''
-                            }))
-                            clearErrors('payment_method')
-                            clearErrors('bank_name')
-                            clearErrors('cheque_number')
-                          }}
-                          disabled={cartItems.length === 0}
-                        >
-                          <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'mobile_banking' ? 'text-[#dab785]' : '')}>
-                            <MobileBankingIcon className='h-5 w-5' />
-                            <p className='text-sm font-medium tracking-tighter'>Mobile Banking</p>
-                          </div>
-                        </Button>
-                        <Button
-                          variant='ghost'
-                          className={cn('flex h-full w-1/3 items-end justify-start rounded-l-none px-2.5 pb-2.5', data.payment_method === 'cheque' ? 'bg-accent' : '')}
-                          onClick={() => {
-                            setData(data => ({
-                              ...data,
-                              payment_method: 'cheque',
-                              service_provider: '',
-                              account_number: '',
-                              txn_id: ''
-                            }))
-                            clearErrors('payment_method')
-                            clearErrors('service_provider')
-                            clearErrors('account_number')
-                            clearErrors('txn_id')
-                          }}
-                          disabled={cartItems.length === 0}
-                        >
-                          <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'cheque' ? 'text-[#d5896f]' : '')}>
-                            <ChequeIcon className='h-5 w-5' />
-                            <p className='text-sm font-medium tracking-tighter'>Cheque</p>
-                          </div>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </FormInput>
-                </CardContent>
-                <CardContent className='pb-2'>
-                  <FormInput id='payment_status' label='Payment Status' errorMessage={errors.payment_status || errors.total_paid}>
-                    <div className='grid grid-cols-3 gap-2'>
-                      <Button
-                        variant='outline'
-                        className={cn('relative h-auto px-0 py-3 hover:bg-transparent', data.payment_status === 'due' ? 'border-[#cad2c5] outline-2' : '')}
-                        onClick={() => {
-                          setData('payment_status', 'due')
-                          setData('total_paid', undefined)
-                          setOpenPartialPaymentPopover(false)
-                          clearErrors('total_paid')
-                        }}
-                        disabled={cartItems.length === 0 || ['mobile_banking', 'cheque'].includes(data.payment_method ?? '')}
-                      >
-                        <div className='h-full w-full'>
-                          <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'due' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Due</p>
-                        </div>
-                        <MinusCircle className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#cad2c5] transition-all duration-100', data.payment_status === 'due' ? '' : 'opacity-0')} aria-hidden='true' />
-                      </Button>
-                      <Popover open={openPartialPaymentPopover}>
-                        <PopoverTrigger asChild>
+                          <SelectTrigger id='service_provider'>
+                            <SelectValue placeholder='Select Courier Service' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {courier_services.map(service => (
+                              <SelectItem key={service.value} value={service.id} checkPosition='right' className='group'>
+                                <div className='flex items-center gap-2'>
+                                  <span>{service.label}</span>
+                                  <span className='border-l pl-2 text-xs text-muted-foreground group-hover:border-muted-foreground/20'>BDT {service.value}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormInput>
+                    ) : (
+                      <FormInput id='delivery_man' label='Delivery Man' errorMessage={errors.delivery_man_id}>
+                        <CustomerDropdownList id='delivery_man' label='Delivery Man' handleSelectedCustomer={handleSelectedDeliveryMan} disabled={data.order_variants.length === 0} className='-mt-px' />
+                      </FormInput>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card className='w-full'>
+                  <CardHeader>
+                    <CardTitle>Payment Information</CardTitle>
+                    <CardDescription>Choose payment status and method.</CardDescription>
+                  </CardHeader>
+                  <CardContent className='grid gap-2 pb-2'>
+                    <FormInput id='payment_method' label='Payment Method' errorMessage={errors.payment_method}>
+                      <Card>
+                        <CardContent className='flex h-18 p-0'>
                           <Button
-                            variant='outline'
-                            className={cn('relative h-auto px-0 py-3 hover:bg-transparent focus-visible:outline-none focus-visible:ring-0', data.payment_status === 'partial' ? 'border-[#83c5be] outline-2' : '')}
+                            variant='ghost'
+                            className={cn('flex h-full w-1/3 items-end justify-start rounded-r-none px-2.5 pb-2.5', data.payment_method === 'cash_on_delivery' ? 'bg-accent' : '')}
                             onClick={() => {
-                              setData('payment_status', 'partial')
-                              setData('total_paid', undefined)
-                              setOpenPartialPaymentPopover(true)
+                              setData(data => ({
+                                ...data,
+                                payment_method: 'cash_on_delivery',
+                                bank_name: '',
+                                cheque_number: '',
+                                service_provider: '',
+                                account_number: '',
+                                txn_id: ''
+                              }))
+                              clearErrors('payment_method')
+                              clearErrors('bank_name')
+                              clearErrors('cheque_number')
+                              clearErrors('service_provider')
+                              clearErrors('account_number')
+                              clearErrors('txn_id')
                             }}
                             disabled={cartItems.length === 0}
                           >
-                            <div className='h-full w-full'>
-                              <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'partial' ? '-translate-x-[22%] translate-y-[28%]' : '')}>Partial</p>
+                            <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'cash_on_delivery' ? 'text-[#70a288]' : '')}>
+                              <CashIcon className='h-5 w-5' />
+                              <p className='text-sm font-medium tracking-tighter'>On Delivery</p>
                             </div>
-                            <PartiallyPaidIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#83c5be] transition-all duration-100', data.payment_status === 'partial' ? '' : 'opacity-0')} aria-hidden='true' />
                           </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className='grid gap-2'>
-                          <Label>Amount</Label>
-                          <Input
-                            id='total_paid'
-                            name='total_paid'
-                            type='number'
-                            value={data.total_paid ?? ''}
-                            className='h-8 w-36 no-spin'
-                            placeholder='Amount'
-                            onChange={e => {
-                              if (parseFloat(e.target.value) > 0) {
-                                setData('total_paid', parseFloat(e.target.value))
-                              } else {
-                                setData('total_paid', undefined)
-                              }
-                            }}
-                            onKeyDown={e => {
-                              const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab', 'Enter', 'Escape', 'Home', 'End', '.']
-
-                              const input = e.target as HTMLInputElement
-                              const hasDecimal = input.value.includes('.')
-                              if (!/^[0-9]$/.test(e.key) && (!allowedKeys.includes(e.key) || (e.key === '.' && hasDecimal))) {
-                                e.preventDefault()
-                              }
-                            }}
-                            onKeyUp={e => {
-                              if (e.key === 'Enter') {
-                                setOpenPartialPaymentPopover(false)
-                                clearErrors('total_paid')
-                              }
-                            }}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <Button
-                        variant='outline'
-                        className={cn('relative h-auto px-0 py-3 hover:bg-transparent', data.payment_status === 'paid' ? 'border-[#006d77] outline-2' : '')}
-                        onClick={() => {
-                          setData('payment_status', 'paid')
-                          setTimeout(() => {
-                            setData('total_paid', data.total_payable)
-                          }, 100)
-                          setOpenPartialPaymentPopover(false)
-                          clearErrors('total_paid')
-                        }}
-                        disabled={cartItems.length === 0}
-                      >
-                        <div className='h-full w-full'>
-                          <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'paid' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Paid</p>
-                        </div>
-                        <CheckCircleIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#006d77] transition-all duration-100', data.payment_status === 'paid' ? '' : 'opacity-0')} aria-hidden='true' />
-                      </Button>
-                    </div>
-                  </FormInput>
-                </CardContent>
-
-                <CardContent className={cn('pb-0 transition-all duration-300 ease-in-out', (data.payment_method === 'mobile_banking' || data.payment_method === 'cheque') && 'pb-6')}>
-                  <div ref={contentRef} className={cn('grid h-0 gap-1.5 opacity-0 transition-all duration-300 ease-in-out', (data.payment_method === 'mobile_banking' || data.payment_method === 'cheque') && 'h-auto opacity-100')}>
-                    {data.payment_method === 'mobile_banking' && (
-                      <>
-                        <FormInput id='service_provider' label='Service Provider' errorMessage={errors.service_provider}>
-                          <Select
-                            name='service_provider'
-                            value={data.service_provider}
-                            onValueChange={value => {
+                          <Button
+                            variant='ghost'
+                            className={cn('flex h-full w-1/3 items-end justify-start rounded-none border-x px-2.5 pb-2.5', data.payment_method === 'mobile_banking' ? 'bg-accent' : '')}
+                            onClick={() => {
                               setData(data => ({
                                 ...data,
-                                service_provider: value
+                                payment_method: 'mobile_banking',
+                                payment_status: data.payment_status !== 'due' ? data.payment_status : null,
+                                bank_name: '',
+                                cheque_number: ''
                               }))
-                              clearErrors('service_provider')
+                              clearErrors('payment_method')
+                              clearErrors('bank_name')
+                              clearErrors('cheque_number')
                             }}
+                            disabled={cartItems.length === 0}
                           >
-                            <SelectTrigger id='service_provider'>
-                              <SelectValue placeholder='Select Service Provider' />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                {serviceProviders.map(provider => (
-                                  <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
-                                    <div className='flex items-center gap-1.5'>
-                                      <provider.icon className='h-5 w-5' />
-                                      <span>{provider.label}</span>
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </FormInput>
+                            <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'mobile_banking' ? 'text-[#dab785]' : '')}>
+                              <MobileBankingIcon className='h-5 w-5' />
+                              <p className='text-sm font-medium tracking-tighter'>Mobile Banking</p>
+                            </div>
+                          </Button>
+                          <Button
+                            variant='ghost'
+                            className={cn('flex h-full w-1/3 items-end justify-start rounded-l-none px-2.5 pb-2.5', data.payment_method === 'cheque' ? 'bg-accent' : '')}
+                            onClick={() => {
+                              setData(data => ({
+                                ...data,
+                                payment_method: 'cheque',
+                                service_provider: '',
+                                account_number: '',
+                                txn_id: ''
+                              }))
+                              clearErrors('payment_method')
+                              clearErrors('service_provider')
+                              clearErrors('account_number')
+                              clearErrors('txn_id')
+                            }}
+                            disabled={cartItems.length === 0}
+                          >
+                            <div className={cn('space-y-0.5 transition-all duration-200', data.payment_method === 'cheque' ? 'text-[#d5896f]' : '')}>
+                              <ChequeIcon className='h-5 w-5' />
+                              <p className='text-sm font-medium tracking-tighter'>Cheque</p>
+                            </div>
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </FormInput>
+                  </CardContent>
+                  <CardContent className='pb-2'>
+                    <FormInput id='payment_status' label='Payment Status' errorMessage={errors.payment_status || errors.total_paid}>
+                      <div className='grid grid-cols-3 gap-2'>
+                        <Button
+                          variant='outline'
+                          className={cn('relative h-auto px-0 py-3 hover:bg-transparent', data.payment_status === 'due' ? 'border-[#cad2c5] outline-2' : '')}
+                          onClick={() => {
+                            setData('payment_status', 'due')
+                            setData('total_paid', undefined)
+                            setOpenPartialPaymentPopover(false)
+                            clearErrors('total_paid')
+                          }}
+                          disabled={cartItems.length === 0 || ['mobile_banking', 'cheque'].includes(data.payment_method ?? '')}
+                        >
+                          <div className='h-full w-full'>
+                            <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'due' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Due</p>
+                          </div>
+                          <MinusCircle className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#cad2c5] transition-all duration-100', data.payment_status === 'due' ? '' : 'opacity-0')} aria-hidden='true' />
+                        </Button>
+                        <Popover open={openPartialPaymentPopover}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant='outline'
+                              className={cn('relative h-auto px-0 py-3 hover:bg-transparent focus-visible:outline-none focus-visible:ring-0', data.payment_status === 'partial' ? 'border-[#83c5be] outline-2' : '')}
+                              onClick={() => {
+                                setData('payment_status', 'partial')
+                                setData('total_paid', undefined)
+                                setOpenPartialPaymentPopover(true)
+                              }}
+                              disabled={cartItems.length === 0}
+                            >
+                              <div className='h-full w-full'>
+                                <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'partial' ? '-translate-x-[22%] translate-y-[28%]' : '')}>Partial</p>
+                              </div>
+                              <PartiallyPaidIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#83c5be] transition-all duration-100', data.payment_status === 'partial' ? '' : 'opacity-0')} aria-hidden='true' />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className='grid gap-2'>
+                            <Label>Amount</Label>
+                            <Input
+                              id='total_paid'
+                              name='total_paid'
+                              type='number'
+                              value={data.total_paid ?? ''}
+                              className='h-8 w-36 no-spin'
+                              placeholder='Amount'
+                              onChange={e => {
+                                if (parseFloat(e.target.value) > 0) {
+                                  setData('total_paid', parseFloat(e.target.value))
+                                } else {
+                                  setData('total_paid', undefined)
+                                }
+                              }}
+                              onKeyDown={e => {
+                                const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab', 'Enter', 'Escape', 'Home', 'End', '.']
 
-                        <div className='grid grid-cols-2 gap-2'>
-                          <FormInput id='account_number' label='Account Number' errorMessage={errors.account_number}>
-                            <Input value={data.account_number} onChange={handleInputChange} name='account_number' id='account_number' placeholder='+880 1XXX-XXXXXX' />
+                                const input = e.target as HTMLInputElement
+                                const hasDecimal = input.value.includes('.')
+                                if (!/^[0-9]$/.test(e.key) && (!allowedKeys.includes(e.key) || (e.key === '.' && hasDecimal))) {
+                                  e.preventDefault()
+                                }
+                              }}
+                              onKeyUp={e => {
+                                if (e.key === 'Enter') {
+                                  setOpenPartialPaymentPopover(false)
+                                  clearErrors('total_paid')
+                                }
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <Button
+                          variant='outline'
+                          className={cn('relative h-auto px-0 py-3 hover:bg-transparent', data.payment_status === 'paid' ? 'border-[#006d77] outline-2' : '')}
+                          onClick={() => {
+                            setData('payment_status', 'paid')
+                            setTimeout(() => {
+                              setData('total_paid', data.total_payable)
+                            }, 100)
+                            setOpenPartialPaymentPopover(false)
+                            clearErrors('total_paid')
+                          }}
+                          disabled={cartItems.length === 0}
+                        >
+                          <div className='h-full w-full'>
+                            <p className={cn('flex h-full items-center justify-center text-sm font-medium transition-all duration-300 ease-in-out', data.payment_status === 'paid' ? '-translate-x-[28%] translate-y-[28%]' : '')}>Paid</p>
+                          </div>
+                          <CheckCircleIcon className={cn('absolute right-2.5 top-2 h-4 w-4 text-[#006d77] transition-all duration-100', data.payment_status === 'paid' ? '' : 'opacity-0')} aria-hidden='true' />
+                        </Button>
+                      </div>
+                    </FormInput>
+                  </CardContent>
+
+                  <CardContent className={cn('pb-0 transition-all duration-300 ease-in-out', (data.payment_method === 'mobile_banking' || data.payment_method === 'cheque') && 'pb-6')}>
+                    <div ref={contentRef} className={cn('grid h-0 gap-1.5 opacity-0 transition-all duration-300 ease-in-out', (data.payment_method === 'mobile_banking' || data.payment_method === 'cheque') && 'h-auto opacity-100')}>
+                      {data.payment_method === 'mobile_banking' && (
+                        <>
+                          <FormInput id='service_provider' label='Service Provider' errorMessage={errors.service_provider}>
+                            <Select
+                              name='service_provider'
+                              value={data.service_provider}
+                              onValueChange={value => {
+                                setData(data => ({
+                                  ...data,
+                                  service_provider: value
+                                }))
+                                clearErrors('service_provider')
+                              }}
+                            >
+                              <SelectTrigger id='service_provider'>
+                                <SelectValue placeholder='Select Service Provider' />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {serviceProviders.map(provider => (
+                                    <SelectItem key={provider.value} value={provider.value} checkPosition='right'>
+                                      <div className='flex items-center gap-1.5'>
+                                        <provider.icon className='h-5 w-5' />
+                                        <span>{provider.label}</span>
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
                           </FormInput>
-                          <FormInput id='txn_id' label='Transaction ID' errorMessage={errors.txn_id}>
-                            <Input value={data.txn_id} onChange={handleInputChange} name='txn_id' id='txn_id' placeholder='Transaction ID' />
+
+                          <div className='grid grid-cols-2 gap-2'>
+                            <FormInput id='account_number' label='Account Number' errorMessage={errors.account_number}>
+                              <Input value={data.account_number} onChange={handleInputChange} name='account_number' id='account_number' placeholder='+880 1XXX-XXXXXX' />
+                            </FormInput>
+                            <FormInput id='txn_id' label='Transaction ID' errorMessage={errors.txn_id}>
+                              <Input value={data.txn_id} onChange={handleInputChange} name='txn_id' id='txn_id' placeholder='Transaction ID' />
+                            </FormInput>
+                          </div>
+                        </>
+                      )}
+                      {data.payment_method === 'cheque' && (
+                        <>
+                          <FormInput id='bank_name' label='Bank Name' errorMessage={errors.bank_name}>
+                            <Input value={data.bank_name} onChange={handleInputChange} name='bank_name' id='bank_name' placeholder='Bank name' />
                           </FormInput>
-                        </div>
-                      </>
-                    )}
-                    {data.payment_method === 'cheque' && (
-                      <>
-                        <FormInput id='bank_name' label='Bank Name' errorMessage={errors.bank_name}>
-                          <Input value={data.bank_name} onChange={handleInputChange} name='bank_name' id='bank_name' placeholder='Bank name' />
-                        </FormInput>
-                        <FormInput id='cheque_number' label='Cheque Number' errorMessage={errors.cheque_number}>
-                          <Input value={data.cheque_number} onChange={handleInputChange} name='cheque_number' id='cheque_number' placeholder='Cheque number' />
-                        </FormInput>
-                      </>
-                    )}
-                  </div>
+                          <FormInput id='cheque_number' label='Cheque Number' errorMessage={errors.cheque_number}>
+                            <Input value={data.cheque_number} onChange={handleInputChange} name='cheque_number' id='cheque_number' placeholder='Cheque number' />
+                          </FormInput>
+                        </>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card className='lg:hidden'>
+                <CardHeader>
+                  <CardTitle>Sales Representative</CardTitle>
+                  <CardDescription>Select a customer from the dropdown.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormInput id='sales_rep' label='Sales Rep' errorMessage={errors.sales_rep_id}>
+                    <CustomerDropdownList id='sales_rep' label='Sales Rep' handleSelectedCustomer={handleSelectedSalesRep} />
+                  </FormInput>
                 </CardContent>
               </Card>
             </div>
@@ -794,7 +833,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
               <Separator />
               <CardContent className='hidden px-0 pb-0 lg:block'>
                 {data.order_variants.length > 0 ? (
-                  <ScrollArea className='lg:h-[350px]'>
+                  <ScrollArea className='lg:h-[410px]'>
                     <div>
                       {cartItems.map((cartItem, index) => (
                         <div key={cartItem.variant.id}>
@@ -807,7 +846,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                     </div>
                   </ScrollArea>
                 ) : (
-                  <div className='flex flex-col items-center justify-center gap-2 text-muted-foreground lg:h-[350px]'>
+                  <div className='flex flex-col items-center justify-center gap-2 text-muted-foreground lg:h-[410px]'>
                     <ShoppingCartIcon className='mt-4 h-18 w-18' />
                     <span className='ml-2 text-sm font-medium'>Add items to cart.</span>
                   </div>
@@ -841,7 +880,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
               <CardContent className={cn('mx-6 max-h-max p-0 text-xs transition-height-padding-opacity duration-500 ease-in-out', data.total_paid ? 'space-y-0 opacity-100' : 'space-y-4 opacity-0')}>
                 <div className={`flex items-center justify-between overflow-hidden text-xs transition-all duration-300 ease-in-out ${data.total_paid && data.total_paid !== data.total_payable ? 'max-h-20 py-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <Label className='text-sm transition-all duration-300'>Total Remaining</Label>
-                  <p className='text-sm transition-all duration-300'>BDT {totalRemaining}</p>
+                  <p className='text-sm transition-all duration-300'>{formatCurrency(totalRemaining)}</p>
                 </div>
               </CardContent>
               <CardFooter className={cn('justify-end space-x-2 pt-6 transition-all duration-300 lg:space-x-0', ((subtotal && data.delivery_cost) || data.total_paid) && 'pt-0')}>

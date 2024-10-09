@@ -23,6 +23,8 @@ interface AddAcquisitionProps {
   categories: SelectOption[]
 }
 
+// TODO: fix product dropdown list issue
+
 const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
   const [productToEdit, setProductToEdit] = useState<AcquiredProductFormType | undefined>(undefined)
   const [openPCCalendarPopover, setOpenPCCalendarPopover] = useState(false)

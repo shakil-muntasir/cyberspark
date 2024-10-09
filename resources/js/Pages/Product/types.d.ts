@@ -11,6 +11,7 @@ type Attributes = {
     availability: string
     category: string
     category_id: string
+    stock_threshold: string | null
     created_by: CreatedOrUpdatedBy
     updated_by: CreatedOrUpdatedBy
     created_at: string
@@ -82,6 +83,7 @@ export type ProductForm = {
     description: string | null
     category_id: string
     status?: string
+    stock_threshold: string | null
 }
 
 export type ProductVariantForm = {

@@ -24,8 +24,7 @@ import { toTitleCase } from '@/Lib/utils'
 import ProductVariantData from '@/Pages/Product/Partials/variant-data'
 import { ProductForm, ProductResource } from '@/Pages/Product/types'
 import { SelectOption } from '@/Types'
-
-// TODO: fix width
+import { InputNumber } from '@/Components/ui/input-number'
 
 interface ShowProductTypes {
   categories: SelectOption[]
@@ -41,7 +40,8 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
     sku_prefix: product.data.attributes.sku_prefix,
     description: product.data.attributes.description,
     category_id: product.data.attributes.category_id,
-    status: product.data.attributes.status
+    status: product.data.attributes.status,
+    stock_threshold: product.data.attributes.stock_threshold
   }
   const { data, setData, patch, delete: destroy, errors, clearErrors, reset } = useForm<ProductForm>(initialProductData)
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(false)
@@ -142,8 +142,8 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
 
   return (
     <AuthenticatedLayout title='Product Details'>
-      <main className='grid flex-1 sm:px-6 sm:py-0'>
-        <div className='mx-auto grid max-w-[80rem] flex-1 auto-rows-max gap-4'>
+      <main className='flex w-full justify-center sm:px-6 sm:py-0'>
+        <div className='flex max-w-[80rem] flex-1 flex-col gap-4'>
           <div className='flex items-center gap-4'>
             <TooltipProvider>
               <Tooltip delayDuration={0}>
@@ -186,7 +186,7 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
             </div>
           </div>
           <div className='flex flex-col gap-4 lg:flex-row lg:gap-6'>
-            <div className='grid auto-rows-max items-start gap-4 lg:gap-6'>
+            <div className='flex flex-1 flex-col gap-4 lg:gap-6'>
               <Card>
                 <CardHeader>
                   <CardTitle>Product Details</CardTitle>
@@ -194,33 +194,45 @@ const ShowProduct: React.FC<ShowProductTypes> = ({ categories, product, statuses
                 </CardHeader>
 
                 <CardContent>
-                  <div className='grid gap-6'>
-                    <FormInput id='name' label='Product Name' errorMessage={errors.name}>
-                      <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' autoComplete='off' />
-                    </FormInput>
-
-                    <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
-                      <div className='relative'>
-                        <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} autoComplete='off' />
-                        <div className='absolute right-1 top-1/2 flex items-center'>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger asChild>
-                                <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
-                                  {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Manual Input?</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
+                  <div className='grid gap-4'>
+                    <div className='flex flex-col gap-4 lg:flex-row'>
+                      <div className='lg:w-7/12'>
+                        <FormInput id='name' label='Product Name' errorMessage={errors.name}>
+                          <Input id='name' type='text' name='name' value={data.name} onChange={handleInputChange} placeholder='Name' autoComplete='off' />
+                        </FormInput>
                       </div>
-                    </FormInput>
+
+                      <div className='lg:w-2/12'>
+                        <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
+                          <div className='relative'>
+                            <Input id='sku_prefix' name='sku_prefix' value={data.sku_prefix} onChange={handleInputChange} placeholder='SKU Prefix' readOnly={!skuManualInput} autoComplete='off' />
+                            <div className='absolute right-1 top-1/2 flex items-center'>
+                              <TooltipProvider>
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <Button type='button' variant='ghost' size='icon' className='mr-1 h-7 w-7 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100' onClick={() => setSkuManualInput(!skuManualInput)}>
+                                      {skuManualInput ? <LockOpen1Icon className='h-4 w-4' /> : <LockClosedIcon className='h-4 w-4' />}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Manual Input?</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </div>
+                        </FormInput>
+                      </div>
+
+                      <div className='w-3/12'>
+                        <FormInput id='stock_threshold' label='Stock Threshold' errorMessage={errors.stock_threshold}>
+                          <InputNumber id='stock_threshold' name='stock_threshold' value={data.stock_threshold ?? ''} onChange={handleInputChange} placeholder='Stock Threshold' />
+                        </FormInput>
+                      </div>
+                    </div>
 
                     <FormInput id='description' label='Description' errorMessage={errors.description}>
-                      <Textarea id='description' name='description' value={data.description ?? ''} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
+                      <Textarea id='description' rows={4} name='description' value={data.description ?? ''} onChange={handleInputChange} placeholder='Description' autoComplete='off' />
                     </FormInput>
                   </div>
                 </CardContent>

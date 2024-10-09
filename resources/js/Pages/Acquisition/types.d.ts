@@ -39,6 +39,7 @@ export type AcquiredProductForm = {
     buying_price: string
     retail_price: string
     selling_price: string
+    stock_threshold: string | null
     description: string | null
 }
 

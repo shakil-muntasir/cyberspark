@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Comp
 import { LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons'
 import { abbreviateWords } from '@/Lib/utils'
 import FormInput from '@/Components/FormInput'
+import { InputNumber } from '@/Components/ui/input-number'
 
 interface AddProductProps {
   categories: SelectOption[]
@@ -26,10 +27,11 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
   const { toast } = useToast()
 
   const { data, setData, post, errors, clearErrors, reset } = useForm<ProductForm>({
+    category_id: '',
     name: '',
     sku_prefix: '',
     description: '',
-    category_id: ''
+    stock_threshold: ''
   })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -163,6 +165,10 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                   ))}
                 </SelectContent>
               </Select>
+            </FormInput>
+
+            <FormInput id='stock_threshold' label='Stock Threshold' errorMessage={errors.stock_threshold}>
+              <InputNumber id='stock_threshold' name='stock_threshold' value={data.stock_threshold ?? ''} onChange={handleInputChange} placeholder='Stock Threshold' />
             </FormInput>
 
             <FormInput id='description' label='Description' errorMessage={errors.description}>

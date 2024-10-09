@@ -36,6 +36,7 @@ class ProductResource extends JsonResource
                 'availability' => $this->availability,
                 'category' => $this->whenLoaded('category', fn() => $this->category->name),
                 'category_id' => (string) $this->category_id,
+                'stock_threshold' => $this->stock_threshold,
                 'created_by' => $this->created_by,
                 'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),

@@ -47,6 +47,7 @@ class AcquisitionController extends Controller
                     'sku_prefix' => $productRequestData['sku_prefix'],
                     'category_id' => $productRequestData['category_id'],
                     'description' => $productRequestData['description'],
+                    'stock_threshold' => $productRequestData['stock_threshold'],
                 ];
                 $variantData = [
                     'quantity' => $productRequestData['quantity'],
@@ -96,6 +97,7 @@ class AcquisitionController extends Controller
             'buying_price' => 'required|numeric|min:0',
             'retail_price' => 'nullable|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
+            'stock_threshold' => 'nullable|integer|min:1',
             'sku_prefix' => [
                 'required',
                 Rule::unique('products', 'sku_prefix')->ignore(request()->input('id')),
@@ -103,7 +105,12 @@ class AcquisitionController extends Controller
         ], [
             'id.required_without' => 'Select or create a new product.',
             'name.required' => 'Select or create a new product.',
-            'sku_prefix.unique' => 'The SKU Prefix is already taken.'
+            'sku_prefix.unique' => 'The SKU Prefix is already taken.',
+            'quantity.min' => 'Must be at least 1.',
+            'buying_price.min' => 'Must be at least 0.',
+            'retail_price.min' => 'Must be at least 0.',
+            'selling_price.min' => 'Must be at least 0.',
+            'stock_threshold.min' => 'Must be at least 1.',
         ]);
 
         return response()->json(['success' => 'Product is valid.']);

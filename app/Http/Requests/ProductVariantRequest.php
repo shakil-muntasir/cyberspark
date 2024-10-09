@@ -21,10 +21,10 @@ class ProductVariantRequest extends FormRequest
         }
 
         return [
-            'quantity' => 'required|integer',
-            'buying_price' => 'required|numeric',
-            'retail_price' => 'nullable|numeric',
-            'selling_price' => 'required|numeric',
+            'quantity' => 'required|integer|min:1',
+            'buying_price' => 'required|numeric|min:0',
+            'retail_price' => 'nullable|numeric|min:0',
+            'selling_price' => 'required|numeric|min:0'
         ];
     }
 

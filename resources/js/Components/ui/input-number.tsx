@@ -8,6 +8,7 @@ type CustomNumberInputProps = {
   className?: string
   allowNegative?: boolean
   placeholder?: string
+  disabled?: boolean
 } & (
   | {
       onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -21,7 +22,7 @@ type CustomNumberInputProps = {
     }
 )
 
-const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, className, allowNegative = false, placeholder, onEnterPress }) => {
+const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, className, allowNegative = false, placeholder, onEnterPress, disabled }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const changeValue = (delta: number, e: React.MouseEvent) => {
@@ -65,7 +66,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
 
   return (
     <div className='group relative flex'>
-      <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} onKeyUp={handleKeyUp} />
+      <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} onKeyUp={handleKeyUp} disabled={disabled} />
       <div className='absolute inset-y-0 right-2 flex items-center opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100'>
         <div className='flex flex-col'>
           <button

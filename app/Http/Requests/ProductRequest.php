@@ -31,6 +31,11 @@ class ProductRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'status' => ['nullable', 'string', Rule::in(['active', 'inactive'])],
+            'stock_threshold' => [
+                $this->isMethod('put') || $this->isMethod('patch') ? 'required' : 'nullable',
+                'integer',
+                'min:1',
+            ],
         ];
     }
 
@@ -39,6 +44,7 @@ class ProductRequest extends FormRequest
         return [
             'category_id.required' => 'Select a category.',
             'category_id.exists' => 'The selected category is invalid.',
+            'stock_threshold.min' => 'Should be a positive number.'
         ];
     }
 
