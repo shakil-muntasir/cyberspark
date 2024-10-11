@@ -1,10 +1,10 @@
-import { Product } from '@/Pages/Product/types'
+import { ProductVariant } from '@/Pages/Product/types'
 import { CreatedOrUpdatedBy } from '@/Types'
 
 type Attributes = {
     invoice_number: string
     acquired_date: string
-    products_count: string
+    variants_count: string
     created_by: CreatedOrUpdatedBy
     updated_by: CreatedOrUpdatedBy
     created_at: string
@@ -12,7 +12,7 @@ type Attributes = {
 }
 
 type Relationships = {
-    products?: Product[]
+    variants?: ProductVariant[]
 }
 
 export type Acquisition = {

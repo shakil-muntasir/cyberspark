@@ -24,6 +24,7 @@ class ProductSeeder extends Seeder
             $variantsCount = rand(3, 5);
             ProductVariant::factory($variantsCount)->create([
                 'product_id' => $product->id,
+                'acquisition_id' => null
             ]);
         }
     }

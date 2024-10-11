@@ -33,6 +33,7 @@ class ProductVariantController extends Controller
     {
         Gate::authorize('delete', $variant);
 
+        // NOTE: this checks if the variant is associated with any order
         $request->validated();
 
         $variant->delete();

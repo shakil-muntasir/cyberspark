@@ -35,13 +35,11 @@ class AcquisitionSeeder extends Seeder
                         'buying_price' => rand(100, 1000),
                         'retail_price' => rand(100, 1200),
                         'selling_price' => rand(100, 1300),
+                        'acquisition_id' => $acquisition->id,
                     ];
 
                     // Create a variant for each product
                     $product->variants()->create($variantData);
-
-                    // Attach the product to the acquisition
-                    $acquisition->products()->attach($product);
                 });
             }
         });

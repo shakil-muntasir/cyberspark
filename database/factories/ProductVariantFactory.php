@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Acquisition;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,6 +21,7 @@ class ProductVariantFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
+            'acquisition_id' => Acquisition::factory(),
             'quantity' => fake()->numberBetween(10, 50),
             'buying_price' => fake()->randomFloat(2, 1000, 2000),
             'retail_price' => fake()->randomFloat(2, 1500, 2500),

@@ -54,6 +54,7 @@ class AcquisitionController extends Controller
                     'buying_price' => $productRequestData['buying_price'],
                     'retail_price' => $productRequestData['retail_price'],
                     'selling_price' => $productRequestData['selling_price'],
+                    'acquisition_id' => $acquisition->id
                 ];
 
                 // if product id empty, create a new product
@@ -64,8 +65,6 @@ class AcquisitionController extends Controller
                 }
 
                 $product->variants()->create($variantData);
-
-                $acquisition->products()->attach($product);
             }
         });
 
@@ -75,13 +74,14 @@ class AcquisitionController extends Controller
     public function show(Acquisition $acquisition): InertiaResponse
     {
         $acquisition->load([
-            'products',
-            'products.variants',
+            'variants',
+            'variants.product',
             'audits.user'
-        ])->loadCount('products');
+        ])->loadCount('variants');
 
         return inertia('Acquisition/Show', [
-            'acquisition' => new AcquisitionResource($acquisition)
+            'categories' => Category::getAllOptions(),
+            'acquisition' => new AcquisitionResource($acquisition),
         ]);
     }
 

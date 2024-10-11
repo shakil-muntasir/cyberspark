@@ -32,7 +32,7 @@ const AcquisitionShow: React.FC<AcquisitionShowProps> = ({ acquisition }) => {
           </TooltipProvider>
           <h1 className='flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0'>{acquisition.data.attributes.invoice_number}</h1>
           <Badge variant='default' className='ml-auto sm:ml-0'>
-            {acquisition.data.attributes.products_count}
+            {acquisition.data.attributes.variants_count}
           </Badge>
         </div>
       </main>

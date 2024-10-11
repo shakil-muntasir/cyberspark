@@ -21,6 +21,7 @@ class ProductVariant extends Model implements Auditable
         'buying_price',
         'retail_price',
         'selling_price',
+        'acquisition_id'
     ];
 
     protected $casts = [
@@ -30,6 +31,11 @@ class ProductVariant extends Model implements Auditable
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function acquisition(): BelongsTo
+    {
+        return $this->belongsTo(Acquisition::class);
     }
 
     public function orders(): HasManyThrough

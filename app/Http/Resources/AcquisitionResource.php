@@ -10,7 +10,7 @@ class AcquisitionResource extends JsonResource
      * @var array<string, string>
      */
     protected array $relationships = [
-        'products' => ProductResource::class,
+        'variants' => ProductVariantResource::class,
     ];
 
     /**
@@ -26,7 +26,7 @@ class AcquisitionResource extends JsonResource
             'attributes' => [
                 'invoice_number' => $this->invoice_number,
                 'acquired_date' => $this->acquired_date->format('m-d-Y'),
-                'products_count' => $this->products_count,
+                'variants_count' => $this->variants_count,
                 'created_by' => $this->created_by,
                 'updated_by' => $this->updated_by,
                 'created_at' => $this->created_at->format('jS F, Y h:i A'),

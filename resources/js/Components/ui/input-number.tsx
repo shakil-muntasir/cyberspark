@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Input } from '@/Components/ui/input'
+import { cn } from '@/Lib/utils'
 
 type CustomNumberInputProps = {
   id: string
@@ -72,7 +73,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
           <button
             type='button'
             tabIndex={-1}
-            className='m-0 -my-0.5 p-0'
+            className={cn('m-0 -my-0.5 p-0', disabled && 'hidden')}
             onMouseDown={e => {
               const input = inputRef.current
               if (input && document.activeElement === input) {
@@ -86,7 +87,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
           <button
             type='button'
             tabIndex={-1}
-            className='m-0 -my-0.5 p-0'
+            className={cn('m-0 -my-0.5 p-0', disabled && 'hidden')}
             onMouseDown={e => {
               const input = inputRef.current
               if (input && document.activeElement === input) {

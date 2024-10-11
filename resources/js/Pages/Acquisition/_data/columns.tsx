@@ -45,7 +45,7 @@ const columns: TableColumn<Acquisition>[] = createColumns([
   {
     id: 'products_count',
     header: column => <DataTableColumnHeader column={column} title='Products' align='end' />,
-    cell: acquisition => <div className='mr-4 text-end font-medium'>{acquisition.attributes.products_count}</div>
+    cell: acquisition => <div className='mr-4 text-end font-medium'>{acquisition.attributes.variants_count}</div>
   },
   {
     id: 'acquired_date',
