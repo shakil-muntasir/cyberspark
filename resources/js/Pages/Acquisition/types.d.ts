@@ -31,7 +31,8 @@ export type AcquisitionCollection = {
 }
 
 export type AcquiredProductForm = {
-    id: string
+    id: string | undefined
+    product_id: string | undefined
     name: string
     sku_prefix: string
     category_id: string

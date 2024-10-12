@@ -56,10 +56,10 @@ class AcquisitionController extends Controller
                 ];
 
                 // if product id empty, create a new product
-                if (empty($productRequestData['id'])) {
+                if (empty($productRequestData['product_id'])) {
                     $product = Product::create($productData);
                 } else {
-                    $product = Product::find($productRequestData['id']);
+                    $product = Product::find($productRequestData['product_id']);
                 }
 
                 $product->variants()->create($variantData);

@@ -29,6 +29,7 @@ interface AcquiredProductFormProps {
 const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, checkDirtyBeforeEdit, discardFormData = false, onProductAdd, productToEdit }) => {
   const initialFormData: AcquiredProductFormType = {
     id: '',
+    product_id: '',
     name: '',
     sku_prefix: '',
     category_id: '',
@@ -52,8 +53,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       setProductForm(productToEdit)
       setProductAddButtonTitle('Save')
 
-      // TODO: should be changed to product_id
-      if (productToEdit.id === '') {
+      if (productToEdit.product_id === '') {
         setProductManualInput(true)
       } else {
         setProductManualInput(false)
@@ -141,14 +141,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   const handleProductSelect = (product: Product) => {
     setProductForm(data => ({
       ...data,
-      id: product.id,
+      product_id: product.id,
       name: product.attributes.name,
       sku_prefix: product.attributes.sku_prefix,
       category_id: product.attributes.category_id,
       stock_threshold: product.attributes.stock_threshold,
       description: product.attributes.description
     }))
-    clearErrors(['id', 'name', 'sku_prefix', 'category_id'])
+    clearErrors(['product_id', 'name', 'sku_prefix', 'category_id'])
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -205,10 +205,9 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       <div className='space-y-2 px-4'>
         <div className='flex flex-col gap-2 lg:flex-row'>
           <div className='relative w-8/12'>
-            <FormInput id='name' label='Product Name' errorMessage={errors.id || errors.name}>
-              {/* TODO: id will be changed to product_id */}
-              {productToEdit && productToEdit.id !== '' ? (
-                <Input id='product' className='mt-px' value={productForm.name} placeholder='Name' onChange={handleInputChange} readOnly={true} />
+            <FormInput id='name' label='Product Name' errorMessage={errors.product_id || errors.name}>
+              {productToEdit && productToEdit.product_id !== '' ? (
+                <Input id='product' className='mt-px' value={productForm.name} name='name' placeholder='Name' onChange={handleInputChange} readOnly={true} />
               ) : !productManualInput ? (
                 <ProductDropdownList handleAddToCart={handleProductSelect} id='product' productName={productForm?.name} />
               ) : (

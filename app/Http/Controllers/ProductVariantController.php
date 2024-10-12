@@ -63,10 +63,14 @@ class ProductVariantController extends Controller
     public function validate(): JsonResponse
     {
         request()->validate([
-            'id' => 'required_without:name|nullable|exists:products,id',
-            'name' => 'required|string',
+            'id' => 'nullable|exists:product_variants,id',
+            'product_id' => 'required_without:name|nullable|exists:products,id',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('products', 'name')->ignore(request()->input('product_id')),
+            ],
             'category_id' => 'required|exists:categories,id',
-            'product_id' => 'nullable|exists:products,id',
             'description' => 'nullable|string',
             'quantity' => 'required|integer|min:1',
             'buying_price' => 'required|numeric|min:0',
@@ -75,11 +79,12 @@ class ProductVariantController extends Controller
             'stock_threshold' => 'nullable|integer|min:1',
             'sku_prefix' => [
                 'required',
-                Rule::unique('products', 'sku_prefix')->ignore(request()->input('id')),
+                Rule::unique('products', 'sku_prefix')->ignore(request()->input('product_id')),
             ],
         ], [
-            'id.required_without' => 'Select or create a new product.',
+            'product_id.required_without' => 'Select or create a new product.',
             'name.required' => 'Select or create a new product.',
+            'name.unique' => 'A product with this name already exists.',
             'sku_prefix.unique' => 'The SKU Prefix is already taken.',
             'quantity.min' => 'Must be at least 1.',
             'buying_price.min' => 'Must be at least 0.',
