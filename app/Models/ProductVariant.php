@@ -17,11 +17,12 @@ class ProductVariant extends Model implements Auditable
     use AuditableTrait, HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'product_id',
+        'acquisition_id',
         'quantity',
         'buying_price',
         'retail_price',
         'selling_price',
-        'acquisition_id'
     ];
 
     protected $casts = [

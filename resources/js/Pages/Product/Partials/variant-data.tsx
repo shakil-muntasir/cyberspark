@@ -31,6 +31,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
   const { initializeDeleteModal } = useDeleteModal()
 
   const initialFormData: ProductVariantForm = {
+    product_id: product.id,
     quantity: '',
     buying_price: '',
     retail_price: '',
@@ -49,7 +50,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     event.preventDefault()
 
     setTimeout(() => {
-      post(route('products.variants.store', { product: product.id }), {
+      post(route('variants.store'), {
         preserveScroll: true,
         onSuccess: () => handleSuccess('New variant has been added successfully.'),
         onError: handleError
@@ -61,7 +62,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
     event.preventDefault()
 
     setTimeout(() => {
-      patch(route('products.variants.update', { product: product.id, variant: data.id }), {
+      patch(route('variants.update', { variant: data.id }), {
         preserveScroll: true,
         onSuccess: () => handleSuccess('The variant has been updated successfully.'),
         onError: handleError
@@ -76,7 +77,7 @@ const ProductVariantData: React.FC<ProductVariantDataProps> = ({ product, varian
       title: 'product variants',
       onConfirm: () => {
         setTimeout(() => {
-          destroy(route('products.variants.destroy', { product: product.id, variant: variant.id }), {
+          destroy(route('variants.destroy', { variant: variant.id }), {
             preserveScroll: true,
             onSuccess: () => handleSuccess('The variant has been deleted successfully.'),
             onError: (errors: Partial<Record<keyof ProductVariantForm, string>>) => {

@@ -88,6 +88,7 @@ export type ProductForm = {
 
 export type ProductVariantForm = {
     id?: string
+    product_id: string
     quantity: string
     buying_price: string
     retail_price?: string

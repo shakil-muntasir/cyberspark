@@ -100,7 +100,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
 
   const validateProduct = async (): Promise<boolean> => {
     try {
-      await axios.post<{ success: boolean }>(route('acquisitions.product.validate'), productForm)
+      await axios.post<{ success: boolean }>(route('variants.validate'), productForm)
 
       return true
     } catch (error: unknown) {

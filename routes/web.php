@@ -17,7 +17,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/acquisitions')->name('acquisitions.')->group(function () {
         Route::get('/', [AcquisitionController::class, 'index'])->name('index');
         Route::post('/', [AcquisitionController::class, 'store'])->name('store');
-        Route::post('/product/validate', [AcquisitionController::class, 'productValidate'])->name('product.validate');
         Route::get('/{acquisition}', [AcquisitionController::class, 'show'])->name('show');
     });
 
@@ -39,13 +38,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{product}', [ProductController::class, 'show'])->name('show');
         Route::patch('/{product}', [ProductController::class, 'update'])->name('update');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
-
-        Route::prefix('/{product}/variants')->name('variants.')->group(function () {
-            Route::post('/', [ProductVariantController::class, 'store'])->name('store');
-
-            Route::patch('/{variant}', [ProductVariantController::class, 'update'])->name('update');
-            Route::delete('/{variant}', [ProductVariantController::class, 'destroy'])->name('destroy');
-        });
     });
 
     Route::prefix('/profile')->name('profile.')->group(function () {
@@ -62,7 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/variants')->name('variants.')->group(function () {
+        Route::post('/', [ProductVariantController::class, 'store'])->name('store');
         Route::get('/dropdown', [ProductVariantController::class, 'dropdown'])->name('dropdown');
+        Route::post('/validate', [ProductVariantController::class, 'validate'])->name('validate');
+        Route::patch('/{variant}', [ProductVariantController::class, 'update'])->name('update');
+        Route::delete('/{variant}', [ProductVariantController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('/invoices')->name('invoices.')->group(function () {

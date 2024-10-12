@@ -21,6 +21,7 @@ class ProductVariantRequest extends FormRequest
         }
 
         return [
+            'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
             'buying_price' => 'required|numeric|min:0',
             'retail_price' => 'nullable|numeric|min:0',

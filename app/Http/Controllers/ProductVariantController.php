@@ -4,23 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductVariantRequest;
 use App\Http\Resources\ProductVariantCollection;
-use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class ProductVariantController extends Controller
 {
-    public function store(ProductVariantRequest $request, Product $product): RedirectResponse
+    public function store(ProductVariantRequest $request): RedirectResponse
     {
         Gate::authorize('create', ProductVariant::class);
 
-        $product->variants()->create($request->validated());
+        ProductVariant::create($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(ProductVariantRequest $request, $_, ProductVariant $variant): RedirectResponse
+    public function update(ProductVariantRequest $request, ProductVariant $variant): RedirectResponse
     {
         Gate::authorize('update', $variant);
 
@@ -29,7 +30,7 @@ class ProductVariantController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(ProductVariantRequest $request, $_, ProductVariant $variant): RedirectResponse
+    public function destroy(ProductVariantRequest $request, ProductVariant $variant): RedirectResponse
     {
         Gate::authorize('delete', $variant);
 
@@ -57,5 +58,36 @@ class ProductVariantController extends Controller
             ->get();
 
         return new ProductVariantCollection($variants);
+    }
+
+    public function validate(): JsonResponse
+    {
+        request()->validate([
+            'id' => 'required_without:name|nullable|exists:products,id',
+            'name' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'product_id' => 'nullable|exists:products,id',
+            'description' => 'nullable|string',
+            'quantity' => 'required|integer|min:1',
+            'buying_price' => 'required|numeric|min:0',
+            'retail_price' => 'nullable|numeric|min:0',
+            'selling_price' => 'required|numeric|min:0',
+            'stock_threshold' => 'nullable|integer|min:1',
+            'sku_prefix' => [
+                'required',
+                Rule::unique('products', 'sku_prefix')->ignore(request()->input('id')),
+            ],
+        ], [
+            'id.required_without' => 'Select or create a new product.',
+            'name.required' => 'Select or create a new product.',
+            'sku_prefix.unique' => 'The SKU Prefix is already taken.',
+            'quantity.min' => 'Must be at least 1.',
+            'buying_price.min' => 'Must be at least 0.',
+            'retail_price.min' => 'Must be at least 0.',
+            'selling_price.min' => 'Must be at least 0.',
+            'stock_threshold.min' => 'Must be at least 1.',
+        ]);
+
+        return response()->json(['success' => 'Product is valid.']);
     }
 }
