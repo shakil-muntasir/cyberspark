@@ -10,23 +10,21 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 
 import { abbreviateWords } from '@/Lib/utils'
-import { AcquiredProductForm as AcquiredProductFormType } from '@/Pages/Acquisition/types'
+import { AcquiredProductForm as AddEditProductFormType } from '@/Pages/Acquisition/types'
 import { SelectOption } from '@/Types'
 import ProductDropdownList from '@/Components/ProductDropdownList'
 import { Product } from '@/Pages/Product/types'
-import { Checkbox } from '@/Components/ui/checkbox'
 import FormInput from '@/Components/FormInput'
 import axios, { AxiosError } from 'axios'
 
-interface AcquiredProductFormProps {
+interface AddEditProductFormProps {
   categories: SelectOption[]
-  checkDirtyBeforeEdit: (isDirty: boolean) => void
-  onProductAdd: (product: AcquiredProductFormType) => void
-  productToEdit?: AcquiredProductFormType
+  onProductAdd: (product: AddEditProductFormType) => void
+  productToEdit?: AddEditProductFormType
 }
 
-const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, checkDirtyBeforeEdit, onProductAdd, productToEdit }) => {
-  const initialFormData: AcquiredProductFormType = {
+const AddEditProductForm: React.FC<AddEditProductFormProps> = ({ categories, onProductAdd, productToEdit }) => {
+  const initialFormData: AddEditProductFormType = {
     id: '',
     product_id: '',
     name: '',
@@ -40,12 +38,11 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     description: ''
   }
 
-  const [productForm, setProductForm] = useState<AcquiredProductFormType>(initialFormData)
+  const [productForm, setProductForm] = useState<AddEditProductFormType>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string | undefined>>({})
   const [productManualInput, setProductManualInput] = useState(false)
   const [skuManualInput, setSkuManualInput] = useState(false)
   const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
-  const [isDirty, setIsDirty] = useState(false)
 
   useEffect(() => {
     if (productToEdit) {
@@ -59,13 +56,6 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       }
     }
   }, [productToEdit])
-
-  useEffect(() => {
-    // Check if form is dirty by comparing it to initialFormData
-    const formDirty = JSON.stringify(productForm) !== JSON.stringify(initialFormData)
-    setIsDirty(formDirty)
-    checkDirtyBeforeEdit(formDirty) // Notify parent component if the form is dirty
-  }, [productForm])
 
   useEffect(() => {
     if (!skuManualInput && productManualInput && !productToEdit) {
@@ -149,28 +139,25 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       ...currentData,
       [name]: value
     }))
-    clearErrors(name as keyof AcquiredProductFormType)
+    clearErrors(name as keyof AddEditProductFormType)
   }
 
   const handleDiscardProduct = () => {
-    if (productToEdit) {
-      onProductAdd(productToEdit)
-    }
     setProductForm(initialFormData)
     setProductAddButtonTitle('Add')
     setProductManualInput(false)
     clearErrors()
   }
 
-  const setProductFormData = (name: keyof AcquiredProductFormType, value: string) => {
+  const setProductFormData = (name: keyof AddEditProductFormType, value: string) => {
     setProductForm(currentData => ({
       ...currentData,
       [name]: value
     }))
-    clearErrors(name as keyof AcquiredProductFormType)
+    clearErrors(name as keyof AddEditProductFormType)
   }
 
-  const clearErrors = (name?: keyof AcquiredProductFormType | Array<keyof AcquiredProductFormType>) => {
+  const clearErrors = (name?: keyof AddEditProductFormType | Array<keyof AddEditProductFormType>) => {
     if (!name) {
       setErrors({})
 
@@ -194,7 +181,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
 
   return (
     <form className='w-full pb-4 lg:h-auto' onSubmit={handleSubmit}>
-      <div className='space-y-2 px-4'>
+      <div className='space-y-2'>
         <div className='flex flex-col gap-2 lg:flex-row'>
           <div className='relative w-8/12'>
             <FormInput id='name' label='Product Name' errorMessage={errors.product_id || errors.name}>
@@ -206,20 +193,6 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
                 <Input id='product' className='mt-px' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />
               )}
             </FormInput>
-            <div className='absolute right-0 top-0 flex flex-row-reverse items-center gap-1.5 text-xs text-muted-foreground lg:left-28 lg:flex-row'>
-              <Checkbox
-                checked={productManualInput}
-                onCheckedChange={checked => {
-                  setProductForm(initialFormData)
-                  if (typeof checked === 'boolean') {
-                    setProductManualInput(checked)
-                  }
-                  clearErrors()
-                }}
-                disabled={productToEdit ? true : false}
-              />
-              <p>New Product?</p>
-            </div>
           </div>
           <div className='w-4/12'>
             <FormInput id='sku_prefix' label='SKU Prefix' errorMessage={errors.sku_prefix}>
@@ -258,18 +231,22 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
         <div className='flex flex-col gap-2 lg:flex-row'>
           <div className='w-1/3'>
             <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
-              <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)} disabled={!productManualInput}>
-                <SelectTrigger id='category_id' aria-label='Select Category'>
-                  <SelectValue placeholder='Select Category' />
-                </SelectTrigger>
-                <SelectContent className='max-h-80'>
-                  {categories.map(category => (
-                    <SelectItem key={category.value} value={category.value}>
-                      {category.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {productManualInput ? (
+                <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)}>
+                  <SelectTrigger id='category_id' aria-label='Select Category'>
+                    <SelectValue placeholder='Select Category' />
+                  </SelectTrigger>
+                  <SelectContent className='max-h-80'>
+                    {categories.map(category => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input id='category_id' value={categories.find(category => category.value === productForm.category_id)?.label} placeholder='Category' readOnly={true} />
+              )}
             </FormInput>
           </div>
           <div className='w-1/3'>
@@ -305,8 +282,8 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
         </FormInput>
       </div>
       <DialogFooter>
-        <div className='flex justify-end gap-2 px-4'>
-          <Button variant='secondary' className='px-2.5' onClick={handleDiscardProduct} disabled={!isDirty}>
+        <div className='flex justify-end gap-2'>
+          <Button variant='secondary' className='px-2.5' onClick={handleDiscardProduct}>
             Discard
           </Button>
           <Button type='submit' className='w-21.5 space-x-px px-2.5 transition-all duration-200' disabled={productAddButtonTitle === 'Added' || productAddButtonTitle === 'Saved'}>
@@ -319,4 +296,4 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   )
 }
 
-export default AcquiredProductForm
+export default AddEditProductForm

@@ -32,7 +32,6 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
   const [openAddAcquisitionDialog, setOpenAddAcquisitionDialog] = useState(false)
   const [isFormDirty, setIsFormDirty] = useState(false)
   const [showEditConfirmation, setShowEditConfirmation] = useState(false) // Manage the popover state for edit confirmation
-  const [discardFormData, setDiscardFormData] = useState(false)
 
   const { data, post, setData, clearErrors, reset } = useForm<AcquisitionForm>({
     invoice_number: '',
@@ -137,7 +136,7 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
       <DialogContent className='flex h-screen flex-col justify-between gap-0 overflow-y-auto p-0 lg:h-auto lg:min-w-[64rem]'>
         <div className='flex flex-col justify-end lg:flex-row'>
           <div className='pt-6'>
-            <DialogHeader className='px-4'>
+            <DialogHeader className='px-6'>
               <DialogTitle>Add Products</DialogTitle>
               <DialogDescription>Add the acquired products to the store.</DialogDescription>
             </DialogHeader>
@@ -181,7 +180,9 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
             {/* for mobile view only */}
             <MobileAcquiredProductsList products={data.products} onEditProduct={handleEditProduct} onRemoveProduct={handleRemoveProduct} showEditConfirmation={showEditConfirmation} onConfirmEditProduct={handleConfirmEditProduct} onCancelEditProduct={handleCancelEditProduct} />
 
-            <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} discardFormData={discardFormData} categories={categories} />
+            <div className='px-2'>
+              <AcquiredProductForm onProductAdd={handleAddProduct} productToEdit={productToEdit} checkDirtyBeforeEdit={checkFormDirtyBeforeEditing} categories={categories} />
+            </div>
           </div>
 
           {/* for PC view only */}
@@ -243,7 +244,6 @@ const AddAcquisition: React.FC<AddAcquisitionProps> = ({ categories }) => {
               onClick={() => {
                 setOpenAddAcquisitionDialog(false)
                 setData('products', [])
-                setDiscardFormData(false)
                 reset()
               }}
             >
