@@ -48,11 +48,11 @@ class AcquisitionController extends Controller
                     'stock_threshold' => $productRequestData['stock_threshold'],
                 ];
                 $variantData = [
+                    'acquisition_id' => $acquisition->id,
                     'quantity' => $productRequestData['quantity'],
                     'buying_price' => $productRequestData['buying_price'],
                     'retail_price' => $productRequestData['retail_price'],
                     'selling_price' => $productRequestData['selling_price'],
-                    'acquisition_id' => $acquisition->id
                 ];
 
                 // if product id empty, create a new product

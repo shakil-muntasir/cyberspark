@@ -31,11 +31,12 @@ class AcquisitionSeeder extends Seeder
                 DB::transaction(function () use ($acquisition, $product) {
                     // Create variant data for the product
                     $variantData = [
+                        'acquisition_id' => $acquisition->id,
                         'quantity' => rand(1, 100),
                         'buying_price' => rand(100, 1000),
                         'retail_price' => rand(100, 1200),
                         'selling_price' => rand(100, 1300),
-                        'acquisition_id' => $acquisition->id,
+                        'status' => rand(0, 1) ? 'active' : 'inactive'
                     ];
 
                     // Create a variant for each product
