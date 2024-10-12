@@ -10,13 +10,12 @@ import { Product, ProductCollection } from '@/Pages/Product/types'
 
 interface ProductDropdownListProps {
   handleAddToCart: (product: Product) => void
-  clearProductName?: boolean
+  productName?: string
   id?: string
 }
 
-const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id, clearProductName }) => {
+const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id, productName }) => {
   const [products, setProducts] = useState<Product[]>([])
-  const [selectedProduct, setSelectedProduct] = useState<Product>()
   const [search, setSearch] = useState<string | undefined>()
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const widthRef = useRef<HTMLDivElement>(null)
@@ -50,12 +49,6 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
     }
   }, [search])
 
-  useEffect(() => {
-    if (clearProductName) {
-      setSelectedProduct(undefined)
-    }
-  }, [clearProductName])
-
   return (
     <div>
       {/* WARNING: this div below is used to calculate the width for command dropdown */}
@@ -65,7 +58,7 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
           <PopoverTrigger asChild>
             <Button variant='outline' role='combobox' aria-expanded={open} className='flex h-auto w-full items-center justify-between px-3 py-1.5'>
               <div className='flex flex-wrap justify-start gap-2'>
-                <span className='flex justify-center'>{selectedProduct ? selectedProduct.attributes.name : 'Select Product'}</span>
+                <span className='flex justify-center'>{productName ? productName : 'Select Product'}</span>
               </div>
               <div className='flex items-center self-center'>
                 <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
@@ -84,7 +77,6 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
                       key={product.id}
                       onSelect={() => {
                         handleAddToCart(product)
-                        setSelectedProduct(product)
                         setOpen(false)
                       }}
                       className='group flex justify-between rounded-md p-2 hover:bg-muted'
@@ -101,7 +93,7 @@ const ProductDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCa
                           <span className='text-xs font-semibold tracking-wide text-primary/70'>{product.attributes.category}</span>
                         </div>
                       </div>
-                      <CheckIcon className={product.id === selectedProduct?.id ? 'mr-2 h-4 w-4 opacity-100' : 'mr-2 h-4 w-4 opacity-0'} />
+                      <CheckIcon className={product.attributes.name === productName ? 'mr-2 h-4 w-4 opacity-100' : 'mr-2 h-4 w-4 opacity-0'} />
                     </CommandItem>
                   ))}
                 </CommandGroup>

@@ -9,12 +9,12 @@ import { Button } from '@/Components/ui/button'
 import { ChevronsUpDownIcon } from 'lucide-react'
 import { CheckCircleIcon } from '@/Icons/CheckCircleIcon'
 
-interface ProductDropdownListProps {
+interface ProductVariantDropdownListProps {
   handleAddToCart: (variant: ProductVariant) => void
   id?: string
 }
 
-const ProductVariantDropdownList: React.FC<ProductDropdownListProps> = ({ handleAddToCart, id }) => {
+const ProductVariantDropdownList: React.FC<ProductVariantDropdownListProps> = ({ handleAddToCart, id }) => {
   const [open, setOpen] = useState(false)
   const widthRef = useRef<HTMLDivElement>(null)
   const [variants, setVariants] = useState<ProductVariant[]>([])

@@ -10,6 +10,7 @@ type CustomNumberInputProps = {
   allowNegative?: boolean
   placeholder?: string
   disabled?: boolean
+  readOnly?: boolean
 } & (
   | {
       onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -23,7 +24,7 @@ type CustomNumberInputProps = {
     }
 )
 
-const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, className, allowNegative = false, placeholder, onEnterPress, disabled }) => {
+const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChange, className, allowNegative = false, placeholder, onEnterPress, disabled, readOnly }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const changeValue = (delta: number, e: React.MouseEvent) => {
@@ -67,13 +68,13 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
 
   return (
     <div className='group relative flex'>
-      <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} onKeyUp={handleKeyUp} disabled={disabled} />
+      <Input id={id} type='number' name={name} value={value} onChange={onChange} ref={inputRef} className={`no-spin ${className}`} placeholder={placeholder} onKeyUp={handleKeyUp} disabled={disabled} readOnly={readOnly} />
       <div className='absolute inset-y-0 right-2 flex items-center opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100'>
         <div className='flex flex-col'>
           <button
             type='button'
             tabIndex={-1}
-            className={cn('m-0 -my-0.5 p-0', disabled && 'hidden')}
+            className={cn('m-0 -my-0.5 p-0', (disabled || readOnly) && 'hidden')}
             onMouseDown={e => {
               const input = inputRef.current
               if (input && document.activeElement === input) {
@@ -87,7 +88,7 @@ const InputNumber: React.FC<CustomNumberInputProps> = ({ id, name, value, onChan
           <button
             type='button'
             tabIndex={-1}
-            className={cn('m-0 -my-0.5 p-0', disabled && 'hidden')}
+            className={cn('m-0 -my-0.5 p-0', (disabled || readOnly) && 'hidden')}
             onMouseDown={e => {
               const input = inputRef.current
               if (input && document.activeElement === input) {

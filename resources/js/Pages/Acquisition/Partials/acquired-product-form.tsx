@@ -46,12 +46,18 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
   const [skuManualInput, setSkuManualInput] = useState(false)
   const [productAddButtonTitle, setProductAddButtonTitle] = useState('Add')
   const [isDirty, setIsDirty] = useState(false)
-  const [clearProductName, setClearProductName] = useState(false)
 
   useEffect(() => {
     if (productToEdit) {
       setProductForm(productToEdit)
       setProductAddButtonTitle('Save')
+
+      // TODO: should be changed to product_id
+      if (productToEdit.id === '') {
+        setProductManualInput(true)
+      } else {
+        setProductManualInput(false)
+      }
     }
   }, [productToEdit])
 
@@ -91,10 +97,6 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     }
 
     handleAddProduct(e)
-    setClearProductName(true)
-    setTimeout(() => {
-      setClearProductName(false)
-    }, 100)
     clearErrors()
   }
 
@@ -123,8 +125,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     e.preventDefault()
     onProductAdd(productForm)
     setProductForm(initialFormData)
-    setProductAddButtonTitle('Added')
-    setSkuManualInput(false)
+
+    if (productToEdit) {
+      setProductAddButtonTitle('Saved')
+    } else {
+      setProductAddButtonTitle('Added')
+    }
+
+    setProductManualInput(false)
     setTimeout(() => {
       setProductAddButtonTitle('Add')
     }, 1300)
@@ -140,6 +148,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       stock_threshold: product.attributes.stock_threshold,
       description: product.attributes.description
     }))
+    clearErrors(['id', 'name', 'sku_prefix', 'category_id'])
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -151,6 +160,16 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     clearErrors(name as keyof AcquiredProductFormType)
   }
 
+  const handleDiscardProduct = () => {
+    if (productToEdit) {
+      onProductAdd(productToEdit)
+    }
+    setProductForm(initialFormData)
+    setProductAddButtonTitle('Add')
+    setProductManualInput(false)
+    clearErrors()
+  }
+
   const setProductFormData = (name: keyof AcquiredProductFormType, value: string) => {
     setProductForm(currentData => ({
       ...currentData,
@@ -159,7 +178,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
     clearErrors(name as keyof AcquiredProductFormType)
   }
 
-  const clearErrors = (name?: keyof AcquiredProductFormType) => {
+  const clearErrors = (name?: keyof AcquiredProductFormType | Array<keyof AcquiredProductFormType>) => {
     if (!name) {
       setErrors({})
 
@@ -168,7 +187,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
 
     setErrors(currentErrors => {
       const newErrors = { ...currentErrors }
-      delete newErrors[name]
+
+      if (Array.isArray(name)) {
+        name.forEach(n => {
+          delete newErrors[n]
+        })
+      } else {
+        delete newErrors[name]
+      }
 
       return newErrors
     })
@@ -180,7 +206,14 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
         <div className='flex flex-col gap-2 lg:flex-row'>
           <div className='relative w-8/12'>
             <FormInput id='name' label='Product Name' errorMessage={errors.id || errors.name}>
-              {!productManualInput ? <ProductDropdownList handleAddToCart={handleProductSelect} id='product' clearProductName={clearProductName} /> : <Input id='product' className='mt-px' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />}
+              {/* TODO: id will be changed to product_id */}
+              {productToEdit && productToEdit.id !== '' ? (
+                <Input id='product' className='mt-px' value={productForm.name} placeholder='Name' onChange={handleInputChange} readOnly={true} />
+              ) : !productManualInput ? (
+                <ProductDropdownList handleAddToCart={handleProductSelect} id='product' productName={productForm?.name} />
+              ) : (
+                <Input id='product' className='mt-px' type='text' name='name' value={productForm.name} onChange={handleInputChange} placeholder='Name' />
+              )}
             </FormInput>
             <div className='absolute right-0 top-0 flex flex-row-reverse items-center gap-1.5 text-xs text-muted-foreground lg:left-28 lg:flex-row'>
               <Checkbox
@@ -192,6 +225,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
                   }
                   clearErrors()
                 }}
+                disabled={productToEdit ? true : false}
               />
               <p>New Product?</p>
             </div>
@@ -233,18 +267,22 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
         <div className='flex flex-col gap-2 lg:flex-row'>
           <div className='w-1/3'>
             <FormInput id='category_id' label='Category' errorMessage={errors.category_id}>
-              <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)} disabled={!productManualInput}>
-                <SelectTrigger id='category_id' aria-label='Select Category'>
-                  <SelectValue placeholder='Select Category' />
-                </SelectTrigger>
-                <SelectContent className='max-h-80'>
-                  {categories.map(category => (
-                    <SelectItem key={category.value} value={category.value}>
-                      {category.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {productManualInput ? (
+                <Select name='category_id' value={productForm.category_id} onValueChange={value => setProductFormData('category_id', value)}>
+                  <SelectTrigger id='category_id' aria-label='Select Category'>
+                    <SelectValue placeholder='Select Category' />
+                  </SelectTrigger>
+                  <SelectContent className='max-h-80'>
+                    {categories.map(category => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input id='category_id' value={categories.find(category => category.value === productForm.category_id)?.label} placeholder='Category' readOnly={true} />
+              )}
             </FormInput>
           </div>
           <div className='w-1/3'>
@@ -254,7 +292,7 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
           </div>
           <div className='w-1/3'>
             <FormInput id='stock_threshold' label='Threshold' errorMessage={errors.stock_threshold}>
-              <InputNumber id='stock_threshold' name='stock_threshold' value={productForm.stock_threshold ?? ''} onChange={handleInputChange} placeholder='Threshold' disabled={!productManualInput} />
+              <InputNumber id='stock_threshold' name='stock_threshold' value={productForm.stock_threshold ?? ''} onChange={handleInputChange} placeholder='Threshold' readOnly={!productManualInput} />
             </FormInput>
           </div>
         </div>
@@ -281,22 +319,11 @@ const AcquiredProductForm: React.FC<AcquiredProductFormProps> = ({ categories, c
       </div>
       <DialogFooter>
         <div className='flex justify-end gap-2 px-4'>
-          <Button
-            variant='secondary'
-            className='px-2.5'
-            onClick={() => {
-              setProductForm(initialFormData)
-              setProductAddButtonTitle('Add')
-              setProductManualInput(false)
-              setSkuManualInput(false)
-              clearErrors()
-            }}
-            disabled={!isDirty}
-          >
+          <Button variant='secondary' className='px-2.5' onClick={handleDiscardProduct} disabled={!isDirty}>
             Discard
           </Button>
-          <Button type='submit' className='w-21.5 space-x-px px-2.5 transition-all duration-200' disabled={productAddButtonTitle === 'Added'}>
-            {productAddButtonTitle === 'Added' && <CheckIcon className='h-4 w-4' />}
+          <Button type='submit' className='w-21.5 space-x-px px-2.5 transition-all duration-200' disabled={productAddButtonTitle === 'Added' || productAddButtonTitle === 'Saved'}>
+            {(productAddButtonTitle === 'Added' || productAddButtonTitle === 'Saved') && <CheckIcon className='h-4 w-4' />}
             <p>{productAddButtonTitle}</p>
           </Button>
         </div>
