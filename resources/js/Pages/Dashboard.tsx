@@ -10,7 +10,7 @@ export default function Dashboard() {
   return (
     <AuthenticatedLayout title='Dashboard'>
       <div className='py-6'>
-        <div className='mx-auto grid gap-6 sm:px-6 lg:px-8'>
+        <div className='mx-auto grid gap-6'>
           <div className='grid gap-2'>
             <span>Monthly Log</span>
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>

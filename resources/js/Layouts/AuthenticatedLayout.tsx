@@ -8,7 +8,6 @@ import { Separator } from '@/Components/ui/separator'
 import { Toaster } from '@/Components/ui/toaster'
 import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
 import MobileNavigation from '@/Layouts/Partials/mobile-navigation'
-import PcNavigation from '@/Layouts/Partials/pc-navigation'
 import UserDropdown from '@/Layouts/Partials/user-dropdown'
 import SprintDevsFullDark from '@/public/assets/sprint_devs_full_dark.svg'
 import SprintDevsFullLight from '@/public/assets/sprint_devs_full_light.svg'
@@ -16,6 +15,8 @@ import { FacebookIcon } from '@/Icons/FacebookIcon'
 import { InstagramIcon } from '@/Icons/InstagramIcon'
 import { LinkedInIcon } from '@/Icons/LinkedInIcon'
 import { Button } from '@/Components/ui/button'
+import { AppSidebar } from '@/Layouts/Partials/AppSidebar'
+import { SidebarProvider } from '@/Components/ui/sidebar'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -23,11 +24,11 @@ export default function AuthenticatedLayout({ title, children }: { title: string
   const { url } = usePage()
 
   return (
-    <>
+    <SidebarProvider>
+      <AppSidebar />
       <Head title={title} />
-      <div className='flex flex-col bg-muted/40'>
-        <PcNavigation />
-        <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4 sm:pl-14'>
+      <div className='flex w-full flex-col bg-muted/40'>
+        <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
             <MobileNavigation />
             <DynamicBreadcrumb />
@@ -78,6 +79,6 @@ export default function AuthenticatedLayout({ title, children }: { title: string
         </Link>
       )}
       <Toaster />
-    </>
+    </SidebarProvider>
   )
 }
