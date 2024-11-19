@@ -12,6 +12,13 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/misc', function() {
+        return inertia('Misc/Index');
+    });
+    Route::get('/misc2', function() {
+        return inertia('Misc/Index2');
+    });
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('/acquisitions')->name('acquisitions.')->group(function () {

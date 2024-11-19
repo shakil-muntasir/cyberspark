@@ -1,9 +1,10 @@
 'use client'
 
-import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { ChevronRight, HomeIcon, ShieldCheckIcon, ShieldPlusIcon, type LucideIcon } from 'lucide-react'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/Components/ui/collapsible'
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from '@/Components/ui/sidebar'
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from '@/Components/ui/sidebar'
+import { Link } from '@inertiajs/react'
 
 export function NavMain({
   items
@@ -21,13 +22,20 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip='Dashboard' className={location.pathname === '/' ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+            <Link href='/'>
+              <HomeIcon />
+              <span>Dashboard</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         {items.map(item => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive} className='group/collapsible'>
+          <Collapsible key={item.title} asChild defaultOpen={item.items?.some(subItem => location.pathname === subItem.url)} className='group/collapsible'>
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.title} className={item.items?.some(subItem => location.pathname === subItem.url) ? 'group-data-[collapsible=icon]:!bg-accent group-data-[collapsible=icon]:!text-foreground' : 'text-muted-foreground'}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
@@ -37,10 +45,10 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map(subItem => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                      <SidebarMenuSubButton asChild className={location.pathname === subItem.url ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+                        <Link href={subItem.url}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
@@ -49,6 +57,22 @@ export function NavMain({
             </SidebarMenuItem>
           </Collapsible>
         ))}
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip='Approvals' className={location.pathname === '/misc' ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+            <Link href='/misc'>
+              <ShieldCheckIcon />
+              <span>Approvals</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip='Multi-layer Approvals' className={location.pathname === '/misc2' ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+            <Link href='/misc2'>
+              <ShieldPlusIcon />
+              <span>Multi-layer Approvals</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   )

@@ -1,140 +1,181 @@
-'use client'
-
-import * as React from 'react'
-import { AudioWaveform, BookOpen, Bot, Command, Frame, GalleryVerticalEnd, Map, PieChart, Settings2, SquareTerminal } from 'lucide-react'
+import { ClipboardListIcon, Settings2, ShoppingBagIcon, UsersIcon } from 'lucide-react'
 
 import { NavMain } from '@/Components/navbar/nav-main'
-import { NavProjects } from '@/Components/navbar/nav-projects'
-import { NavUser } from '@/Components/navbar/nav-user'
-import { TeamSwitcher } from '@/Components/navbar/team-switcher'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/Components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/Components/ui/sidebar'
+import NGOFLogo from '@/public/assets/NGOF_Logo_white.png'
+import NGOFLogoSmall from '@/public/assets/NGOF_Logo_Small.png'
+import { Link } from '@inertiajs/react'
 
-// This is sample data.
 const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg'
-  },
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise'
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup'
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free'
-    }
-  ],
   navMain: [
     {
-      title: 'Playground',
+      title: 'Purchases',
       url: '#',
-      icon: SquareTerminal,
+      icon: ShoppingBagIcon,
       isActive: true,
       items: [
         {
-          title: 'History',
+          title: 'Dashboard',
           url: '#'
         },
         {
-          title: 'Starred',
+          title: 'Acquisitions',
+          url: '/acquisitions'
+        },
+        {
+          title: 'Orders List',
+          url: '/orders'
+        },
+        {
+          title: 'Create Order',
+          url: '/orders/create'
+        },
+        {
+          title: 'Quotation Entries',
           url: '#'
         },
         {
-          title: 'Settings',
+          title: 'Comparative Statements',
+          url: '#'
+        },
+        {
+          title: 'Receives',
+          url: '#'
+        },
+        {
+          title: 'Returns',
+          url: '#'
+        },
+        {
+          title: 'Payments',
+          url: '#'
+        },
+        {
+          title: 'Analytics',
+          url: '#'
+        },
+        {
+          title: 'Reports',
           url: '#'
         }
       ]
     },
     {
-      title: 'Models',
+      title: 'Inventory',
       url: '#',
-      icon: Bot,
+      icon: ClipboardListIcon,
       items: [
         {
-          title: 'Genesis',
+          title: 'Dashboard',
           url: '#'
         },
         {
-          title: 'Explorer',
+          title: 'Products',
+          url: '/products'
+        },
+        {
+          title: 'Transfer Requests',
           url: '#'
         },
         {
-          title: 'Quantum',
+          title: 'Conversions',
+          url: '#'
+        },
+        {
+          title: 'Requisitions',
+          url: '#'
+        },
+        {
+          title: 'Issues',
+          url: '#'
+        },
+        {
+          title: 'Stock Adjustments',
+          url: '#'
+        },
+        {
+          title: 'Reports',
+          url: '#'
+        },
+        {
+          title: 'Stock Conversions',
           url: '#'
         }
       ]
     },
     {
-      title: 'Documentation',
+      title: 'HR',
       url: '#',
-      icon: BookOpen,
+      icon: UsersIcon,
       items: [
         {
-          title: 'Introduction',
+          title: 'Dashboard',
           url: '#'
         },
         {
-          title: 'Get Started',
+          title: 'Users',
+          url: '/users'
+        },
+        {
+          title: 'Attendance',
           url: '#'
         },
         {
-          title: 'Tutorials',
+          title: 'Leaves & Movements',
           url: '#'
         },
         {
-          title: 'Changelog',
+          title: 'Salary Disbursements',
+          url: '#'
+        },
+        {
+          title: 'Self Service',
           url: '#'
         }
       ]
     },
     {
-      title: 'Settings',
+      title: 'Configurations',
       url: '#',
       icon: Settings2,
       items: [
         {
-          title: 'General',
+          title: 'Personal Profile',
+          url: '/profile'
+        },
+        {
+          title: 'Employees',
           url: '#'
         },
         {
-          title: 'Team',
+          title: 'Item Profile',
           url: '#'
         },
         {
-          title: 'Billing',
+          title: 'Customer Profile',
           url: '#'
         },
         {
-          title: 'Limits',
+          title: 'Supplier Profile',
+          url: '#'
+        },
+        {
+          title: 'Partner Profile',
+          url: '#'
+        },
+        {
+          title: 'Company Profile',
+          url: '#'
+        },
+        {
+          title: 'Wallet Profile',
+          url: '#'
+        },
+        {
+          title: 'Approval Profile',
           url: '#'
         }
       ]
-    }
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map
     }
   ]
 }
@@ -142,16 +183,15 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+      <SidebarHeader className='mt-2'>
+        <Link href='/' className='flex items-center justify-center'>
+          <img src={NGOFLogo} className='-ml-1.5 h-12 object-contain group-data-[collapsible=icon]:!hidden' />
+          <img src={NGOFLogoSmall} className='-ml-1.5 hidden h-12 object-contain group-data-[collapsible=icon]:!block' />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )

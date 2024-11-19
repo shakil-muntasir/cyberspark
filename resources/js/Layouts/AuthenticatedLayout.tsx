@@ -17,6 +17,7 @@ import { LinkedInIcon } from '@/Icons/LinkedInIcon'
 import { Button } from '@/Components/ui/button'
 import { AppSidebar } from '@/Components/navbar/app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/Components/ui/sidebar'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/Components/ui/tooltip'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -34,8 +35,16 @@ export default function AuthenticatedLayout({ title, children }: { title: string
             <MobileNavigation />
             {/* <DynamicBreadcrumb /> */}
 
-            <div className='flex items-center gap-2'>
-              <SidebarTrigger className='-ml-1' />
+            <div className='flex items-center gap-4'>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SidebarTrigger className='-ml-1.5' />
+                </TooltipTrigger>
+                <TooltipContent side='bottom' align='center'>
+                  Toggle Sidebar
+                </TooltipContent>
+              </Tooltip>
+
               <Separator orientation='vertical' className='h-4' />
               <DynamicBreadcrumb />
             </div>
