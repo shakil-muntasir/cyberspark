@@ -15,8 +15,8 @@ import { FacebookIcon } from '@/Icons/FacebookIcon'
 import { InstagramIcon } from '@/Icons/InstagramIcon'
 import { LinkedInIcon } from '@/Icons/LinkedInIcon'
 import { Button } from '@/Components/ui/button'
-import { AppSidebar } from '@/Layouts/Partials/AppSidebar'
-import { SidebarProvider } from '@/Components/ui/sidebar'
+import { AppSidebar } from '@/Components/navbar/app-sidebar'
+import { SidebarProvider, SidebarTrigger } from '@/Components/ui/sidebar'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -28,10 +28,18 @@ export default function AuthenticatedLayout({ title, children }: { title: string
       <AppSidebar />
       <Head title={title} />
       <div className='flex w-full flex-col bg-muted/40'>
+        {/* <PcNavigation /> */}
         <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
             <MobileNavigation />
-            <DynamicBreadcrumb />
+            {/* <DynamicBreadcrumb /> */}
+
+            <div className='flex items-center gap-2'>
+              <SidebarTrigger className='-ml-1' />
+              <Separator orientation='vertical' className='h-4' />
+              <DynamicBreadcrumb />
+            </div>
+
             <div className='relative ml-auto flex-1 md:grow-0'>
               <SearchIcon className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input id='search' type='search' name='search' className='w-full rounded-md bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' />
