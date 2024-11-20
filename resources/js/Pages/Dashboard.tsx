@@ -21,7 +21,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className='text-xs'>Revenue</div>
-                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>BDT 20,000</div>
+                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>৳ 20,000</div>
                   </div>
                 </CardContent>
               </Card>
@@ -32,7 +32,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className='text-xs'>Cost Of Sales</div>
-                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>BDT 20,000</div>
+                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>৳ 20,000</div>
                   </div>
                 </CardContent>
               </Card>
@@ -43,7 +43,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className='text-xs'>Gross Profit</div>
-                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>BDT 20,000</div>
+                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>৳ 20,000</div>
                   </div>
                 </CardContent>
               </Card>
@@ -54,7 +54,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className='text-xs'>Expense</div>
-                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>BDT 20,000</div>
+                    <div className='text-xxs font-semibold tracking-wide text-muted-foreground'>৳ 20,000</div>
                   </div>
                 </CardContent>
               </Card>
@@ -79,19 +79,19 @@ export default function Dashboard() {
                             <td className='flex items-center py-2 pl-6'>
                               <span className='text-xs text-muted-foreground'>Cash</span>
                             </td>
-                            <td className='text-nowrap py-2 text-xs font-medium'>BDT 10,000</td>
+                            <td className='text-nowrap py-2 text-xs font-medium'>৳ 10,000</td>
                           </tr>
                           <tr className='border-t'>
                             <td className='flex items-center py-2 pl-6'>
                               <span className='text-xs text-muted-foreground'>Bank</span>
                             </td>
-                            <td className='text-nowrap py-2 text-xs font-medium'>BDT 15,000</td>
+                            <td className='text-nowrap py-2 text-xs font-medium'>৳ 15,000</td>
                           </tr>
                           <tr className='border-t'>
                             <td className='flex items-center py-2 pl-6'>
                               <span className='text-xs text-muted-foreground'>Inventory</span>
                             </td>
-                            <td className='text-nowrap py-2 text-xs font-medium'>BDT 25,000</td>
+                            <td className='text-nowrap py-2 text-xs font-medium'>৳ 25,000</td>
                           </tr>
                         </tbody>
                       </table>
@@ -109,13 +109,13 @@ export default function Dashboard() {
                             <td className='flex items-center py-2 pl-2'>
                               <span className='text-xs text-muted-foreground'>Receivable</span>
                             </td>
-                            <td className='text-nowrap py-2 text-xs font-medium'>BDT 10,000</td>
+                            <td className='text-nowrap py-2 text-xs font-medium'>৳ 10,000</td>
                           </tr>
                           <tr className='border-t'>
                             <td className='flex items-center py-2 pl-2'>
                               <span className='text-xs text-muted-foreground'>Payable</span>
                             </td>
-                            <td className='text-nowrap py-2 text-xs font-medium'>BDT 15,000</td>
+                            <td className='text-nowrap py-2 text-xs font-medium'>৳ 15,000</td>
                           </tr>
                           <tr className='border-t'>
                             <td className='h-full' />
@@ -147,7 +147,7 @@ export default function Dashboard() {
                         </td>
                         <td className='text-xs'>PR-NFFP</td>
                         <td className='text-nowrap py-2 text-xs font-medium'>17th Nov, 2024</td>
-                        <td className='text-xs'>BDT 32,000</td>
+                        <td className='text-xs'>৳ 32,000</td>
                       </tr>
                       <tr className='border-t'>
                         <td className='flex items-center py-2 pl-6'>
@@ -155,7 +155,7 @@ export default function Dashboard() {
                         </td>
                         <td className='text-xs'>PR-NFFQ</td>
                         <td className='text-nowrap py-2 text-xs font-medium'>15th July, 2024</td>
-                        <td className='text-xs'>BDT 25,000</td>
+                        <td className='text-xs'>৳ 25,000</td>
                       </tr>
                       <tr className='border-t'>
                         <td className='flex items-center py-2 pl-6'>
@@ -163,7 +163,7 @@ export default function Dashboard() {
                         </td>
                         <td className='text-xs'>PR-NFFR</td>
                         <td className='text-nowrap py-2 text-xs font-medium'>20th Feb, 2024</td>
-                        <td className='text-xs'>BDT 15,000</td>
+                        <td className='text-xs'>৳ 15,000</td>
                       </tr>
                     </tbody>
                   </table>
@@ -179,17 +179,17 @@ export default function Dashboard() {
                 <div className='grid w-56 gap-4'>
                   <div>
                     <div className='text-nowrap text-xs font-semibold text-blue-500'>Total Purchase</div>
-                    <div className='text-xs font-semibold'>BDT 20,000</div>
+                    <div className='text-xs font-semibold'>৳ 20,000</div>
                   </div>
 
                   <div>
                     <div className='text-nowrap text-xs font-semibold text-orange-600'>Total Sales</div>
-                    <div className='text-xs font-semibold'>BDT 20,000</div>
+                    <div className='text-xs font-semibold'>৳ 20,000</div>
                   </div>
 
                   <div>
                     <div className='text-nowrap text-xs font-semibold text-green-600'>Total Expense</div>
-                    <div className='text-xs font-semibold'>BDT 20,000</div>
+                    <div className='text-xs font-semibold'>৳ 20,000</div>
                   </div>
                 </div>
 

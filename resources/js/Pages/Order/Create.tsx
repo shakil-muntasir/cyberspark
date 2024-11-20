@@ -559,7 +559,7 @@ const CreateOrder: React.FC<MakeSellProps> = ({ courier_services, states }) => {
                               <SelectItem key={service.value} value={service.id} checkPosition='right' className='group'>
                                 <div className='flex items-center gap-2'>
                                   <span>{service.label}</span>
-                                  <span className='border-l pl-2 text-xs text-muted-foreground group-hover:border-muted-foreground/20'>BDT {service.value}</span>
+                                  <span className='border-l pl-2 text-xs text-muted-foreground group-hover:border-muted-foreground/20'>৳ {service.value}</span>
                                 </div>
                               </SelectItem>
                             ))}

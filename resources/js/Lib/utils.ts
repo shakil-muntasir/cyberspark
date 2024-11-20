@@ -71,6 +71,8 @@ export function toTitleCase(str: string) {
 
 export function formatCurrency(amount?: number | null, currency = 'BDT'): string {
     if (amount === 0 || amount === undefined || amount === null) {
+        if (currency === 'BDT') return `৳ 0.00`
+
         return `${currency} 0.00`
     }
 
@@ -80,6 +82,10 @@ export function formatCurrency(amount?: number | null, currency = 'BDT'): string
         currency: currency,
         currencyDisplay: 'symbol'
     }).format(typeof amount === 'number' ? amount : parseInt(amount))
+
+    if (currency === 'BDT') {
+        return formattedAmount.replace('BDT', '৳')
+    }
 
     return formattedAmount
 }
