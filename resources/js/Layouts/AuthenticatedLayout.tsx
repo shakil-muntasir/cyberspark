@@ -1,9 +1,8 @@
-import { PlusIcon, SearchIcon } from 'lucide-react'
+import { BellIcon, MessageCircleMoreIcon, NotebookTextIcon, PlusIcon } from 'lucide-react'
 import { Head, Link, usePage } from '@inertiajs/react'
 
 import { useTheme } from '@/Providers/theme-provider'
 import { DarkModeToggle } from '@/Components/ui/dark-mode-toggle'
-import { Input } from '@/Components/ui/input'
 import { Separator } from '@/Components/ui/separator'
 import { Toaster } from '@/Components/ui/toaster'
 import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
@@ -18,6 +17,8 @@ import { Button } from '@/Components/ui/button'
 import { AppSidebar } from '@/Components/navbar/app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/Components/ui/sidebar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/Components/ui/tooltip'
+import { StarFilledIcon } from '@radix-ui/react-icons'
+import { CircleFillIcon } from '@/Icons/CircleFill'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -49,13 +50,67 @@ export default function AuthenticatedLayout({ title, children }: { title: string
               <DynamicBreadcrumb />
             </div>
 
-            <div className='relative ml-auto flex-1 md:grow-0'>
-              <SearchIcon className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
-              <Input id='search' type='search' name='search' className='w-full rounded-md bg-background pl-8 md:w-[200px] lg:w-[336px]' placeholder='Search...' />
+            <div className='flex flex-1 items-center justify-end space-x-1'>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className='relative'>
+                    <Button variant='link' size='icon' className='group px-2 hover:bg-accent'>
+                      <BellIcon className='h-5 w-5 group-hover:text-teal-600' />
+                      <span className='sr-only'>Notifications</span>
+                    </Button>
+                    <CircleFillIcon className='absolute right-1.5 top-1 h-3 w-3 text-red-600' />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side='bottom' align='center'>
+                  Notifications
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant='link' size='icon' className='group px-2 hover:bg-accent'>
+                    <NotebookTextIcon className='h-5 w-5 group-hover:text-blue-500' />
+                    <span className='sr-only'>Notes</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side='bottom' align='center'>
+                  Notes
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant='link' size='icon' className='group relative px-2 hover:bg-accent'>
+                    <StarFilledIcon className='h-5 w-5 group-hover:text-orange-500' />
+                    <span className='sr-only'>Favorites</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side='bottom' align='center'>
+                  Favorites
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant='link' size='icon' className='group relative px-2 hover:bg-accent'>
+                    <MessageCircleMoreIcon className='h-5 w-5 group-hover:text-emerald-600' />
+                    <span className='sr-only'>Messages</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side='bottom' align='center'>
+                  Messages
+                </TooltipContent>
+              </Tooltip>
+
+              <div className='rounded-lg border bg-accent/30 px-4 py-1'>
+                <span className='text-sm font-semibold'>NGO Forum for Public Health</span>
+              </div>
             </div>
 
-            <DarkModeToggle />
-            <UserDropdown />
+            <div className='flex items-center gap-4'>
+              <DarkModeToggle />
+              <UserDropdown />
+            </div>
           </header>
           <main className='flex-1 items-start px-6 py-4 md:py-0'>{children}</main>
           <footer className='px-6'>
