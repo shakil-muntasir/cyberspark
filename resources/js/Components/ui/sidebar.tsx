@@ -10,9 +10,10 @@ import { cn } from '@/Lib/utils'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Separator } from '@/Components/ui/separator'
-import { Sheet, SheetContent } from '@/Components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/Components/ui/sheet'
 import { Skeleton } from '@/Components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -164,6 +165,10 @@ const Sidebar = React.forwardRef<
           side={side}
         >
           <div className='flex h-full w-full flex-col'>{children}</div>
+          <VisuallyHidden.Root>
+            <SheetTitle>Sidebar</SheetTitle>
+            <SheetDescription>Sidebar Description</SheetDescription>
+          </VisuallyHidden.Root>
         </SheetContent>
       </Sheet>
     )

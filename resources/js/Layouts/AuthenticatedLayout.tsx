@@ -19,14 +19,25 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/Components/ui/tooltip
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import { CircleFillIcon } from '@/Icons/CircleFill'
 import NGOFLogoSmall from '@/public/assets/NGOF_Logo_Small.png'
+import { useState } from 'react'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
   const { theme } = useTheme()
   const { url } = usePage()
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    return localStorage.getItem('sidebarOpen') === 'true'
+  })
+
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      open={isSidebarOpen}
+      onOpenChange={() => {
+        setIsSidebarOpen(!isSidebarOpen)
+        localStorage.setItem('sidebarOpen', JSON.stringify(!isSidebarOpen))
+      }}
+    >
       <AppSidebar />
       <Head title={title} />
       <div className='flex w-full flex-col bg-muted/40'>

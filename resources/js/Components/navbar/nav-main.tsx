@@ -32,10 +32,10 @@ export function NavMain({
           </SidebarMenuButton>
         </SidebarMenuItem>
         {items.map(item => (
-          <Collapsible key={item.title} asChild defaultOpen={item.items?.some(subItem => location.pathname === subItem.url)} className='group/collapsible'>
+          <Collapsible key={item.title} asChild defaultOpen={item.items?.some(subItem => location.pathname === subItem.url || location.pathname.startsWith(`${subItem.url}/`))} className='group/collapsible'>
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title} className={item.items?.some(subItem => location.pathname === subItem.url) ? 'group-data-[collapsible=icon]:!bg-accent group-data-[collapsible=icon]:!text-foreground' : 'text-muted-foreground'}>
+                <SidebarMenuButton tooltip={item.title} className={item.items?.some(subItem => location.pathname === subItem.url || location.pathname.startsWith(`${subItem.url}/`)) ? 'group-data-[collapsible=icon]:!bg-accent group-data-[collapsible=icon]:!text-foreground' : 'text-muted-foreground'}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
@@ -58,15 +58,15 @@ export function NavMain({
           </Collapsible>
         ))}
         <SidebarMenuItem>
-          <SidebarMenuButton asChild tooltip='Approvals' className={location.pathname === '/misc' ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
-            <Link href='/misc'>
+          <SidebarMenuButton asChild tooltip='Approvals' className={location.pathname.startsWith('/misc1') ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+            <Link href='/misc1'>
               <ShieldCheckIcon />
               <span>Approvals</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-          <SidebarMenuButton asChild tooltip='Multi-layer Approvals' className={location.pathname === '/misc2' ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
+          <SidebarMenuButton asChild tooltip='Multi-layer Approvals' className={location.pathname.startsWith('/misc2') ? 'bg-accent text-foreground' : 'text-muted-foreground'}>
             <Link href='/misc2'>
               <ShieldPlusIcon />
               <span>Multi-layer Approvals</span>

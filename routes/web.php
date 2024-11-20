@@ -12,10 +12,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/misc', function() {
+    Route::get('/misc1', function () {
         return inertia('Misc/Index');
     });
-    Route::get('/misc2', function() {
+    Route::get('/misc2', function () {
         return inertia('Misc/Index2');
     });
 
