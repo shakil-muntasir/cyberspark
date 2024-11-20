@@ -6,7 +6,6 @@ import { DarkModeToggle } from '@/Components/ui/dark-mode-toggle'
 import { Separator } from '@/Components/ui/separator'
 import { Toaster } from '@/Components/ui/toaster'
 import DynamicBreadcrumb from '@/Layouts/Partials/breadcrumb'
-import MobileNavigation from '@/Layouts/Partials/mobile-navigation'
 import UserDropdown from '@/Layouts/Partials/user-dropdown'
 import SprintDevsFullDark from '@/public/assets/sprint_devs_full_dark.svg'
 import SprintDevsFullLight from '@/public/assets/sprint_devs_full_light.svg'
@@ -19,6 +18,7 @@ import { SidebarProvider, SidebarTrigger } from '@/Components/ui/sidebar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/Components/ui/tooltip'
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import { CircleFillIcon } from '@/Icons/CircleFill'
+import NGOFLogoSmall from '@/public/assets/NGOF_Logo_Small.png'
 
 export default function AuthenticatedLayout({ title, children }: { title: string; children: React.ReactNode }) {
   const currentDate = new Date()
@@ -33,7 +33,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
         {/* <PcNavigation /> */}
         <div className='flex min-h-screen flex-col sm:gap-4 sm:py-4'>
           <header className='sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
-            <MobileNavigation />
+            {/* <MobileNavigation /> */}
             {/* <DynamicBreadcrumb /> */}
 
             <div className='flex items-center gap-4'>
@@ -46,7 +46,11 @@ export default function AuthenticatedLayout({ title, children }: { title: string
                 </TooltipContent>
               </Tooltip>
 
-              <Separator orientation='vertical' className='h-4' />
+              <Link href='/'>
+                <img src={NGOFLogoSmall} className='-ml-1.5 inline h-8 object-contain lg:hidden' />
+              </Link>
+
+              <Separator orientation='vertical' className='hidden h-4 lg:block' />
               <DynamicBreadcrumb />
             </div>
 
@@ -102,9 +106,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
                 </TooltipContent>
               </Tooltip>
 
-              <div className='rounded-lg border bg-accent/30 px-4 py-1'>
-                <span className='text-sm font-semibold'>NGO Forum for Public Health</span>
-              </div>
+              <span className='hidden rounded-lg border bg-accent/30 px-4 py-1.5 text-sm font-semibold lg:inline'>NGO Forum for Public Health</span>
             </div>
 
             <div className='flex items-center gap-4'>

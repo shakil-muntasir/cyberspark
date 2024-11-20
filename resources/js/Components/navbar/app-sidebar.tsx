@@ -183,9 +183,9 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
-      <SidebarHeader className='mt-2'>
+      <SidebarHeader>
         <Link href='/' className='flex items-center justify-center'>
-          <img src={NGOFLogo} className='-ml-1.5 h-12 object-contain group-data-[collapsible=icon]:!hidden' />
+          <img src={NGOFLogo} className='-ml-1.5 mt-2 h-12 object-contain group-data-[collapsible=icon]:!hidden' />
           <img src={NGOFLogoSmall} className='-ml-1.5 hidden h-12 object-contain group-data-[collapsible=icon]:!block' />
         </Link>
       </SidebarHeader>
