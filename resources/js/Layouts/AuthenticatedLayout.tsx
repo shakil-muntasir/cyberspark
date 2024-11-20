@@ -37,6 +37,10 @@ export default function AuthenticatedLayout({ title, children }: { title: string
             {/* <DynamicBreadcrumb /> */}
 
             <div className='flex items-center gap-4'>
+              <Link href='/' className='inline lg:hidden'>
+                <img src={NGOFLogoSmall} className='inline h-11 object-contain' />
+              </Link>
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <SidebarTrigger className='-ml-1.5' />
@@ -46,11 +50,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
                 </TooltipContent>
               </Tooltip>
 
-              <Link href='/'>
-                <img src={NGOFLogoSmall} className='-ml-1.5 inline h-8 object-contain lg:hidden' />
-              </Link>
-
-              <Separator orientation='vertical' className='hidden h-4 lg:block' />
+              <Separator orientation='vertical' className='-ml-2 hidden h-4 lg:block' />
               <DynamicBreadcrumb />
             </div>
 
@@ -58,7 +58,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className='relative'>
-                    <Button variant='link' size='icon' className='group px-2 hover:bg-accent'>
+                    <Button variant='ghost' size='icon' className='group px-2'>
                       <BellIcon className='h-5 w-5 group-hover:text-teal-600' />
                       <span className='sr-only'>Notifications</span>
                     </Button>
@@ -72,7 +72,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant='link' size='icon' className='group px-2 hover:bg-accent'>
+                  <Button variant='ghost' size='icon' className='group px-2'>
                     <NotebookTextIcon className='h-5 w-5 group-hover:text-blue-500' />
                     <span className='sr-only'>Notes</span>
                   </Button>
@@ -84,7 +84,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant='link' size='icon' className='group relative px-2 hover:bg-accent'>
+                  <Button variant='ghost' size='icon' className='group relative px-2'>
                     <StarFilledIcon className='h-5 w-5 group-hover:text-orange-500' />
                     <span className='sr-only'>Favorites</span>
                   </Button>
@@ -96,7 +96,7 @@ export default function AuthenticatedLayout({ title, children }: { title: string
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant='link' size='icon' className='group relative px-2 hover:bg-accent'>
+                  <Button variant='ghost' size='icon' className='group relative px-2'>
                     <MessageCircleMoreIcon className='h-5 w-5 group-hover:text-emerald-600' />
                     <span className='sr-only'>Messages</span>
                   </Button>
